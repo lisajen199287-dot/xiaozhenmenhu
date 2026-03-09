@@ -1,0 +1,129 @@
+[36mvite v7.3.1 [32mbuilding client environment for production...[36m[39m
+transforming...
+[32m✓[39m 2224 modules transformed.
+rendering chunks...
+computing gzip size...
+[2mdist/[22m[32mindex.html                                      [39m[1m[2m    0.72 kB[22m[1m[22m[2m │ gzip:   0.43 kB[22m
+[2mdist/[22m[32mconsole.html                                    [39m[1m[2m    0.82 kB[22m[1m[22m[2m │ gzip:   0.46 kB[22m
+[2mdist/[22m[32madmin.html                                      [39m[1m[2m    0.89 kB[22m[1m[22m[2m │ gzip:   0.52 kB[22m
+[2mdist/[22m[32massets/fa-regular-400-nyy7hhHF.woff2            [39m[1m[2m   18.92 kB[22m[1m[22m
+[2mdist/[22m[32massets/fa-brands-400-BP5tdqmh.woff2             [39m[1m[2m  110.09 kB[22m[1m[22m
+[2mdist/[22m[32massets/fa-solid-900-DRAAbZTg.woff2              [39m[1m[2m  114.74 kB[22m[1m[22m
+[2mdist/[22m[32massets/events-bg-CIZfExTn.jpg                   [39m[1m[2m  314.65 kB[22m[1m[22m
+[2mdist/[22m[32massets/infra-bg-BD1uH4_r.jpg                    [39m[1m[2m  455.36 kB[22m[1m[22m
+[2mdist/[22m[35massets/AdminApplicationsView-9FCAwpJ5.css       [39m[1m[2m    0.15 kB[22m[1m[22m[2m │ gzip:   0.14 kB[22m
+[2mdist/[22m[35massets/AdminNavigationView-CUeVSHS3.css         [39m[1m[2m    0.16 kB[22m[1m[22m[2m │ gzip:   0.14 kB[22m
+[2mdist/[22m[35massets/console-f92ZD-Sz.css                     [39m[1m[2m    0.22 kB[22m[1m[22m[2m │ gzip:   0.18 kB[22m
+[2mdist/[22m[35massets/admin-Bn6TQoL5.css                       [39m[1m[2m    0.22 kB[22m[1m[22m[2m │ gzip:   0.18 kB[22m
+[2mdist/[22m[35massets/UsersAdminView-DNFXJReE.css              [39m[1m[2m    0.22 kB[22m[1m[22m[2m │ gzip:   0.19 kB[22m
+[2mdist/[22m[35massets/AdminAppPermissionsView-C6D9j26o.css     [39m[1m[2m    0.60 kB[22m[1m[22m[2m │ gzip:   0.31 kB[22m
+[2mdist/[22m[35massets/AdminAdminsView-DDU_rX9e.css             [39m[1m[2m    0.73 kB[22m[1m[22m[2m │ gzip:   0.37 kB[22m
+[2mdist/[22m[35massets/AdminSlidesView-DJjhi4PR.css             [39m[1m[2m    0.83 kB[22m[1m[22m[2m │ gzip:   0.40 kB[22m
+[2mdist/[22m[35massets/style-C73u23ON.css                       [39m[1m[2m    0.83 kB[22m[1m[22m[2m │ gzip:   0.42 kB[22m
+[2mdist/[22m[35massets/AdminLogsView-CFSLfA2N.css               [39m[1m[2m    0.92 kB[22m[1m[22m[2m │ gzip:   0.42 kB[22m
+[2mdist/[22m[35massets/AdminOrdersView-C50xZQl6.css             [39m[1m[2m    0.92 kB[22m[1m[22m[2m │ gzip:   0.43 kB[22m
+[2mdist/[22m[35massets/AdminIntroView-D3adg1sO.css              [39m[1m[2m    1.24 kB[22m[1m[22m[2m │ gzip:   0.53 kB[22m
+[2mdist/[22m[35massets/AdminTicketsView-DkThZ8KX.css            [39m[1m[2m    1.31 kB[22m[1m[22m[2m │ gzip:   0.52 kB[22m
+[2mdist/[22m[35massets/AdminStatsView-Dw7VOICh.css              [39m[1m[2m    1.79 kB[22m[1m[22m[2m │ gzip:   0.62 kB[22m
+[2mdist/[22m[35massets/AdminActiveUsersView-D1jlap3i.css        [39m[1m[2m    1.89 kB[22m[1m[22m[2m │ gzip:   0.67 kB[22m
+[2mdist/[22m[35massets/PlatformIntroView-C0t6zUrT.css           [39m[1m[2m    1.92 kB[22m[1m[22m[2m │ gzip:   0.80 kB[22m
+[2mdist/[22m[35massets/UserSettingsView-eFXZCAiF.css            [39m[1m[2m    1.93 kB[22m[1m[22m[2m │ gzip:   0.66 kB[22m
+[2mdist/[22m[35massets/AdminLoginView-DEq2UY-m.css              [39m[1m[2m    2.48 kB[22m[1m[22m[2m │ gzip:   0.83 kB[22m
+[2mdist/[22m[35massets/UserAppsView-B5HeWKF9.css                [39m[1m[2m    2.56 kB[22m[1m[22m[2m │ gzip:   0.82 kB[22m
+[2mdist/[22m[35massets/DashboardView-DGTvNT6i.css               [39m[1m[2m    2.70 kB[22m[1m[22m[2m │ gzip:   0.84 kB[22m
+[2mdist/[22m[35massets/UserLayout-cvQIpw3m.css                  [39m[1m[2m    2.78 kB[22m[1m[22m[2m │ gzip:   0.86 kB[22m
+[2mdist/[22m[35massets/UserApiView-Cbl6zsu1.css                 [39m[1m[2m    2.88 kB[22m[1m[22m[2m │ gzip:   0.89 kB[22m
+[2mdist/[22m[35massets/AppCenterView-C5SNHq_Q.css               [39m[1m[2m    2.94 kB[22m[1m[22m[2m │ gzip:   1.06 kB[22m
+[2mdist/[22m[35massets/UserSupportView-BJH1X0Yy.css             [39m[1m[2m    2.96 kB[22m[1m[22m[2m │ gzip:   0.93 kB[22m
+[2mdist/[22m[35massets/UserBillingView-lUq5HVr6.css             [39m[1m[2m    3.23 kB[22m[1m[22m[2m │ gzip:   0.92 kB[22m
+[2mdist/[22m[35massets/SuccessCasesView-6dFiArLd.css            [39m[1m[2m    3.36 kB[22m[1m[22m[2m │ gzip:   1.14 kB[22m
+[2mdist/[22m[35massets/AdminLayout-CRjefMhN.css                 [39m[1m[2m    3.41 kB[22m[1m[22m[2m │ gzip:   1.02 kB[22m
+[2mdist/[22m[35massets/EngineView-Dukde45P.css                  [39m[1m[2m    3.83 kB[22m[1m[22m[2m │ gzip:   1.15 kB[22m
+[2mdist/[22m[35massets/CasesAdminView-qLPWWCYa.css              [39m[1m[2m    4.03 kB[22m[1m[22m[2m │ gzip:   1.14 kB[22m
+[2mdist/[22m[35massets/UserDashboardView-BnAwqIaR.css           [39m[1m[2m    4.12 kB[22m[1m[22m[2m │ gzip:   1.13 kB[22m
+[2mdist/[22m[35massets/EventsAdminView-SZJ_wPGo.css             [39m[1m[2m    4.42 kB[22m[1m[22m[2m │ gzip:   1.28 kB[22m
+[2mdist/[22m[35massets/SolutionsView-BUhM2U9B.css               [39m[1m[2m    4.43 kB[22m[1m[22m[2m │ gzip:   1.30 kB[22m
+[2mdist/[22m[35massets/NewsView-D9wgRJTQ.css                    [39m[1m[2m    4.45 kB[22m[1m[22m[2m │ gzip:   1.39 kB[22m
+[2mdist/[22m[35massets/EventsView-Dckhqo1N.css                  [39m[1m[2m    4.60 kB[22m[1m[22m[2m │ gzip:   1.37 kB[22m
+[2mdist/[22m[35massets/EcoView-Dg-908xI.css                     [39m[1m[2m    4.83 kB[22m[1m[22m[2m │ gzip:   1.37 kB[22m
+[2mdist/[22m[35massets/AgentView-CgYyklv5.css                   [39m[1m[2m    4.93 kB[22m[1m[22m[2m │ gzip:   1.43 kB[22m
+[2mdist/[22m[35massets/NewsDetailView-CtB3UCLg.css              [39m[1m[2m    5.11 kB[22m[1m[22m[2m │ gzip:   1.44 kB[22m
+[2mdist/[22m[35massets/RegisterView-RsvZatIq.css                [39m[1m[2m    5.88 kB[22m[1m[22m[2m │ gzip:   1.64 kB[22m
+[2mdist/[22m[35massets/LoginView-glsTvuTJ.css                   [39m[1m[2m    6.09 kB[22m[1m[22m[2m │ gzip:   1.68 kB[22m
+[2mdist/[22m[35massets/EcommerceSolutionsView-B568nI0p.css      [39m[1m[2m    6.21 kB[22m[1m[22m[2m │ gzip:   1.68 kB[22m
+[2mdist/[22m[35massets/InternetSolutionsView-CQlRExpd.css       [39m[1m[2m    6.21 kB[22m[1m[22m[2m │ gzip:   1.68 kB[22m
+[2mdist/[22m[35massets/AutoSolutionsView-IZYo5zAv.css           [39m[1m[2m    6.21 kB[22m[1m[22m[2m │ gzip:   1.68 kB[22m
+[2mdist/[22m[35massets/ConsumerSolutionsView-N_PtIMeg.css       [39m[1m[2m    6.21 kB[22m[1m[22m[2m │ gzip:   1.68 kB[22m
+[2mdist/[22m[35massets/ManufacturingSolutionsView-DD5LEbh9.css  [39m[1m[2m    6.21 kB[22m[1m[22m[2m │ gzip:   1.68 kB[22m
+[2mdist/[22m[35massets/ParkSolutionsView-Cp7Ox_r1.css           [39m[1m[2m    6.21 kB[22m[1m[22m[2m │ gzip:   1.68 kB[22m
+[2mdist/[22m[35massets/MedicalSolutionsView-DN5QHk3b.css        [39m[1m[2m    6.21 kB[22m[1m[22m[2m │ gzip:   1.68 kB[22m
+[2mdist/[22m[35massets/GovMediaSolutionsView-BZhc1Lxc.css       [39m[1m[2m    6.21 kB[22m[1m[22m[2m │ gzip:   1.68 kB[22m
+[2mdist/[22m[35massets/CaseDetailView-DJZA1Ay8.css              [39m[1m[2m    6.77 kB[22m[1m[22m[2m │ gzip:   1.89 kB[22m
+[2mdist/[22m[35massets/ArticlesView-DMN2PG-X.css                [39m[1m[2m    7.77 kB[22m[1m[22m[2m │ gzip:   1.95 kB[22m
+[2mdist/[22m[35massets/HomeView-a3PA1B1j.css                    [39m[1m[2m    8.75 kB[22m[1m[22m[2m │ gzip:   2.26 kB[22m
+[2mdist/[22m[35massets/InfraView-Dwl54CMI.css                   [39m[1m[2m   11.36 kB[22m[1m[22m[2m │ gzip:   2.64 kB[22m
+[2mdist/[22m[35massets/RichTextEditor-B16Q1NiD.css              [39m[1m[2m   15.95 kB[22m[1m[22m[2m │ gzip:   3.15 kB[22m
+[2mdist/[22m[35massets/main-DbqvL7WK.css                        [39m[1m[2m   46.31 kB[22m[1m[22m[2m │ gzip:   9.60 kB[22m
+[2mdist/[22m[35massets/vue-router-DeWibpvc.css                  [39m[1m[2m  429.14 kB[22m[1m[22m[2m │ gzip:  73.78 kB[22m
+[2mdist/[22m[36massets/_plugin-vue_export-helper-DlAUqK2U.js    [39m[1m[2m    0.09 kB[22m[1m[22m[2m │ gzip:   0.10 kB[22m
+[2mdist/[22m[36massets/userStore-BkQtpgCB.js                    [39m[1m[2m    0.66 kB[22m[1m[22m[2m │ gzip:   0.40 kB[22m
+[2mdist/[22m[36massets/AdminIntroView-B3lbQkys.js               [39m[1m[2m    1.12 kB[22m[1m[22m[2m │ gzip:   0.76 kB[22m
+[2mdist/[22m[36massets/PlatformIntroView-CcoE6ADG.js            [39m[1m[2m    1.52 kB[22m[1m[22m[2m │ gzip:   0.81 kB[22m
+[2mdist/[22m[36massets/SuccessCasesView-7Q88NNtF.js             [39m[1m[2m    1.99 kB[22m[1m[22m[2m │ gzip:   1.20 kB[22m
+[2mdist/[22m[36massets/console-Po9tR2qh.js                      [39m[1m[2m    2.10 kB[22m[1m[22m[2m │ gzip:   0.84 kB[22m
+[2mdist/[22m[36massets/AdminLoginView-DMssCtNu.js               [39m[1m[2m    2.11 kB[22m[1m[22m[2m │ gzip:   1.15 kB[22m
+[2mdist/[22m[36massets/AdminLogsView-BF7SJcuV.js                [39m[1m[2m    2.27 kB[22m[1m[22m[2m │ gzip:   1.23 kB[22m
+[2mdist/[22m[36massets/UserSettingsView-DCzwPdGT.js             [39m[1m[2m    2.42 kB[22m[1m[22m[2m │ gzip:   1.18 kB[22m
+[2mdist/[22m[36massets/UserAppsView-DHEo1R_X.js                 [39m[1m[2m    2.67 kB[22m[1m[22m[2m │ gzip:   1.47 kB[22m
+[2mdist/[22m[36massets/DashboardView-BhUf8mUG.js                [39m[1m[2m    2.91 kB[22m[1m[22m[2m │ gzip:   1.33 kB[22m
+[2mdist/[22m[36massets/UserLayout-mKFUW5NQ.js                   [39m[1m[2m    2.97 kB[22m[1m[22m[2m │ gzip:   1.53 kB[22m
+[2mdist/[22m[36massets/UserBillingView-CnrDMwa0.js              [39m[1m[2m    3.20 kB[22m[1m[22m[2m │ gzip:   1.64 kB[22m
+[2mdist/[22m[36massets/AdminOrdersView-C9BVaF1I.js              [39m[1m[2m    3.24 kB[22m[1m[22m[2m │ gzip:   1.67 kB[22m
+[2mdist/[22m[36massets/AppCenterView-Cql_pB74.js                [39m[1m[2m    3.63 kB[22m[1m[22m[2m │ gzip:   2.03 kB[22m
+[2mdist/[22m[36massets/NewsView-CxChMg3b.js                     [39m[1m[2m    3.73 kB[22m[1m[22m[2m │ gzip:   1.97 kB[22m
+[2mdist/[22m[36massets/AdminActiveUsersView-BJ3kEULm.js         [39m[1m[2m    3.78 kB[22m[1m[22m[2m │ gzip:   1.86 kB[22m
+[2mdist/[22m[36massets/UserApiView-Co2e0wJ7.js                  [39m[1m[2m    3.90 kB[22m[1m[22m[2m │ gzip:   1.96 kB[22m
+[2mdist/[22m[36massets/EngineView-NdXLFOyt.js                   [39m[1m[2m    3.95 kB[22m[1m[22m[2m │ gzip:   1.88 kB[22m
+[2mdist/[22m[36massets/EventsView-BynqTs-s.js                   [39m[1m[2m    4.18 kB[22m[1m[22m[2m │ gzip:   2.39 kB[22m
+[2mdist/[22m[36massets/AdminTicketsView-BGVmKN95.js             [39m[1m[2m    4.37 kB[22m[1m[22m[2m │ gzip:   2.13 kB[22m
+[2mdist/[22m[36massets/EcoView-DAI-YySo.js                      [39m[1m[2m    4.40 kB[22m[1m[22m[2m │ gzip:   2.28 kB[22m
+[2mdist/[22m[36massets/admin-CeRUaYB5.js                        [39m[1m[2m    4.58 kB[22m[1m[22m[2m │ gzip:   1.45 kB[22m
+[2mdist/[22m[36massets/CaseDetailView-C71QAzxN.js               [39m[1m[2m    4.63 kB[22m[1m[22m[2m │ gzip:   2.21 kB[22m
+[2mdist/[22m[36massets/AgentView-B3QzI8xp.js                    [39m[1m[2m    4.81 kB[22m[1m[22m[2m │ gzip:   2.18 kB[22m
+[2mdist/[22m[36massets/RegisterView-CRTxUAkF.js                 [39m[1m[2m    4.84 kB[22m[1m[22m[2m │ gzip:   2.02 kB[22m
+[2mdist/[22m[36massets/LoginView-BFoLDq9X.js                    [39m[1m[2m    5.00 kB[22m[1m[22m[2m │ gzip:   2.19 kB[22m
+[2mdist/[22m[36massets/UserDashboardView-4DSMtNMp.js            [39m[1m[2m    5.06 kB[22m[1m[22m[2m │ gzip:   2.30 kB[22m
+[2mdist/[22m[36massets/AdminLayout-BR2CavF_.js                  [39m[1m[2m    5.16 kB[22m[1m[22m[2m │ gzip:   2.26 kB[22m
+[2mdist/[22m[36massets/UsersAdminView-Bc2scRMy.js               [39m[1m[2m    5.31 kB[22m[1m[22m[2m │ gzip:   2.12 kB[22m
+[2mdist/[22m[36massets/AdminNavigationView-BJhTlKHG.js          [39m[1m[2m    5.62 kB[22m[1m[22m[2m │ gzip:   2.15 kB[22m
+[2mdist/[22m[36massets/UserSupportView-DrsV1GO-.js              [39m[1m[2m    5.75 kB[22m[1m[22m[2m │ gzip:   2.68 kB[22m
+[2mdist/[22m[36massets/SolutionsView-JA8Ng2WH.js                [39m[1m[2m    5.75 kB[22m[1m[22m[2m │ gzip:   3.25 kB[22m
+[2mdist/[22m[36massets/NewsDetailView-Q5BtFRdQ.js               [39m[1m[2m    5.93 kB[22m[1m[22m[2m │ gzip:   2.66 kB[22m
+[2mdist/[22m[36massets/EventsAdminView-CQ0OW_fb.js              [39m[1m[2m    6.26 kB[22m[1m[22m[2m │ gzip:   2.47 kB[22m
+[2mdist/[22m[36massets/InfraView-D-Jy22EK.js                    [39m[1m[2m    6.57 kB[22m[1m[22m[2m │ gzip:   2.46 kB[22m
+[2mdist/[22m[36massets/AdminAppPermissionsView-CZYUl3cs.js      [39m[1m[2m    6.64 kB[22m[1m[22m[2m │ gzip:   2.69 kB[22m
+[2mdist/[22m[36massets/AdminApplicationsView-D0zp6CLr.js        [39m[1m[2m    6.80 kB[22m[1m[22m[2m │ gzip:   2.49 kB[22m
+[2mdist/[22m[36massets/AdminSlidesView-CxIJd-fd.js              [39m[1m[2m    6.96 kB[22m[1m[22m[2m │ gzip:   2.76 kB[22m
+[2mdist/[22m[36massets/CasesAdminView-MRiPQSPW.js               [39m[1m[2m    7.15 kB[22m[1m[22m[2m │ gzip:   2.77 kB[22m
+[2mdist/[22m[36massets/InternetSolutionsView-CMqn1x1u.js        [39m[1m[2m    7.92 kB[22m[1m[22m[2m │ gzip:   3.85 kB[22m
+[2mdist/[22m[36massets/ConsumerSolutionsView-KzHQOW2i.js        [39m[1m[2m    7.98 kB[22m[1m[22m[2m │ gzip:   4.02 kB[22m
+[2mdist/[22m[36massets/AutoSolutionsView-Bt-TRDVN.js            [39m[1m[2m    7.99 kB[22m[1m[22m[2m │ gzip:   3.99 kB[22m
+[2mdist/[22m[36massets/ManufacturingSolutionsView-BIRAkeEG.js   [39m[1m[2m    8.01 kB[22m[1m[22m[2m │ gzip:   4.04 kB[22m
+[2mdist/[22m[36massets/AdminAdminsView-CEm2zKTs.js              [39m[1m[2m    8.06 kB[22m[1m[22m[2m │ gzip:   2.72 kB[22m
+[2mdist/[22m[36massets/EcommerceSolutionsView-CZDK0bxt.js       [39m[1m[2m    8.10 kB[22m[1m[22m[2m │ gzip:   3.96 kB[22m
+[2mdist/[22m[36massets/ParkSolutionsView-3d3r1_az.js            [39m[1m[2m    8.10 kB[22m[1m[22m[2m │ gzip:   4.07 kB[22m
+[2mdist/[22m[36massets/MedicalSolutionsView-DhkXfxqq.js         [39m[1m[2m    8.38 kB[22m[1m[22m[2m │ gzip:   4.34 kB[22m
+[2mdist/[22m[36massets/GovMediaSolutionsView-F-wqHsXR.js        [39m[1m[2m    8.40 kB[22m[1m[22m[2m │ gzip:   4.35 kB[22m
+[2mdist/[22m[36massets/adminStore-pmajcGJr.js                   [39m[1m[2m   11.79 kB[22m[1m[22m[2m │ gzip:   5.61 kB[22m
+[2mdist/[22m[36massets/ArticlesView-RIKLGq3W.js                 [39m[1m[2m   13.08 kB[22m[1m[22m[2m │ gzip:   5.12 kB[22m
+[2mdist/[22m[36massets/main-aFCgxZVm.js                         [39m[1m[2m   19.15 kB[22m[1m[22m[2m │ gzip:   6.13 kB[22m
+[2mdist/[22m[36massets/HomeView-DcOnxXKI.js                     [39m[1m[2m   29.88 kB[22m[1m[22m[2m │ gzip:  11.02 kB[22m
+[2mdist/[22m[36massets/RichTextEditor-D7uMatVr.js               [39m[1m[33m  807.69 kB[39m[22m[2m │ gzip: 279.47 kB[22m
+[2mdist/[22m[36massets/AdminStatsView-DazlZkWW.js               [39m[1m[33m1,123.03 kB[39m[22m[2m │ gzip: 373.01 kB[22m
+[2mdist/[22m[36massets/vue-router-Pn9jnQWG.js                   [39m[1m[33m1,151.06 kB[39m[22m[2m │ gzip: 369.85 kB[22m
+[33m
+(!) Some chunks are larger than 500 kB after minification. Consider:
+- Using dynamic import() to code-split the application
+- Use build.rollupOptions.output.manualChunks to improve chunking: https://rollupjs.org/configuration-options/#output-manualchunks
+- Adjust chunk size limit for this warning via build.chunkSizeWarningLimit.[39m
+[32m✓ built in 7.64s[39m

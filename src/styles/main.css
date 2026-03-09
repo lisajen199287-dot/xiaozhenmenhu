@@ -1,0 +1,39 @@
+/* Base Reset & Variables */
+:root {
+    --primary: #4F46E5;
+    --primary-dark: #3730A3;
+    --text-main: #111827;
+    --text-subtitle: #4B5563;
+    --bg-light: #F8FAFC;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
+    color: var(--text-main);
+    background: var(--bg-light);
+    line-height: 1.5;
+    overflow-x: hidden;
+}
+
+a {
+    transition: all 0.2s;
+}
+
+/* Global Container Utility */
+.wrapper {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 0 40px;
+}
+
+@media (max-width: 768px) {
+    .wrapper {
+        padding: 0 16px;
+    }
+}
