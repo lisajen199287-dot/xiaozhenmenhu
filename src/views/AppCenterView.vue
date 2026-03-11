@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import NavBar from "@/components/NavBar.vue";
 import * as newApi from "@/api/newApi/index";
@@ -13,6 +13,10 @@ interface Application {
   url: string;
   entryType: "iframe" | "redirect" | "vue";
   requirePayment: boolean;
+  category: string;
+  categoryIcon: string;
+  categoryDescription: string;
+  appType: string;
 }
 
 interface AppCategory {
@@ -23,37 +27,50 @@ interface AppCategory {
 }
 
 const router = useRouter();
+const apps = ref<Application[]>([]);
+const loading = ref(true);
 
-const categories = ref<AppCategory[]>([
-  {
-    title: "内容与营销",
-    icon: "fas fa-bullhorn",
-    description:
-      "通过智能内容生成大幅降低营销制作成本，提升品牌曝光率与内容转化效率。",
-    apps: [],
-  },
-  {
-    title: "获客与投放",
-    icon: "fas fa-chart-line",
-    description:
-      "精准识别客户群体，深度研判商业趋势，重构全周期的多渠道投放网络。",
-    apps: [],
-  },
-  {
-    title: "销售与转化",
-    icon: "fas fa-handshake",
-    description:
-      "智能化武装每一个前线阵地，通过数字助理提供沟通支持与销售成单背书。",
-    apps: [],
-  },
-  {
-    title: "经营与管理",
-    icon: "fas fa-building",
-    description:
-      "数字化重塑企业行政、法务与人事生态节点，全面提升管理运营自动化。",
-    apps: [],
-  },
-]);
+const fetchApps = async () => {
+  try {
+    const res = await newApi.apiPublicApplications();
+    apps.value = res;
+  } catch (e) {
+    console.error("Failed to fetch apps:", e);
+  } finally {
+    loading.value = false;
+  }
+};
+
+// 动态对应用进行分类分组
+const categories = computed(() => {
+  const groups: Record<string, AppCategory> = {};
+  apps.value.forEach((app) => {
+    const cat = app.category || "其他";
+    if (!groups[cat]) {
+      groups[cat] = {
+        title: cat,
+        icon: app.categoryIcon || "fas fa-th-large",
+        description: app.categoryDescription || "",
+        apps: [],
+      };
+    }
+    groups[cat].apps.push(app);
+  });
+  return Object.values(groups);
+});
+
+onMounted(() => {
+  fetchApps();
+});
+
+const getGridClass = (n: number) => {
+  // 根据用户需求：
+  // 3, 5, 6, 9... 采用 3 列基准
+  // 4, 7, 8, 12... 采用 4 列基准
+  if (n === 4 || n === 7 || n === 8) return "grid-base-4";
+  if (n >= 12 && n % 4 === 0) return "grid-base-4";
+  return "grid-base-3";
+};
 
 const handleEnter = (app: Application) => {
   if (app.url === "#") {
@@ -67,15 +84,6 @@ const handleEnter = (app: Application) => {
     router.push(app.url);
   }
 };
-const init = async () => {
-  const res = await newApi.apiApplications();
-  categories.value.forEach((category) => {
-    category.apps = res.filter((app: any) => app.appType == category.title);
-  });
-};
-onMounted(() => {
-  init();
-});
 </script>
 
 <template>
@@ -103,7 +111,7 @@ onMounted(() => {
           <p class="category-desc">{{ category.description }}</p>
         </div>
 
-        <div class="app-grid" >
+        <div class="app-grid" :class="getGridClass(category.apps.length)">
           <div v-for="app in category.apps" :key="app.name" class="app-card">
             <div
               class="app-card-image"
@@ -111,8 +119,6 @@ onMounted(() => {
               style="cursor: pointer"
             >
               <img :src="app.coverImage" :alt="app.name" />
-              <div class="app-tag" v-if="app.requirePayment">付费应用</div>
-              <div class="app-tag free" v-else>免费体验</div>
             </div>
             <div class="app-card-content">
               <div class="app-card-header">
@@ -152,12 +158,25 @@ onMounted(() => {
   text-align: center;
 }
 
+@media (max-width: 768px) {
+  .app-hero {
+    padding: 100px 0 50px;
+  }
+}
+
 .hero-title {
   font-size: 3.5rem;
   font-weight: 850;
   margin-bottom: 20px;
   color: white;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+}
+
+@media (max-width: 768px) {
+  .hero-title {
+    font-size: 2.2rem;
+    margin-bottom: 12px;
+  }
 }
 
 .hero-sub {
@@ -168,23 +187,51 @@ onMounted(() => {
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
 }
 
+@media (max-width: 768px) {
+  .hero-sub {
+    font-size: 1rem;
+    padding: 0 20px;
+  }
+}
+
 .app-main {
   padding: 80px 0 100px;
+}
+
+@media (max-width: 768px) {
+  .app-main {
+    padding: 40px 0 60px;
+  }
 }
 
 .category-block {
   margin-bottom: 80px;
 }
 
+@media (max-width: 768px) {
+  .category-block {
+    margin-bottom: 40px;
+  }
+}
+
 .category-header {
   margin-bottom: 40px;
   padding-bottom: 24px;
   border-bottom: 2px solid #e2e8f0;
+  text-align: center;
+}
+
+@media (max-width: 768px) {
+  .category-header {
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+  }
 }
 
 .category-title-wrap {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 16px;
   margin-bottom: 12px;
 }
@@ -213,16 +260,76 @@ onMounted(() => {
 .category-desc {
   font-size: 1.1rem;
   color: #64748b;
-  margin: 0;
-  margin-left: 72px; /* align with text */
+  margin: 0 auto;
   max-width: 800px;
   line-height: 1.6;
 }
 
+@media (max-width: 768px) {
+  .category-icon {
+    width: 44px;
+    height: 44px;
+    font-size: 1.5rem;
+    border-radius: 10px;
+  }
+  .category-title {
+    font-size: 1.5rem;
+  }
+  .category-desc {
+    font-size: 0.9rem;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+}
+
+/* 方案九：动态比例均衡网格 */
 .app-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
   gap: 32px;
+  margin-top: 40px;
+  width: 100%;
+}
+
+@media (max-width: 768px) {
+  .app-grid {
+    gap: 16px;
+    margin-top: 24px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 12px;
+  }
+}
+
+.grid-base-3 .app-card {
+  flex: 0 1 380px; /* 以 3 列为基准，但在 4, 7, 8 以外的情况能较好地排列 */
+}
+
+.grid-base-4 .app-card {
+  flex: 0 1 310px; /* 稍微调小，确保在普通宽屏下能挤下 4 个 */
+}
+
+@media (max-width: 480px) {
+  .grid-base-3 .app-card,
+  .grid-base-4 .app-card {
+    flex: none;
+    width: 100%;
+  }
+}
+
+/* 在超大宽屏下，限制 4 列模式的最大宽度，防止卡片被拉得太宽 */
+.grid-base-4 {
+  max-width: 1400px;
+  margin-left: auto;
+  margin-right: auto;
 }
 
 .app-card {
@@ -248,6 +355,18 @@ onMounted(() => {
   overflow: hidden;
 }
 
+@media (max-width: 768px) {
+  .app-card-image {
+    height: 140px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-card-image {
+    height: 110px;
+  }
+}
+
 .app-card-image img {
   width: 100%;
   height: 100%;
@@ -259,25 +378,6 @@ onMounted(() => {
   transform: scale(1.08);
 }
 
-.app-tag {
-  position: absolute;
-  top: 16px;
-  right: 16px;
-  padding: 6px 14px;
-  background: rgba(239, 68, 68, 0.95);
-  color: white;
-  border-radius: 100px;
-  font-size: 0.75rem;
-  font-weight: 700;
-  backdrop-filter: blur(4px);
-  box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
-}
-
-.app-tag.free {
-  background: rgba(16, 185, 129, 0.95);
-  box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
-}
-
 .app-card-content {
   padding: 28px;
   display: flex;
@@ -285,11 +385,30 @@ onMounted(() => {
   flex: 1;
 }
 
+@media (max-width: 768px) {
+  .app-card-content {
+    padding: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-card-content {
+    padding: 12px;
+  }
+}
+
 .app-card-header {
   display: flex;
   align-items: center;
   gap: 16px;
   margin-bottom: 20px;
+}
+
+@media (max-width: 768px) {
+  .app-card-header {
+    gap: 10px;
+    margin-bottom: 12px;
+  }
 }
 
 .app-icon {
@@ -304,6 +423,15 @@ onMounted(() => {
   font-size: 1.5rem;
   border: 1px solid #e2e8f0;
   box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8);
+}
+
+@media (max-width: 768px) {
+  .app-icon {
+    width: 36px;
+    height: 36px;
+    font-size: 1.1rem;
+    border-radius: 8px;
+  }
 }
 
 .app-titles {
@@ -328,6 +456,16 @@ onMounted(() => {
   margin-top: 4px;
 }
 
+@media (max-width: 768px) {
+  .app-name {
+    font-size: 1rem;
+  }
+  .app-name-en {
+    font-size: 0.65rem;
+    margin-top: 2px;
+  }
+}
+
 .app-desc {
   color: #475569;
   font-size: 0.95rem;
@@ -338,6 +476,20 @@ onMounted(() => {
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+}
+
+@media (max-width: 768px) {
+  .app-desc {
+    font-size: 0.85rem;
+    margin-bottom: 16px;
+    height: 2.8em;
+  }
+}
+
+@media (max-width: 480px) {
+  .app-desc {
+    display: none; /* In 2-column mobile, hide description to save space */
+  }
 }
 
 .btn-enter {
@@ -358,6 +510,24 @@ onMounted(() => {
   gap: 8px;
 }
 
+@media (max-width: 768px) {
+  .btn-enter {
+    padding: 10px;
+    font-size: 0.85rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .btn-enter {
+    padding: 8px;
+    font-size: 0.8rem;
+    border-radius: 6px;
+  }
+  .btn-enter i {
+    font-size: 0.7rem;
+  }
+}
+
 .app-card:hover .btn-enter {
   background: #4f46e5;
   color: white;
@@ -365,19 +535,12 @@ onMounted(() => {
   box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
 }
 
-@media (max-width: 768px) {
+@media (max-width: 480px) {
   .hero-title {
-    font-size: 2.5rem;
-  }
-  .category-title {
     font-size: 1.8rem;
   }
-  .category-desc {
-    margin-left: 0;
-    margin-top: 12px;
-  }
-  .app-grid {
-    grid-template-columns: 1fr;
+  .app-hero {
+    padding: 80px 0 30px;
   }
 }
 </style>

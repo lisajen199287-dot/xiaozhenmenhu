@@ -62,9 +62,8 @@ export function useUser() {
         token.value = userData.accessToken
 
         localStorage.setItem('token', token.value)
-
+        localStorage.setItem('refreshToken', userData.refreshToken)
         localStorage.setItem('user_info', JSON.stringify(user.value))
-
     }
 
 
@@ -74,6 +73,7 @@ export function useUser() {
         user.value = null
         token.value = ''
         localStorage.removeItem('token')
+        localStorage.removeItem('refreshToken')
         localStorage.removeItem('user_info')
     }
 

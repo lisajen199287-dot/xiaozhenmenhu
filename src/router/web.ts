@@ -127,7 +127,7 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/brain',
         name: 'Brain',
-        component: () => import('@/views/AgentView.vue') // Reuse AgentView for Brain
+        component: () => import('@/views/EnterpriseBrainView.vue') // Reuse AgentView for Brain
     },
     {
         path: '/app-center',

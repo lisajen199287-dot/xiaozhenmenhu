@@ -216,10 +216,12 @@ service.interceptors.response.use(
 
 const refreshToken = async () => {
   axios.defaults.headers.common['tenant-id'] = getTenantId()
-  return await axios.post(base_url + '/member/auth/refresh-token?refreshToken=' + localStorage.getItem('token'))
+  return await axios.post(base_url + '/member/auth/refresh-token?refreshToken=' + localStorage.getItem('refreshToken'))
 }
 const handleAuthorized = () => {
-  // localStorage.removeItem('token')
+  localStorage.removeItem('token')
+  localStorage.removeItem('refreshToken')
+  localStorage.removeItem('user_info')
   router.push('/')
   return Promise.reject('登录超时,请重新登录!')
 }

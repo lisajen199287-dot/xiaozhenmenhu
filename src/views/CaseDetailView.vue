@@ -3,6 +3,7 @@ import { ref, onMounted } from "vue";
 import { useRoute, useRouter } from "vue-router";
 import { useAdminStore } from "@/utils/adminStore";
 import * as newApi from "@/api/newApi/index";
+import { ElMessage } from "element-plus";
 
 const route = useRoute();
 const router = useRouter();
@@ -52,6 +53,43 @@ onMounted(() => {
 const copyLink = () => {
   navigator.clipboard.writeText(window.location.href);
   alert("链接已复制！");
+};
+
+// Form State
+const form = ref({
+  company: "",
+  contact: "",
+  phone: "",
+  demand: "",
+});
+
+const submitting = ref(false);
+const submitted = ref(false);
+
+const handleSubmit = async () => {
+  if (!form.value.contact || !form.value.phone)
+    return alert("请填写联系人与手机号");
+
+  submitting.value = true;
+  try {
+    const solutionName =
+      document.querySelector("h1")?.innerText || "未知解决方案";
+    newApi.apiAdmSolutionRequests(
+      JSON.stringify({ ...form.value, solutionName })
+    );
+    submitted.value = true;
+    form.value = { company: "", contact: "", phone: "", demand: "" };
+    ElMessage.success("提交成功，我们会尽快联系您");
+  } catch (e) {
+    ElMessage.info("提交失败，请重试");
+  } finally {
+    submitting.value = false;
+  }
+};
+
+const scrollToForm = () => {
+  const el = document.getElementById("consult-form");
+  if (el) el.scrollIntoView({ behavior: "smooth" });
 };
 </script>
 
@@ -190,36 +228,100 @@ const copyLink = () => {
 
     <!-- Module 3: Call to Action Bottom -->
 
-    <section class="cd-cta-bottom">
-      <div class="wrapper cta-inner">
-        <h2>
-          {{ caseData.subIndustry || caseData.category || caseData.industry }}
-          行业遇到类似的业务挑战？
-        </h2>
+    <section id="consult-form" class="section-form">
+      <div class="wrapper form-wrapper">
+        <div class="form-content-left">
+          <h2>
+            {{ caseData.industry }} 行业遇到 <br /><span class="highlight-text"
+              >类似挑战？</span
+            >
+          </h2>
+          <p class="form-lead">
+            立刻对话我们的行业架构师 <br />为您量身定制专属 AI 赋能方案
+          </p>
 
-        <p>
-          立刻对话我们的行业架构师，为您量身定制专属 AI
-          赋能方案，探索业务的无限可能
-        </p>
+          <div class="trust-features">
+            <div class="trust-feat-item">
+              <i class="fas fa-search-dollar"></i>
+              <div>
+                <h4>全面痛点诊断</h4>
+                <p>从业务流程到技术卡点，深度剖析您的核心问题</p>
+              </div>
+            </div>
+            <div class="trust-feat-item">
+              <i class="fas fa-drafting-compass"></i>
+              <div>
+                <h4>定制化系统方案</h4>
+                <p>由资深架构师量身定制专属于您的 AI 构建计划</p>
+              </div>
+            </div>
+          </div>
+        </div>
 
-        <div class="cta-actions">
-          <RouterLink to="/solutions" class="btn-cta-primary">
-            获取行业专属解决方案
+        <div class="form-container-right">
+          <div v-if="submitted" class="success-message">
+            <i class="fas fa-check-circle"></i>
+            <h3>提交成功</h3>
+            <p>我们已收到您的诉求卷宗，<br />架构师将火速与您联系</p>
+            <button class="btn-reset" @click="submitted = false">
+              再次咨询
+            </button>
+          </div>
 
-            <i class="fas fa-arrow-right animate-arrow"></i>
-          </RouterLink>
+          <form v-else class="consult-form" @submit.prevent="handleSubmit">
+            <div class="form-header-minimal">
+              <h3>免费获取专属方案</h3>
+              <p>请留下您的联系方式</p>
+            </div>
 
-          <a href="#contact-sales" class="btn-cta-secondary"
-            >联系销售咨询报价</a
-          >
+            <div class="form-group">
+              <label>企业名称</label>
+              <input
+                v-model="form.company"
+                type="text"
+                placeholder="输入企业主体名称"
+              />
+            </div>
+
+            <div class="form-row">
+              <div class="form-group">
+                <label>您的姓名 <span class="required">*</span></label>
+                <input
+                  v-model="form.contact"
+                  type="text"
+                  placeholder="怎么称呼"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label>联系电话 <span class="required">*</span></label>
+                <input
+                  v-model="form.phone"
+                  type="text"
+                  placeholder="用于接收方案"
+                  required
+                />
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>核心诉求描述</label>
+              <textarea
+                v-model="form.demand"
+                rows="3"
+                placeholder="描述您的业务现状或痛点..."
+              ></textarea>
+            </div>
+
+            <button type="submit" class="btn-submit" :disabled="submitting">
+              {{ submitting ? "信息加密上传.." : "提交需求" }}
+            </button>
+            <p class="privacy-note">
+              <i class="fas fa-lock"></i> 信息已采用端到端加密保护
+            </p>
+          </form>
         </div>
       </div>
-
-      <!-- Decorative background shapes -->
-
-      <div class="cta-decor circle"></div>
-
-      <div class="cta-decor grid"></div>
     </section>
   </div>
 </template>
@@ -229,37 +331,25 @@ const copyLink = () => {
 <style scoped>
 .case-detail-page {
   background-color: #f8fafc;
-
   min-height: 100vh;
-
   padding-top: 72px; /* For fixed nav */
-
   font-family: "Inter", -apple-system, sans-serif;
 }
 
 .loader-overlay {
   height: 60vh;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
 }
-
 .spinner {
   width: 40px;
   height: 40px;
-
   border: 4px solid #e2e8f0;
-
   border-top: 4px solid #4f46e5;
-
   border-radius: 50%;
-
   animation: spin 1s linear infinite;
 }
-
 @keyframes spin {
   100% {
     transform: rotate(360deg);
@@ -267,37 +357,25 @@ const copyLink = () => {
 }
 
 /* Hero Section */
-
 .cd-hero {
   position: relative;
-
   min-height: 50vh;
-
   background-size: cover;
-
   background-position: center;
-
   background-attachment: fixed;
-
   display: flex;
-
   align-items: flex-end;
-
   color: white;
-
   padding-bottom: 60px;
-
   padding-top: 120px;
 }
 
 .cd-hero-overlay {
   position: absolute;
-
   top: 0;
   left: 0;
   right: 0;
   bottom: 0;
-
   background: linear-gradient(
     180deg,
     rgba(15, 23, 42, 0.4) 0%,
@@ -307,29 +385,19 @@ const copyLink = () => {
 
 .cd-hero-content {
   position: relative;
-
   z-index: 10;
-
   width: 100%;
 }
 
 .cd-breadcrumb {
   display: flex;
-
   gap: 12px;
-
   align-items: center;
-
   font-size: 0.85rem;
-
   font-weight: 600;
-
   margin-bottom: 32px;
-
   text-transform: uppercase;
-
   letter-spacing: 0.05em;
-
   opacity: 0.8;
 }
 
@@ -338,145 +406,102 @@ const copyLink = () => {
   text-decoration: none;
   transition: opacity 0.2s;
 }
-
 .cd-breadcrumb a:hover {
   opacity: 0.7;
 }
-
 .cd-breadcrumb .sep {
   color: rgba(255, 255, 255, 0.4);
 }
-
 .cd-breadcrumb .current {
   color: #a5b4fc;
 }
 
 .cd-title-area {
   display: flex;
-
   align-items: center;
-
   gap: 24px;
-
   margin-bottom: 48px;
 }
 
 .client-logo {
   font-size: 2.5rem;
-
   color: #a5b4fc;
 }
 
 .cd-title {
   font-size: 3.5rem;
-
   font-weight: 900;
-
   margin: 0;
-
   letter-spacing: -0.02em;
-
   line-height: 1.2;
-
   text-wrap: balance;
 }
 
 .cd-hero-stats {
   display: flex;
-
   gap: 40px;
-
   flex-wrap: wrap;
-
   padding-top: 32px;
-
   border-top: 1px solid rgba(255, 255, 255, 0.15);
 }
 
 .hero-stat-item {
   display: flex;
-
   flex-direction: column;
 }
 
 .hs-value {
   font-size: 2.5rem;
-
   font-weight: 900;
-
   color: #10b981;
-
   text-shadow: 0 2px 10px rgba(16, 185, 129, 0.2);
 }
 
 .hs-label {
   font-size: 0.9rem;
-
   font-weight: 600;
-
   color: #cbd5e1;
-
   text-transform: uppercase;
-
   letter-spacing: 0.05em;
-
   margin-top: 4px;
 }
 
 /* Main Layout */
-
 .cd-main-section {
   padding: 60px 0 100px;
 }
 
 .cd-layout-split {
   display: grid;
-
   grid-template-columns: 280px 1fr;
-
   gap: 60px;
-
   align-items: start;
 }
 
 /* Sidebar */
-
 .sticky-sidebar {
   position: sticky;
-
   top: 100px; /* Offset for fixed navbar */
-
   display: flex;
-
   flex-direction: column;
-
   gap: 24px;
 }
 
 .summary-card {
   background: white;
-
   border-radius: 12px;
-
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05),
     0 2px 4px -2px rgba(0, 0, 0, 0.05);
-
   border: 1px solid #f1f5f9;
-
   overflow: hidden;
 }
 
 .sc-header {
   padding: 16px 20px;
-
   font-weight: 800;
-
   font-size: 0.95rem;
-
   display: flex;
-
   align-items: center;
-
   gap: 10px;
 }
 
@@ -485,13 +510,11 @@ const copyLink = () => {
   color: #be123c;
   border-bottom: 1px solid #ffe4e6;
 }
-
 .sc-header.solution {
   background: #eff6ff;
   color: #1d4ed8;
   border-bottom: 1px solid #dbeafe;
 }
-
 .sc-header.base {
   background: #f8fafc;
   color: #334155;
@@ -500,38 +523,26 @@ const copyLink = () => {
 
 .sc-body {
   padding: 20px;
-
   font-size: 0.9rem;
-
   color: #475569;
-
   line-height: 1.6;
 }
 
 .share-actions {
   display: flex;
-
   gap: 12px;
-
   justify-content: center;
 }
 
 .icon-btn {
   width: 40px;
   height: 40px;
-
   border-radius: 50%;
-
   border: 1px solid #e2e8f0;
-
   background: white;
-
   color: #64748b;
-
   font-size: 1.1rem;
-
   cursor: pointer;
-
   transition: all 0.2s;
 }
 
@@ -540,13 +551,11 @@ const copyLink = () => {
   color: white;
   border-color: #10b981;
 }
-
 .icon-btn:hover.in {
   background: #0ea5e9;
   color: white;
   border-color: #0ea5e9;
 }
-
 .icon-btn:hover.link {
   background: #4f46e5;
   color: white;
@@ -554,51 +563,35 @@ const copyLink = () => {
 }
 
 /* Rich Text Area */
-
 .cd-rich-content {
   background: white;
-
   padding: 60px;
-
   border-radius: 16px;
-
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.05),
     0 8px 10px -6px rgba(0, 0, 0, 0.01);
-
   border: 1px solid #f1f5f9;
 }
 
 .rt-content-rendered {
   /* Scope styles strictly for the rich text from WangEditor */
-
   font-size: 1.1rem;
-
   line-height: 1.8;
-
   color: #334155;
 }
 
 .rt-content-rendered :deep(h2) {
   font-size: 1.8rem;
-
   font-weight: 850;
-
   color: #0f172a;
-
   margin: 48px 0 24px;
-
   padding-bottom: 12px;
-
   border-bottom: 2px solid #f1f5f9;
 }
 
 .rt-content-rendered :deep(h3) {
   font-size: 1.4rem;
-
   font-weight: 700;
-
   color: #1e293b;
-
   margin: 32px 0 16px;
 }
 
@@ -608,15 +601,10 @@ const copyLink = () => {
 
 .rt-content-rendered :deep(img) {
   max-width: 100%;
-
   height: auto;
-
   border-radius: 8px;
-
   margin: 32px 0;
-
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-
   border: 1px solid #e2e8f0;
 }
 
@@ -650,242 +638,261 @@ const copyLink = () => {
 
 .rt-content-rendered :deep(blockquote) {
   border-left: 4px solid #4f46e5;
-
   background: #f8fafc;
-
   padding: 24px;
-
   margin: 32px 0;
-
   font-style: italic;
-
   font-size: 1.2rem;
-
   color: #475569;
-
   border-radius: 0 8px 8px 0;
 }
 
 .empty-content {
   text-align: center;
-
   padding: 60px 0;
-
   color: #64748b;
 }
 
 .empty-content img {
   height: 200px;
-
   margin-bottom: 24px;
-
   opacity: 0.8;
 }
 
 .empty-content h3 {
   font-size: 1.4rem;
-
   color: #0f172a;
-
   font-weight: 800;
-
   margin-bottom: 12px;
 }
 
-/* CTA Bottom */
-
-.cd-cta-bottom {
-  background: #0f172a;
-
+/* Lead Generation Form (Shared Style with Solutions) */
+.section-form {
   padding: 100px 0;
-
-  position: relative;
-
-  overflow: hidden;
-
+  background: #0f172a;
   color: white;
-
-  text-align: center;
 }
 
-.cta-inner {
-  position: relative;
-
-  z-index: 10;
-
-  max-width: 800px;
-
-  margin: 0 auto;
+.form-wrapper {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
 }
 
-.cta-inner h2 {
-  font-size: 2.2rem;
-
+.form-content-left h2 {
+  font-size: 3rem;
   font-weight: 900;
-
   margin-bottom: 24px;
-
-  letter-spacing: -0.02em;
+  line-height: 1.2;
 }
 
-.cta-inner p {
-  font-size: 1.2rem;
+.highlight-text {
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
 
+.form-lead {
+  font-size: 1.25rem;
   color: #94a3b8;
-
   margin-bottom: 48px;
-
   line-height: 1.6;
 }
 
-.cta-actions {
+.trust-features {
   display: flex;
-
-  justify-content: center;
-
-  gap: 24px;
+  flex-direction: column;
+  gap: 32px;
 }
 
-.btn-cta-primary {
-  display: inline-flex;
+.trust-feat-item {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
 
-  align-items: center;
+.trust-feat-item i {
+  font-size: 1.5rem;
+  color: #6366f1;
+  margin-top: 4px;
+}
 
-  gap: 12px;
+.trust-feat-item h4 {
+  font-size: 1.1rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+  color: white;
+}
 
+.trust-feat-item p {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  margin: 0;
+}
+
+.form-container-right {
+  background: white;
+  padding: 40px;
+  border-radius: 24px;
+  color: #1e293b;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.5);
+}
+
+.success-message {
+  text-align: center;
+  padding: 40px 0;
+}
+
+.success-message i {
+  font-size: 4rem;
+  color: #10b981;
+  margin-bottom: 24px;
+}
+
+.btn-reset {
+  margin-top: 24px;
+  padding: 12px 32px;
+  background: #f1f5f9;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+}
+
+.form-header-minimal {
+  text-align: center;
+  margin-bottom: 32px;
+}
+
+.form-header-minimal h3 {
+  font-size: 1.5rem;
+  font-weight: 800;
+  margin-bottom: 8px;
+}
+
+.form-header-minimal p {
+  color: #64748b;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-group label {
+  display: block;
+  font-size: 0.9rem;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #475569;
+}
+
+.required {
+  color: #ef4444;
+}
+
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px 16px;
+  background: #f8fafc;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  transition: all 0.2s;
+}
+
+.form-group input:focus,
+.form-group textarea:focus {
+  outline: none;
+  border-color: #6366f1;
+  background: white;
+  box-shadow: 0 0 0 4px rgba(99, 102, 241, 0.1);
+}
+
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+}
+
+.btn-submit {
+  width: 100%;
+  padding: 16px;
   background: #4f46e5;
-
   color: white;
-
-  padding: 18px 36px;
-
-  border-radius: 8px;
-
-  font-weight: 800;
-
+  border: none;
+  border-radius: 12px;
   font-size: 1.1rem;
-
-  text-decoration: none;
-
-  transition: all 0.3s;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-top: 10px;
 }
 
-.btn-cta-primary:hover {
+.btn-submit:hover:not(:disabled) {
   background: #4338ca;
-
   transform: translateY(-2px);
-
-  box-shadow: 0 10px 20px rgba(79, 70, 229, 0.3);
+  box-shadow: 0 10px 15px -3px rgba(79, 70, 229, 0.4);
 }
 
-.animate-arrow {
-  transition: transform 0.3s;
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
 }
 
-.btn-cta-primary:hover .animate-arrow {
-  transform: translateX(4px);
-}
-
-.btn-cta-secondary {
-  display: inline-flex;
-
-  align-items: center;
-
-  gap: 12px;
-
-  background: rgba(255, 255, 255, 0.1);
-
-  color: white;
-
-  border: 1px solid rgba(255, 255, 255, 0.2);
-
-  padding: 18px 36px;
-
-  border-radius: 8px;
-
-  font-weight: 800;
-
-  font-size: 1.1rem;
-
-  text-decoration: none;
-
-  transition: all 0.3s;
-}
-
-.btn-cta-secondary:hover {
-  background: rgba(255, 255, 255, 0.2);
-
-  border-color: white;
-}
-
-.cta-decor {
-  position: absolute;
-
-  pointer-events: none;
-}
-
-.cta-decor.circle {
-  width: 600px;
-  height: 600px;
-
-  border-radius: 50%;
-
-  background: radial-gradient(
-    circle,
-    rgba(79, 70, 229, 0.2) 0%,
-    transparent 70%
-  );
-
-  top: -100px;
-
-  left: -200px;
-}
-
-.cta-decor.grid {
-  width: 400px;
-  height: 400px;
-
-  background-image: radial-gradient(
-    rgba(255, 255, 255, 0.1) 2px,
-    transparent 2px
-  );
-
-  background-size: 30px 30px;
-
-  bottom: 0;
-  right: 0;
-
-  opacity: 0.5;
+.privacy-note {
+  text-align: center;
+  font-size: 0.8rem;
+  color: #94a3b8;
+  margin-top: 16px;
 }
 
 @media (max-width: 992px) {
   .cd-layout-split {
     grid-template-columns: 1fr;
   }
-
   .sticky-sidebar {
     position: static;
-
     flex-direction: row;
-
     flex-wrap: wrap;
   }
-
   .summary-card {
     flex: 1;
     min-width: 280px;
   }
-
   .cd-title {
     font-size: 2.5rem;
   }
-
   .cd-rich-content {
     padding: 32px;
   }
-
   .cta-actions {
     flex-direction: column;
+  }
+
+  .form-wrapper {
+    grid-template-columns: 1fr;
+    gap: 60px;
+  }
+  .form-content-left {
+    text-align: center;
+  }
+  .trust-feat-item {
+    justify-content: center;
+    text-align: left;
+  }
+  .form-content-left h2 {
+    font-size: 2.5rem;
+  }
+}
+
+@media (max-width: 640px) {
+  .form-row {
+    grid-template-columns: 1fr;
+  }
+  .form-container-right {
+    padding: 30px 20px;
   }
 }
 </style>

@@ -110,3 +110,16 @@ export const apiTrack = (data: any) => {
     data,
   })
 }
+
+export const apiPublicApplications = () => {
+  return request.get({
+    url: `/api/applications/public`,
+  })
+}
+
+
+export const apiUserLogs = (uid: number) => {
+  return request.get({
+    url: `/api/console/users/${uid}/logs`,
+  })
+}

@@ -17,8 +17,7 @@ interface Article {
     linkType: 'INTERNAL_RICH_TEXT' | 'EXTERNAL_LANDING';
     externalLink: string;
     pushToNav: boolean;
-    pushToHero: boolean;
-    heroBgImage: string;
+    
 }
 
 const activities = ref<Article[]>([])
@@ -70,7 +69,7 @@ const emptyActivity = (): Article => ({
     startTime: getLocalDatetimeString(new Date()), 
     endTime: getLocalDatetimeString(new Date(Date.now() + 365 * 24 * 3600 * 1000)), 
     linkType: 'INTERNAL_RICH_TEXT', externalLink: '',
-    pushToNav: false, pushToHero: false, heroBgImage: ''
+    pushToNav: false
 })
 
 const currentArticle = ref<Article>(emptyActivity())
@@ -129,10 +128,6 @@ const saveActivity = async () => {
     if (!currentArticle.value.date) return alert('请选择发布日期')
     if (!currentArticle.value.startTime || !currentArticle.value.endTime) return alert('请输入文章生效与结束时间')
     if (currentArticle.value.linkType === 'EXTERNAL_LANDING' && !currentArticle.value.externalLink) return alert('请输入外链地址')
-    if (currentArticle.value.pushToHero && !currentArticle.value.heroBgImage) {
-        // Automatically fallback to generic technology background if empty
-        currentArticle.value.heroBgImage = currentArticle.value.image || 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?auto=format&fit=crop&q=80&w=1200';
-    }
 
     const payload: any = { ...currentArticle.value }
     payload.startTime = parseFromDatetimeLocal(payload.startTime) || payload.startTime
@@ -393,18 +388,6 @@ const activeCount = computed(() => activities.value.filter(a => isActive(a.start
                      <p>将文章推荐至网站顶部导航的下拉菜单中</p>
                   </div>
                </label>
-               <label class="placement-card">
-                  <input type="checkbox" v-model="currentArticle.pushToHero">
-                  <div class="p-details">
-                     <h4>首页轮播图展示</h4>
-                     <p>在网站首页首屏轮播中重点推荐</p>
-                  </div>
-               </label>
-            </div>
-            
-            <div v-if="currentArticle.pushToHero" class="hero-bg-config">
-               <label>首页轮播宽幅底图</label>
-               <input v-model="currentArticle.heroBgImage" type="text" placeholder="设置首页 16:9 展示底图 URL">
             </div>
          </div>
 
@@ -586,6 +569,18 @@ const activeCount = computed(() => activities.value.filter(a => isActive(a.start
 .hero-bg-config { margin-top: 16px; padding: 16px; background: #f8fafc; border: 1px solid #e2e8f0; border-radius: 8px; display: flex; flex-direction: column; gap: 8px; }
 .hero-bg-config label { font-size: 0.9rem; font-weight: 600; color: #475569; }
 .hero-bg-config input { width: 100%; height: 44px; padding: 0 14px; border: 1px solid #cbd5e1; border-radius: 6px; font-size: 0.95rem; }
+
+.field-help {
+   margin: 8px 0 0 0;
+   font-size: 0.75rem;
+   color: #64748b;
+   line-height: 1.5;
+   background: #f1f5f9;
+   padding: 8px 12px;
+   border-radius: 4px;
+   border-left: 3px solid #3b82f6;
+}
+.field-help i { color: #3b82f6; margin-right: 4px; }
 
 .form-actions-sticky {
    position: sticky;

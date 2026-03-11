@@ -25,56 +25,65 @@ const updateSEO = (title: string, description: string) => {
 const fetchArticle = async (id: string) => {
   loading.value = true;
   try {
-    const found:any = articles.value.find((a: any) => a.id === Number(id));
-
-    // if (found) {
-    //     const data: any = { ...found }
-    //     const d = new Date(data.date || new Date())
-    //     data.formattedDate = `${d.getFullYear()}年${String(d.getMonth() + 1).padStart(2, '0')}月${String(d.getDate()).padStart(2, '0')}日`
-
-    //     if (!data.tag) {
-    //         data.tag = data.category || '未分类'
-    //         data.tagClass = data.category === '行业动态' ? 'tag-event' : (data.category === '技术教研' ? 'tag-blog' : 'tag-policy')
-    //     }
-    //     if (!data.content) data.content = "暂无内容..."
-
-    //     article.value = data
-    //     updateSEO(data.title, data.content.substring(0, 150).replace(/<[^>]*>/g, ''))
-    // } else {
+    // 1. 优先从 API 获取最新数据，确保后台修改实时生效
     const response = await newApi.apiAdmArticleDetail(Number(id));
-    const data = await response;
-    const d = new Date(data.date || new Date());
-    data.formattedDate = `${d.getFullYear()}年${String(
-      d.getMonth() + 1
-    ).padStart(2, "0")}月${String(d.getDate()).padStart(2, "0")}日`;
-
-    if (!data.tag) {
-      data.tag = data.category || "未分类";
-      data.tagClass =
-        data.category === "行业动态"
-          ? "tag-event"
-          : data.category === "技术教研"
-          ? "tag-blog"
-          : "tag-policy";
-    }
-    article.value = data;
-    updateSEO(
-      data.title,
-      data.summary || data.content.substring(0, 150).replace(/<[^>]*>/g, "")
-    );
-
-    // }
+    const data = response;
+    processArticleData(data);
   } catch (error) {
     console.error("Failed to fetch article:", error);
-    article.value = null;
+    // 发生错误时再次尝试从本地查找
+    const found = articles.value.find((a: any) => a.id === Number(id));
+    if (found) {
+      processArticleData({ ...found });
+    } else {
+      article.value = null;
+    }
   } finally {
     loading.value = false;
   }
 };
 
+const processArticleData = (data: any) => {
+  const d = new Date(data.date || new Date());
+  data.formattedDate = `${d.getFullYear()}年${String(d.getMonth() + 1).padStart(
+    2,
+    "0"
+  )}月${String(d.getDate()).padStart(2, "0")}日`;
+
+  if (!data.tag) {
+    data.tag = data.category || "未分类";
+    data.tagClass =
+      data.category === "行业动态"
+        ? "tag-event"
+        : data.category === "技术教研"
+        ? "tag-blog"
+        : "tag-policy";
+  }
+  if (!data.content) data.content = "暂无内容...";
+
+  article.value = data;
+  updateSEO(
+    data.title,
+    data.summary || data.content.substring(0, 150).replace(/<[^>]*>/g, "")
+  );
+};
+
 onMounted(() => {
   fetchArticle(route.params.id as string);
 });
+
+const copyLink = () => {
+  const url = window.location.href;
+  navigator.clipboard
+    .writeText(url)
+    .then(() => {
+      alert("链接已复制到剪贴板");
+    })
+    .catch((err) => {
+      console.error("无法复制链接: ", err);
+      alert("复制失败，请手动记录浏览器地址栏链接");
+    });
+};
 </script>
 
 <template>
@@ -83,7 +92,7 @@ onMounted(() => {
     <nav class="breadcrumb-nav">
       <RouterLink to="/">首页</RouterLink>
       <span class="separator">/</span>
-      <RouterLink to="/news">动态动态</RouterLink>
+      <RouterLink to="/news">资讯动态</RouterLink>
       <span class="separator">/</span>
       <span class="current" v-if="article">{{
         article.category || "详情"
@@ -124,11 +133,15 @@ onMounted(() => {
             <div class="footer-actions">
               <div class="share-group">
                 <span>分享到：</span>
-                <button class="social-btn">
+                <button class="social-btn" title="复制链接" @click="copyLink">
                   <i class="fab fa-weixin"></i>
                 </button>
-                <button class="social-btn"><i class="fab fa-weibo"></i></button>
-                <button class="social-btn"><i class="fas fa-link"></i></button>
+                <button class="social-btn" title="复制链接" @click="copyLink">
+                  <i class="fab fa-weibo"></i>
+                </button>
+                <button class="social-btn" title="复制链接" @click="copyLink">
+                  <i class="fas fa-link"></i>
+                </button>
               </div>
               <RouterLink to="/news" class="btn-back">
                 <i class="fas fa-arrow-left"></i> 返回动态列表

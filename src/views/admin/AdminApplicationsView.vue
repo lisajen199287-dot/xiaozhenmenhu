@@ -45,9 +45,9 @@ interface Application {
     ssoConfig: string
 
     sortOrder: number
-
-    // New fields
-
+    category: string
+    categoryIcon: string
+    categoryDescription: string
     syncEnabled: boolean
 
     syncEndpoint: string
@@ -101,7 +101,9 @@ const form = ref<Application>({
     ssoConfig: '{}',
 
     sortOrder: 0,
-
+    category: '',
+    categoryIcon: '',
+    categoryDescription: '',
     syncEnabled: false,
 
     syncEndpoint: '',
@@ -179,7 +181,9 @@ const handleAdd = () => {
         ssoConfig: '{}',
 
         sortOrder: 0,
-
+        category: '',
+        categoryIcon: '',
+        categoryDescription: '',
         syncEnabled: false,
 
         syncEndpoint: '',
@@ -510,6 +514,23 @@ onMounted(() => {
 
             <el-form-item label="应用简介">
               <el-input v-model="form.description" type="textarea" :rows="3" placeholder="描述该应用的核心价值" />
+            </el-form-item>
+
+            <el-divider content-position="left">分类展示配置</el-divider>
+            <el-row :gutter="20">
+              <el-col :span="12">
+                <el-form-item label="所属分类">
+                  <el-input v-model="form.category" placeholder="如：内容与营销" />
+                </el-form-item>
+              </el-col>
+              <el-col :span="12">
+                <el-form-item label="分类图标 (FA)">
+                  <el-input v-model="form.categoryIcon" placeholder="如：fas fa-bullhorn" />
+                </el-form-item>
+              </el-col>
+            </el-row>
+            <el-form-item label="分类描述">
+              <el-input v-model="form.categoryDescription" type="textarea" :rows="2" placeholder="显示在分类标题下方的描述文字" />
             </el-form-item>
 
           </el-tab-pane>

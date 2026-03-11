@@ -62,11 +62,11 @@
 
           <div class="model-tag">[视频生成]</div>
 
-          <div class="model-img video-gen">
+          <a href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&modelId=doubao-seedance-2-0-260128&tab=GenVideo" target="_blank" class="model-img video-gen" style="display: block;">
 
              <img src="@/assets/images/doubao-seedance.png" alt="Doubao-Seedance-2.0" class="model-inner-img">
 
-          </div>
+          </a>
 
           <h3>Doubao-Seedance-2.0</h3>
 
@@ -82,11 +82,11 @@
 
           <div class="model-tag">[图片生成]</div>
 
-          <div class="model-img image-gen">
+          <a href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&tab=GenImage" target="_blank" class="model-img image-gen" style="display: block;">
 
              <img src="@/assets/images/doubao-seedream.png" alt="Doubao-Seedream-5.0" class="model-inner-img">
 
-          </div>
+          </a>
 
           <h3>Doubao-Seedream-5.0</h3>
 
@@ -102,11 +102,11 @@
 
           <div class="model-tag">[多模态]</div>
 
-          <div class="model-img multimodal">
+          <a href="https://exp.volcengine.com/ark?_vtm_=0.0.c70961.d701978.0" target="_blank" class="model-img multimodal" style="display: block;">
 
              <img src="@/assets/images/doubao-seed-pro.png" alt="Doubao-Seed-2.0-pro" class="model-inner-img">
 
-          </div>
+          </a>
 
           <h3>Doubao-Seed-2.0-pro</h3>
 
@@ -980,7 +980,7 @@ input[type="range"] {
 
 .smart-infra-v2 {
 
-  margin: 120px 0;
+  margin: 80px 0;
 
 }
 
@@ -1168,11 +1168,11 @@ input[type="range"] {
 
   border-radius: 24px;
 
-  padding: 80px 60px;
+  padding: 60px 40px;
 
   color: #0f172a;
 
-  margin: 120px 0;
+  margin: 80px 0;
 
   position: relative;
 
@@ -1514,538 +1514,298 @@ input[type="range"] {
 
 
 
-@media (max-width: 768px) {
-
-  .main-title { font-size: 2.5rem; }
-
-  .resource-cards-grid { grid-template-columns: 1fr; }
-
-}
-
-
-
 .new-hero-section {
-
   padding: 180px 0 120px; /* Matched AppCenterView height */
-
   background: #ffffff;
-
   position: relative;
-
   text-align: center;
-
   overflow: hidden;
-
   min-height: 400px;
-
   display: flex;
-
   align-items: center;
-
   justify-content: center;
-
   /* Adjust radial gradient for a more subtle transition */
-
   mask-image: radial-gradient(ellipse 100% 120% at 50% 0%, black 60%, transparent 98%);
-
   -webkit-mask-image: radial-gradient(ellipse 100% 120% at 50% 0%, black 60%, transparent 98%);
-
 }
-
-
 
 .new-hero-section::after {
-
   content: '';
-
   position: absolute;
-
   left: 0;
-
   right: 0;
-
   bottom: 0;
-
   height: 100px;
-
   background: linear-gradient(to bottom, transparent, rgba(255, 255, 255, 0.8));
-
   z-index: 2;
-
   pointer-events: none;
-
 }
-
-
 
 .hero-video {
-
   position: absolute;
-
   top: 0;
-
   left: 0;
-
   width: 100%;
-
   height: 100%;
-
   object-fit: cover;
-
   z-index: 1;
-
 }
-
-
 
 .hero-content {
-
   position: relative;
-
   z-index: 10;
-
   display: flex;
-
   flex-direction: column;
-
   align-items: center;
-
 }
-
-
 
 .hero-title {
-
   font-size: 3.5rem;
-
   font-weight: 850;
-
   color: #ffffff;
-
   margin-bottom: 20px;
-
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-
   line-height: 1.1;
-
 }
-
-
 
 .hero-subtitle {
-
   font-size: 1.25rem;
-
   color: rgba(255, 255, 255, 0.95);
-
   margin-bottom: 30px;
-
   font-weight: 600;
-
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-
 }
-
-
 
 .hero-links {
-
   display: flex;
-
   gap: 12px;
-
   padding: 6px;
-
   background: rgba(255, 255, 255, 0.6);
-
   backdrop-filter: blur(20px);
-
   -webkit-backdrop-filter: blur(20px);
-
   border-radius: 40px;
-
   border: 1px solid rgba(255, 255, 255, 0.8);
-
   box-shadow: 0 10px 40px rgba(59, 130, 246, 0.1);
-
 }
-
-
 
 .hero-links a {
-
   padding: 12px 32px;
-
   color: #334155;
-
   text-decoration: none;
-
   font-weight: 700;
-
   transition: all 0.3s;
-
   border-radius: 30px;
-
   font-size: 0.95rem;
-
 }
-
-
 
 .hero-links a:hover {
-
   background: #FFFFFF;
-
   color: #2563eb;
-
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
-
 }
-
-
 
 .divider {
-
   display: none; /* Hide divider in the new button design */
-
 }
-
-
 
 /* Recommended Models Grid - Premium Cards */
-
 .models-grid {
-
   display: grid;
-
   grid-template-columns: repeat(3, 1fr);
-
   gap: 32px; /* Increased gap */
-
 }
-
-
 
 .model-card {
-
   background: white;
-
   border-radius: 16px; /* Softer corners */
-
   padding: 24px;
-
   border: 1px solid #e2e8f0;
-
   transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
-
   position: relative;
-
   overflow: hidden;
-
 }
-
-
 
 .model-card:hover {
-
   transform: translateY(-8px);
-
   box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-
   border-color: #3b82f6; /* Blue highlight */
-
 }
-
-
 
 .model-tag {
-
   font-size: 0.8rem;
-
   font-weight: 700;
-
   color: #64748b;
-
   margin-bottom: 16px;
-
   display: inline-block;
-
   background: #f1f5f9;
-
   padding: 4px 10px;
-
   border-radius: 4px;
-
 }
-
-
 
 .model-img {
-
   width: 100%;
-
   aspect-ratio: 16/9;
-
   border-radius: 12px;
-
   overflow: hidden;
-
   margin-bottom: 20px;
-
   position: relative;
-
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
-
 }
-
-
 
 .model-card:hover .model-inner-img {
-
   transform: scale(1.05); /* Zoom effect */
-
 }
-
-
 
 .model-inner-img {
-
   width: 100%;
-
   height: 100%;
-
   object-fit: cover;
-
   transition: transform 0.5s ease;
-
 }
-
-
-
-/* CSS for text placeholders removed as they are no longer used */
-
-
 
 /* Image Gen Gradient - Removed since we use real image now */
-
 .image-gen .img-placeholder {
-
   display: none;
-
 }
-
-
 
 /* Thinking Gradient - Removed since we use real image now */
-
 .multimodal .img-placeholder {
-
   display: none;
-
 }
-
-
 
 .model-card h3 {
-
   font-size: 1.25rem;
-
   font-weight: 700;
-
   color: #1e293b;
-
   margin-bottom: 8px;
-
 }
-
-
 
 .model-card p {
-
   font-size: 0.95rem;
-
   color: #64748b;
-
   line-height: 1.6;
-
   margin-bottom: 20px;
-
   min-height: 48px; 
-
 }
-
-
 
 .details-link {
-
   color: #2563eb;
-
   font-size: 0.95rem;
-
   text-decoration: none;
-
   font-weight: 600;
-
   display: inline-flex;
-
   align-items: center;
-
   gap: 4px;
-
 }
-
-
 
 .details-link::after {
-
   content: ' \2192';
-
   transition: transform 0.2s;
-
 }
-
-
 
 .details-link:hover { text-decoration: underline; }
-
 .details-link:hover::after { transform: translateX(4px); }
 
-
-
-
-
 /* Smart Infra Grid - Clean & Technical */
-
 .infra-grid {
-
   display: grid;
-
   grid-template-columns: repeat(4, 1fr);
-
   gap: 24px;
-
 }
-
-
 
 .infra-item {
-
   padding: 24px;
-
   border-radius: 12px;
-
   background: #fff;
-
   border: 1px solid transparent;
-
   transition: all 0.3s ease;
-
 }
-
-
 
 .infra-item:hover {
-
   background: #f8fafc;
-
   border-color: #e2e8f0;
-
   transform: translateY(-2px);
-
 }
-
-
 
 .infra-item h3 {
-
   font-size: 1.1rem;
-
   font-weight: 700;
-
   color: #1e293b;
-
   margin-bottom: 12px;
-
   display: flex;
-
   align-items: center;
-
   gap: 10px;
-
 }
-
-
 
 .bullet {
-
   color: #3b82f6; /* Brighter blue */
-
   font-size: 1.2rem;
-
   line-height: 0;
-
   position: relative;
-
   top: 1px;
-
 }
-
-
 
 .infra-item p {
-
   font-size: 0.9rem;
-
   color: #64748b;
-
   line-height: 1.6;
-
 }
 
-
-
 .infra-item a {
-
   color: #3b82f6;
-
   text-decoration: none;
-
   margin-left: 6px;
-
   font-weight: 500;
-
   font-size: 0.85rem;
-
   opacity: 0.8;
-
   transition: opacity 0.2s;
-
 }
 
 .infra-item a:hover { opacity: 1; text-decoration: underline; }
 
-
-
 @media (max-width: 1024px) {
-
   .models-grid { grid-template-columns: repeat(2, 1fr); }
-
   .infra-grid { grid-template-columns: repeat(2, 1fr); }
-
+  .infra-grid-v2 { grid-template-columns: repeat(2, 1fr); }
+  .security-section-v2 { padding: 40px 30px; }
 }
 
-
-
 @media (max-width: 768px) {
+  .models-grid { grid-template-columns: 1fr; gap: 16px; }
+  .infra-grid { grid-template-columns: 1fr; gap: 16px; }
+  .infra-grid-v2 { grid-template-columns: 1fr; gap: 16px; }
+  
+  .infra-card-v2 { 
+    padding: 24px; 
+    display: flex;
+    flex-direction: column;
+  }
+  
+  .card-icon-floating {
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+    margin-bottom: 16px;
+  }
 
-  .models-grid { grid-template-columns: 1fr; }
+  .infra-card-v2 h3 {
+    font-size: 1.15rem;
+    margin-bottom: 8px;
+  }
+  
+  .infra-card-v2 p {
+    font-size: 0.9rem;
+    margin-bottom: 0;
+  }
 
-  .infra-grid { grid-template-columns: 1fr; }
-
+  .security-grid-v2 { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
+  .security-section-v2 { padding: 40px 20px; border-radius: 16px; margin: 40px 0; }
+  .sec-card-v2 { padding: 20px; gap: 16px; flex-direction: column; align-items: flex-start; }
+  .sec-icon-circle { width: 48px; height: 48px; font-size: 1.1rem; margin-bottom: 0px; }
+  .smart-infra-v2 { margin: 60px 0; }
   .hero-links { flex-wrap: wrap; justify-content: center; }
-
   .hero-title { font-size: 2rem; }
-
+  .section-title-v2 { font-size: 1.6rem; }
 }
 
 </style>

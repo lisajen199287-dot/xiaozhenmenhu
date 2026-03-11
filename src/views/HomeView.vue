@@ -11,118 +11,87 @@ import * as newApi from "@/api/newApi/index";
 const router = useRouter();
 const { articles, cases } = useAdminStore();
 
+// Responsive Window Width for Image Selection
+const windowWidth = ref(
+  typeof window !== "undefined" ? window.innerWidth : 1200
+);
+const handleResize = () => {
+  windowWidth.value = window.innerWidth;
+};
+
 // Solution Categories (Updated with Visuals)
 
 const solutions = [
   {
     id: "ecommerce",
-
     label: "电商与跨",
-
     pain: "商品内容生产与投放成本高，转化效率难提升",
-
     desc: "AI生成商品内容与带货素材，结合投放与客户数据实现增长闭环",
-
-    image: "/static/images/solutions/ecommerce.png",
-
+    image: "/static/images/solutions/webp/ecommerce.webp",
+    mobileImage: "/static/images/solutions/webp/ecommerce_mobile.webp",
     theme: "light",
   },
-
   {
     id: "internet",
-
     label: "互联网与游戏",
-
     pain: "获客成本高，素材生产与投放优化依赖人工",
-
     desc: "AI批量生成创意素材，结合投放与数据分析实现精准增长",
-
-    image: "/static/images/solutions/internet.jpg",
-
+    image: "/static/images/solutions/webp/internet.webp",
+    mobileImage: "/static/images/solutions/webp/internet_mobile.webp",
     theme: "dark",
   },
-
   {
     id: "auto",
-
     label: "汽车行业",
-
     pain: "车型内容生产与销售转化依赖人工培训与线索跟进",
-
     desc: "AI生成车型内容与销售辅助工具，提升获客与成交效率",
-
-    image: "/static/images/solutions/auto.png",
-
+    image: "/static/images/solutions/webp/auto.webp",
+    mobileImage: "/static/images/solutions/webp/auto_mobile.webp",
     theme: "dark",
   },
-
   {
     id: "consumer",
-
     label: "消费品行业",
-
     pain: "品牌内容生产与渠道投放效率低，营销转化难规模化",
-
     desc: "AI生成品牌与商品内容，结合渠道投放与数字人实现持续营销",
-
-    image: "/static/images/solutions/consumer.png",
-
+    image: "/static/images/solutions/webp/consumer.webp",
+    mobileImage: "/static/images/solutions/webp/consumer_mobile.webp",
     theme: "light",
   },
-
   {
     id: "manufacturing",
-
     label: "制造业",
-
     pain: "运营管理与决策依赖人工经验，数据利用效率低",
-
     desc: "AI辅助运营分析与流程管理，提升生产与经营决策效率",
-
-    image: "/static/images/solutions/manufacturing.jpg",
-
+    image: "/static/images/solutions/webp/manufacturing.webp",
+    mobileImage: "/static/images/solutions/webp/manufacturing_mobile.webp",
     theme: "light",
   },
-
   {
     id: "park",
-
     label: "园区与产业服务",
-
     pain: "产业分析、招商与园区服务依赖人工处理，效率与专业度不足",
-
     desc: "AI辅助产业研判与招商管理，构建智慧园区服务体系",
-
-    image: "/static/images/solutions/park.png",
-
+    image: "/static/images/solutions/webp/park.webp",
+    mobileImage: "/static/images/solutions/webp/park_mobile.webp",
     theme: "dark",
   },
-
   {
     id: "medical",
-
     label: "医疗健康",
-
     pain: "医疗知识与服务流程复杂，咨询与管理压力大",
-
     desc: "AI医疗助手与流程自动化，提升服务与管理效率",
-
-    image: "/static/images/solutions/medical.png",
-
+    image: "/static/images/solutions/webp/medical.webp",
+    mobileImage: "/static/images/solutions/webp/medical_mobile.webp",
     theme: "light",
   },
-
   {
     id: "gov-media",
-
     label: "政务与融媒体",
-
     pain: "政策与宣传内容生产效率低，视频化传播能力不足",
-
     desc: "AI将稿件自动生成视频与数字人内容，提升政务传播效率",
-
-    image: "/static/images/solutions/gov-media.png",
-
+    image: "/static/images/solutions/webp/gov-media.webp",
+    mobileImage: "/static/images/solutions/webp/gov-media_mobile.webp",
     theme: "dark",
   },
 ];
@@ -224,36 +193,34 @@ const startAutoScroll = () => {
 const stopAutoScroll = () => {
   if (autoScrollTimer) {
     clearInterval(autoScrollTimer);
-
     autoScrollTimer = null;
   }
 };
 
 onMounted(() => {
+  window.addEventListener("resize", handleResize);
   // Init scroll to Set 2 (2400px) quietly
-
   setTimeout(() => {
     if (solScrollContainer.value) {
       solScrollContainer.value.scrollTo({ left: SET_WIDTH, behavior: "auto" });
-
       startAutoScroll();
     }
   }, 50);
+  handleResize(); // Initial call to set windowWidth
 });
 
 onUnmounted(() => {
   stopAutoScroll();
-
   if (scrollTimeout) clearTimeout(scrollTimeout);
+  window.removeEventListener("resize", handleResize);
 });
 
 // Latest News from Store
 
 // Case Studies
-
 const activeCaseTab = ref("游戏互娱");
-
 const caseStudies = cases;
+let caseTimer: any = null;
 
 const currentCase = computed<CaseStudy>(() => {
   return (
@@ -262,158 +229,99 @@ const currentCase = computed<CaseStudy>(() => {
   );
 });
 
+// Responsive Case Background
+const caseBackgroundStyle = computed(() => {
+  if (!currentCase.value) return {};
+  const isMobile = windowWidth.value < 768;
+  const imgUrl =
+    isMobile && currentCase.value.mobileBackgroundImage
+      ? currentCase.value.mobileBackgroundImage
+      : currentCase.value.backgroundImage;
+  return { backgroundImage: `url(${imgUrl})` };
+});
+
+const nextCase = () => {
+  const industries = cases.value.map((c) => c.industry);
+
+  const currentIndex = industries.indexOf(activeCaseTab.value);
+
+  const nextIndex = (currentIndex + 1) % industries.length;
+
+  activeCaseTab.value = industries[nextIndex] as string;
+};
+
+const prevCase = () => {
+  const industries = cases.value.map((c) => c.industry);
+
+  const currentIndex = industries.indexOf(activeCaseTab.value);
+
+  const prevIndex = (currentIndex - 1 + industries.length) % industries.length;
+
+  activeCaseTab.value = industries[prevIndex] as string;
+};
+
+const startCaseTimer = () => {
+  stopCaseTimer();
+
+  caseTimer = setInterval(nextCase, 4000);
+};
+
+const stopCaseTimer = () => {
+  if (caseTimer) {
+    clearInterval(caseTimer);
+
+    caseTimer = null;
+  }
+};
+
+const handleCaseTabClick = (industry: string) => {
+  activeCaseTab.value = industry;
+
+  startCaseTimer(); // Reset timer on manual click
+};
+
 // Carousel State
 
 const currentSlide = ref(0);
 
-const defaultSlides = [
-  {
-    id: 0,
-
-    title: "Seedance 2.0 视频大模型上线",
-
-    subtitle:
-      "联合火山引擎 & 豆包重磅发布。\n即刻预约体验中心，限时领500 万免Tokens 算力豪礼",
-
-    bgImage:
-      "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?q=80&w=2500&auto=format&fit=crop",
-
-    actions: [{ text: "立即预约领取", primary: true, link: "/#appointment" }],
-
-    navTitle: "视频大模型首发",
-
-    navDesc: "500 Token 好礼",
-  },
-
-  {
-    id: 1,
-
-    title: "行业应用“开箱即用”",
-
-    subtitle:
-      "无需从零构建。预16 类核心商业场Agent，\n涵盖电商、营销、办公等高频领域",
-
-    bgImage:
-      "https://images.unsplash.com/photo-1677442136019-21780ecad995?q=80&w=2500&auto=format&fit=crop",
-
-    actions: [
-      { text: "浏览应用市场", primary: true, link: "/app-center" },
-
-      { text: "查看演示", primary: false, link: "/#scenarios" },
-    ],
-
-    navTitle: "零代码应用构建",
-
-    navDesc: "预置模版，开箱即",
-  },
-
-  {
-    id: 2,
-
-    title: "企业专属大模型定制",
-
-    subtitle:
-      "基于公有云强大算力，提供私有化部署方案。\n让数据不出域，模型更懂你的业务",
-
-    bgImage:
-      "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?q=80&w=2500&auto=format&fit=crop",
-
-    actions: [{ text: "咨询定制方案", primary: true, link: "/infra" }],
-
-    navTitle: "大模型 API 聚合",
-
-    navDesc: "统一接口，毫秒响",
-  },
-
-  {
-    id: 3,
-
-    title: "全栈AI 解决方案",
-
-    subtitle:
-      "算力 + 算法 + 应用。从底层基础设施到顶层业务应用，\n提供一站式数字化转型配套服务",
-
-    bgImage:
-      "https://images.unsplash.com/photo-1451187580459-43490279c0fa?q=80&w=2500&auto=format&fit=crop",
-
-    actions: [{ text: "查看行业方案", primary: true, link: "/#solutions" }],
-
-    navTitle: "全栈行业方案",
-
-    navDesc: "算力+算法+应用",
-  },
-
-  {
-    id: 4,
-
-    title: "共建 AI 开发者生态",
-
-    subtitle:
-      "加入我们的开发者社区，获取最新技术文档、\nSDK 工具包及创业扶持资源",
-
-    bgImage:
-      "https://images.unsplash.com/photo-1522071820081-009f0129c71c?q=80&w=2500&auto=format&fit=crop",
-
-    actions: [{ text: "加入开发者社区", primary: true, link: "/developer" }],
-
-    navTitle: "开发者生态",
-
-    navDesc: "赋能成长，共建繁荣",
-  },
-];
+const slides = ref<any[]>([]);
+const activeSlide = computed(
+  () =>
+    slides.value[currentSlide.value] || {
+      title: "",
+      subtitle: "",
+      bgImage: "",
+      actions: [],
+    }
+);
 
 // Helper to resolve image URL
-
 const resolveImageUrl = (url: string) => {
   if (!url) return "";
-
   if (url.startsWith("http") || url.startsWith("/") || url.startsWith("data:"))
     return url;
-
   return `/uploads/${url}`;
 };
 
-const slides = ref<any[]>([...defaultSlides]);
-
-const activeSlide = computed(
-  () => slides.value[currentSlide.value] || defaultSlides[0]
-);
-
 const fetchSlides = async () => {
   try {
-    // const res = await fetch("/api/slides/active");
+    // 只获取轮播管理区的内容
     const res = await newApi.apiSlides();
-    // if (res.ok) {
-      const data = await res;
-
-      if (data && data.length > 0) {
-        slides.value = data.map((s: any) => ({
-          id: s.id,
-
-          title: s.title,
-
-          subtitle: s.subtitle,
-
-          bgClass: s.bgClass,
-
-          bgImage: resolveImageUrl(s.image),
-
-          navTitle: s.navTitle,
-
-          navDesc: s.navDesc,
-
-          actions: s.actionsJson ? JSON.parse(s.actionsJson) : [],
-        }));
-      } else {
-        slides.value = [...defaultSlides];
-      }
-    // } else {
-    //   slides.value = [...defaultSlides];
-    // }
+    const slideData = await res;
+    slides.value = slideData.map((s: any) => ({
+      id: s.id,
+      title: s.title,
+      subtitle: s.subtitle,
+      bgClass: s.bgClass,
+      bgImage: resolveImageUrl(s.image),
+      navTitle: s.navTitle,
+      navDesc: s.navDesc,
+      actions:
+        typeof s.actionsJson === "string" ? JSON.parse(s.actionsJson) : [],
+    }));
   } catch (e) {
     console.error("Error fetching slides", e);
-
-    slides.value = [...defaultSlides];
+    slides.value = [];
   }
 };
 
@@ -445,7 +353,7 @@ onMounted(async () => {
 
   try {
     const res = await newApi.apiArticles();
-    const data = res;
+    const data = await res;
     articles.value = data;
   } catch (e) {
     console.error("Failed to sync articles:", e);
@@ -515,9 +423,8 @@ onMounted(async () => {
   }
   */
 
-  // 2. Start Carousel Auto-play
-
-  timer = setInterval(nextSlide, 5000);
+  // 2. Start Carousel Auto-play (6s)
+  timer = setInterval(nextSlide, 6000);
 
   // 3. Intersection Observer for scroll triggers
 
@@ -535,6 +442,10 @@ onMounted(async () => {
   const target = document.querySelector(".case-display-area");
 
   if (target) observer.observe(target);
+
+  // 4. Start Customer Success Case Auto-play (4s)
+
+  startCaseTimer();
 });
 
 const navToExternal = (url: string) => {
@@ -564,7 +475,9 @@ const handleHeroAction = (link: string) => {
 };
 
 onUnmounted(() => {
+  window.removeEventListener("resize", handleResize);
   if (timer) clearInterval(timer);
+  stopCaseTimer();
 });
 </script>
 
@@ -709,7 +622,14 @@ onUnmounted(() => {
           </div>
 
           <!-- Card 2: AI Coach (Conversation Flow) -->
-          <div class="scenario-card-v5" @click="router.push('/agent')">
+          <div
+            class="scenario-card-v5"
+            @click="
+              navToExternal(
+                'https://qyyxyypl.aics.cii-group.com/admin/login/fsLogin'
+              )
+            "
+          >
             <div class="card-meta">
               <span class="model-tag">Sales-Coach-Pro</span>
               <i class="fas fa-comments"></i>
@@ -820,7 +740,14 @@ onUnmounted(() => {
           </div>
 
           <!-- Card 5: Industry Analysis (Business Strategy) -->
-          <div class="scenario-card-v5" @click="router.push('/infra')">
+          <div
+            class="scenario-card-v5"
+            @click="
+              navToExternal(
+                'https://industry-manage.aics.cii-group.com/account-management?loginType=sso'
+              )
+            "
+          >
             <div class="card-meta">
               <span class="model-tag">Industry-PPT-Gen</span>
               <i class="fas fa-file-powerpoint"></i>
@@ -943,7 +870,16 @@ onUnmounted(() => {
           <div class="product-card">
             <div class="pc-icon purple"><i class="fas fa-brain"></i></div>
 
-            <h4 class="pc-title">Doubao-Seed-2.0-pro</h4>
+            <h4
+              class="pc-title"
+              @click="
+                navToExternal(
+                  'https://exp.volcengine.com/ark?_vtm_=0.0.c70961.d701978.0'
+                )
+              "
+            >
+              Doubao-Seed-2.0-pro
+            </h4>
 
             <p class="pc-desc">
               智核 Agent 通用模型，具备卓越的复杂任务拆解与长程指令遵循能力
@@ -966,7 +902,16 @@ onUnmounted(() => {
           <div class="product-card">
             <div class="pc-icon blue"><i class="fas fa-magic"></i></div>
 
-            <h4 class="pc-title">Doubao-Seedream-5.0</h4>
+            <h4
+              class="pc-title"
+              @click="
+                navToExternal(
+                  'https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&tab=GenImage'
+                )
+              "
+            >
+              Doubao-Seedream-5.0
+            </h4>
 
             <p class="pc-desc">
               豆包图像创作模型。支持联网检索与海量知识增强，实现超高精度的视觉呈现
@@ -989,7 +934,9 @@ onUnmounted(() => {
           <div class="product-card">
             <div class="pc-icon red"><i class="fas fa-bolt"></i></div>
 
-            <h4 class="pc-title">GPU 算力服务</h4>
+            <h4 class="pc-title" @click="$router.push('/infra')">
+              GPU 算力服务
+            </h4>
 
             <p class="pc-desc">
               搭载 H800/RTX4090 异构算力，高效支持AI 训练与大规模推理需求
@@ -1005,7 +952,9 @@ onUnmounted(() => {
           <div class="product-card">
             <div class="pc-icon green"><i class="fas fa-microchip"></i></div>
 
-            <h4 class="pc-title">CPU 算力集群</h4>
+            <h4 class="pc-title" @click="$router.push('/infra')">
+              CPU 算力集群
+            </h4>
 
             <p class="pc-desc">
               安全稳定、弹性伸缩的云计算资源，提供高性价比通用算力支持
@@ -1051,7 +1000,13 @@ onUnmounted(() => {
             :key="index"
             class="sol-v2-card"
             :class="`theme-${sol.theme}`"
-            :style="{ backgroundImage: `url(${sol.image})` }"
+            :style="{
+              backgroundImage: `url(${
+                windowWidth < 768 && sol.mobileImage
+                  ? sol.mobileImage
+                  : sol.image
+              })`,
+            }"
           >
             <div class="sol-v2-overlay"></div>
 
@@ -1099,17 +1054,14 @@ onUnmounted(() => {
               'v3-tab-btn',
               { active: activeCaseTab === study.industry },
             ]"
-            @click="activeCaseTab = study.industry"
+            @click="handleCaseTabClick(study.industry)"
           >
             {{ study.industry }}
           </button>
         </div>
       </div>
 
-      <div
-        class="case-display-area"
-        :style="{ backgroundImage: `url(${currentCase.backgroundImage})` }"
-      >
+      <div class="case-display-area" :style="caseBackgroundStyle">
         <div class="case-overlay"></div>
 
         <div class="case-v3-container">
@@ -1162,6 +1114,28 @@ onUnmounted(() => {
               </div>
             </div>
           </div>
+        </div>
+
+        <!-- Case Navigation Arrows (Mainly for Mobile) -->
+        <div class="case-v3-nav">
+          <button
+            class="nav-arrow prev"
+            @click="
+              prevCase();
+              startCaseTimer();
+            "
+          >
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button
+            class="nav-arrow next"
+            @click="
+              nextCase();
+              startCaseTimer();
+            "
+          >
+            <i class="fas fa-chevron-right"></i>
+          </button>
         </div>
       </div>
     </section>
@@ -2817,10 +2791,27 @@ onUnmounted(() => {
 @media (max-width: 768px) {
   /* Hero Bottom Bar / Tabs */
   .hero-bottom-bar {
-    position: relative;
-    background: rgba(255, 255, 255, 0.95);
-    border-top: none;
-    backdrop-filter: blur(10px);
+    display: none !important;
+  }
+
+  /* Hero Navigation Buttons Refinement */
+  .hero-nav-btn {
+    background: transparent !important;
+    border: none !important;
+    backdrop-filter: none !important;
+    width: 30px !important;
+    height: 60px !important;
+    color: rgba(255, 255, 255, 0.4) !important;
+    font-size: 1.5rem !important;
+  }
+
+  .hero-nav-btn:hover {
+    color: rgba(255, 255, 255, 0.8) !important;
+    box-shadow: none !important;
+  }
+
+  .hero-controls {
+    padding: 0 5px !important;
   }
   .hero-tabs {
     flex-wrap: nowrap;
@@ -2844,6 +2835,10 @@ onUnmounted(() => {
   }
   .tab-desc {
     display: none; /* Hide description on mobile for clean horizontal tabs */
+  }
+
+  .section-title-v5 {
+    font-size: 1.5rem;
   }
 
   /* 16+ AI Application Grid */
@@ -2879,28 +2874,17 @@ onUnmounted(() => {
     padding: 0 16px;
   }
 
-  /* Customer Success */
-  .case-v3-split {
-    grid-template-columns: 1fr;
-    gap: 40px;
+  /* Customer Success - Styles moved to home.css for consistency */
+
+  .success-header {
+    padding: 10px 0 10px;
   }
-  .case-v3-container {
-    padding: 40px 24px;
-    margin: 40px 16px;
-  }
-  .case-v3-stats {
-    flex-direction: column;
-    gap: 20px;
+  .v3-main-title {
+    font-size: 1.5rem;
+    margin-bottom: 20px;
   }
   .v3-case-tabs {
-    flex-wrap: wrap;
-    justify-content: center;
-  }
-  .v3-tab-btn {
-    flex: 1 1 calc(33.333% - 12px);
-    text-align: center;
-    padding: 8px 4px;
-    font-size: 0.85rem;
+    display: none;
   }
 
   /* Trust Section */

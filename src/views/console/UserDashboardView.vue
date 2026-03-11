@@ -46,28 +46,23 @@ const fetchData = async () => {
       newApi.apiOrders(uid),
     ]);
 
-    if (permRes.ok && appsRes.ok) {
-      const perms = await permRes.json();
+    const perms = permRes;
 
-      const apps = await appsRes.json();
+    const apps = appsRes;
 
-      userApps.value = perms.map((p: any) => ({
-        ...p,
-        ...(apps.find((a: any) => a.appKey === p.appKey) || {
-          name: p.appKey,
-          icon: "fas fa-app",
-        }),
-      }));
-    }
+    userApps.value = perms.map((p: any) => ({
+      ...p,
+      ...(apps.find((a: any) => a.appKey === p.appKey) || {
+        name: p.appKey,
+        icon: "fas fa-app",
+      }),
+    }));
+    const orders = orderRes;
 
-    if (orderRes.ok) {
-      const orders = await orderRes.json();
-
-      totalOrders.value = orders.reduce(
-        (sum: number, o: any) => sum + (o.status === "PAID" ? o.amount : 0),
-        0
-      );
-    }
+    totalOrders.value = orders.reduce(
+      (sum: number, o: any) => sum + (o.status === "PAID" ? o.amount : 0),
+      0
+    );
   } catch (e) {
     console.error(e);
   } finally {

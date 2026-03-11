@@ -20,7 +20,13 @@ export interface Article {
     content?: string;
 
     image?: string;
-
+    startTime?: string;
+    endTime?: string;
+    linkType?: 'INTERNAL_RICH_TEXT' | 'EXTERNAL_LANDING';
+    externalLink?: string;
+    pushToNav?: boolean;
+    pushToHero?: boolean;
+    heroBgImage?: string;
 }
 
 
@@ -65,6 +71,7 @@ export interface CaseStudy {
     painPoint?: string;
     desc: string;
     backgroundImage: string;
+    mobileBackgroundImage?: string; // Opt for mobile
     stats: { value: string; label: string; }[];
     tag: string;
     category: string;
@@ -484,7 +491,8 @@ export const useAdminStore = () => {
             bigTitle: 'AI 客服知识库 × 混合云 CDN',
             painPoint: '打造智能客服与全球内容分发体系，让游戏服务与运营效率全面升级',
             desc: '接入企业客服知识库与 AI 语义检索能力，实现玩家问题自动解答与工单智能分流；同时结合混合云 CDN 架构，优化全球游戏下载与更新分发效率。',
-            backgroundImage: '/static/images/cases/game.png',
+            backgroundImage: '/static/images/cases/webp/game.webp',
+            mobileBackgroundImage: '/static/images/cases/webp/game_mobile.webp',
             stats: [
                 { value: '提升 75%', label: '客服响应效率' },
                 { value: '降低 40%', label: '网络延迟' },
@@ -528,7 +536,8 @@ export const useAdminStore = () => {
             bigTitle: 'AI 销售陪练系统',
             painPoint: 'AI 赋能，打造“金牌销冠”数字化导师',
             desc: '基于企业产品资料与销售话术，沉淀顶尖销售话术模型，打造 AI 语音陪练与情景对话训练系统，通过模拟对练加速一线人员成长。',
-            backgroundImage: '/static/images/cases/food.png',
+            backgroundImage: '/static/images/cases/webp/food.webp',
+            mobileBackgroundImage: '/static/images/cases/webp/food_mobile.webp',
             stats: [
                 { value: '缩短 60%', label: '新人培训周期' },
                 { value: '提升 30%', label: '订单转化率' },
@@ -572,7 +581,8 @@ export const useAdminStore = () => {
             bigTitle: 'AI 电商视频生成',
             painPoint: '构建 AI 商品视频生产体系，让商品内容规模化出海',
             desc: '基于商品图片与卖点信息，自动生成多语言商品讲解视频、场景展示视频与社媒短视频，适配 Amazon、TikTok、独立站等跨境渠道。',
-            backgroundImage: '/static/images/cases/biz.png',
+            backgroundImage: '/static/images/cases/webp/biz.webp',
+            mobileBackgroundImage: '/static/images/cases/webp/biz_mobile.webp',
             stats: [
                 { value: '降低 90%', label: '视频制作成本' },
                 { value: '提升 10x', label: '内容产出效率' },
@@ -616,7 +626,8 @@ export const useAdminStore = () => {
             bigTitle: '客户扫码定制包装',
             painPoint: '打造用户共创包装与互动营销新体验',
             desc: '消费者扫码进入 AI 图案生成系统，自主生成个性化杯身图案或祝福语，门店即时生成电子包装，实现品牌互动传播与社交分享裂变。',
-            backgroundImage: '/static/images/cases/drink.png',
+            backgroundImage: '/static/images/cases/webp/drink.webp',
+            mobileBackgroundImage: '/static/images/cases/webp/drink_mobile.webp',
             stats: [
                 { value: '提升 50%', label: '门店二次复购' },
                 { value: '增长 120%', label: '社交媒体曝光' },
@@ -660,7 +671,8 @@ export const useAdminStore = () => {
             bigTitle: '电商内容流水线',
             painPoint: '构建 AI 电商内容生产中台，让素材生产规模化工业化',
             desc: '通过 AI 模特生成、商品图重构、场景图生成与短视频生成，实现详情页素材、广告素材一站式批量生产，支撑全球电商营销。',
-            backgroundImage: '/static/images/cases/sport.png',
+            backgroundImage: '/static/images/cases/webp/sport.webp',
+            mobileBackgroundImage: '/static/images/cases/webp/sport_mobile.webp',
             stats: [
                 { value: '缩短 80%', label: '新品上市周期' },
                 { value: '提升 65%', label: '素材利用率' },
@@ -704,7 +716,8 @@ export const useAdminStore = () => {
             bigTitle: 'AI 销售训练 × 数字人视频',
             painPoint: '打造 AI 汽车销售与视频内容体系，让营销与培训全面数字化',
             desc: '在虚拟环境中实现高难度场景创意复现，通过数字分身赋能终端销售，解决门店销售能力不均问题，实现总部内容统一输出。',
-            backgroundImage: '/static/images/cases/car.png',
+            backgroundImage: '/static/images/cases/webp/car.webp',
+            mobileBackgroundImage: '/static/images/cases/webp/car_mobile.webp',
             stats: [
                 { value: '降低 70%', label: '广告拍摄成本' },
                 { value: '提升 85%', label: '终端获客效率' },
@@ -748,7 +761,8 @@ export const useAdminStore = () => {
             bigTitle: '园区企业经营分析与政策匹配',
             painPoint: '构建 AI 园区运营大脑，让企业服务精准高效',
             desc: '整合园区 6000+ 企业经营数据与政策库，自动生成企业分析，实现政策扶持与企业需求的精准匹配，提升运营与招商能力。',
-            backgroundImage: '/static/images/cases/park.png',
+            backgroundImage: '/static/images/cases/webp/park.webp',
+            mobileBackgroundImage: '/static/images/cases/webp/park_mobile.webp',
             stats: [
                 { value: '100%', label: '企业画像覆盖' },
                 { value: '提升 95%', label: '政策推送精准度' },
@@ -792,7 +806,8 @@ export const useAdminStore = () => {
             bigTitle: '企业投研报告智能体',
             painPoint: '构建 AI 投研分析与报告生成体系，让投资决策更高效',
             desc: '基于公开信息、行业数据与财务数据，自动生成企业分析、行业对比报告与投资建议，辅助投资经理完成尽职调查工作。',
-            backgroundImage: '/static/images/cases/building.png',
+            backgroundImage: '/static/images/cases/webp/building.webp',
+            mobileBackgroundImage: '/static/images/cases/webp/building_mobile.webp',
             stats: [
                 { value: '提升 8 倍', label: '投研效率' },
                 { value: '缩短 90%', label: '报告撰写时间' },
@@ -836,7 +851,8 @@ export const useAdminStore = () => {
             bigTitle: '营销趋势洞察',
             painPoint: '打造 AI 营销洞察与趋势分析系统，让数据价值可直接决策',
             desc: '基于行业数据与营销数据，接入大模型技术，将海量非结构化数据转化为高价值商业决策参考，支撑品牌与营销决策。',
-            backgroundImage: '/static/images/cases/data.png',
+            backgroundImage: '/static/images/cases/webp/data.webp',
+            mobileBackgroundImage: '/static/images/cases/webp/data_mobile.webp',
             stats: [
                 { value: '提升 10 倍', label: '分析效率' },
                 { value: '缩短 70%', label: '数据处理时间' },
