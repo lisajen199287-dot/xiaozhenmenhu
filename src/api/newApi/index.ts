@@ -123,3 +123,9 @@ export const apiUserLogs = (uid: number) => {
     url: `/api/console/users/${uid}/logs`,
   })
 }
+
+export const apiPlatformIntroduction = () => {
+  return request.get({
+    url: `/api/platform-introduction/1`,
+  })
+}

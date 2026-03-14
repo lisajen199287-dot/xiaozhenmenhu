@@ -7,8 +7,8 @@ const config: {
   /**
    * api请求基础路径
    */
-  // base_url: 'http://192.168.12.177:48080/app-api',
-  base_url: '/app-api',
+  base_url: 'http://192.168.12.100:48080/app-api',
+  // base_url: '/app-api',
 
   /**
    * 接口成功返回状态码

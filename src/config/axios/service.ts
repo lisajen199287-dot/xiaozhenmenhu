@@ -152,8 +152,9 @@ service.interceptors.response.use(
         try {
           const refreshTokenRes = await refreshToken()
           // 2.1 刷新成功，则回放队列的请求 + 当前请求
-          setToken((await refreshTokenRes).data.data)
-          config.headers!.Authorization = 'Bearer ' + localStorage.getItem('token')
+          localStorage.setItem("token", (await refreshTokenRes).data.data.accessToken);
+          localStorage.setItem("refreshToken", (await refreshTokenRes).data.data.refreshToken);
+          config.headers!.Authorization = localStorage.getItem('token')
           requestList.forEach((cb: any) => {
             cb()
           })
@@ -178,7 +179,7 @@ service.interceptors.response.use(
         // 添加到队列，等待刷新获取到新的令牌
         return new Promise((resolve) => {
           requestList.push(() => {
-            config.headers!.Authorization = 'Bearer ' + localStorage.getItem('token')// 让每个请求携带自定义token 请根据实际情况自行修改
+            config.headers!.Authorization = localStorage.getItem('token')// 让每个请求携带自定义token 请根据实际情况自行修改
             resolve(service(config))
           })
         })

@@ -96,6 +96,19 @@ const solutions = [
   },
 ];
 
+const golink = () => {
+  if (!localStorage.getItem("token")) {
+    const url = "https://aivideo.aics.cii-group.com:48182";
+    window.open(url, "_blank");
+  } else {
+    const url =
+      "https://aivideo.aics.cii-group.com:48182/TransitPage" +
+      "?PermutationID=" +
+      localStorage.getItem("token");
+    window.open(url, "_blank");
+  }
+};
+
 // Trust cards
 
 const trustCards = [
@@ -573,10 +586,7 @@ onUnmounted(() => {
 
         <div class="scenarios-grid-v5">
           <!-- Card 1: Video Gen (Hero - Spans 2 Columns) -->
-          <div
-            class="scenario-card-v5 hero-card"
-            @click="router.push('/ecommerce-ai')"
-          >
+          <div class="scenario-card-v5 hero-card" @click="golink">
             <div class="card-content-split">
               <div class="card-info">
                 <div class="card-meta">

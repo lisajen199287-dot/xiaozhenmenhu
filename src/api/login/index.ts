@@ -40,7 +40,7 @@ export const wxCode = () => {
   })
 }
 
-// 获取wx二维码
+// 获取wx二维码状态
 export const wxCodeStatus = (data: any) => {
   return request.get({
     url: `/api/auth/qrcode/status?token=${data.token}`,
