@@ -32,12 +32,7 @@ const fetchArticle = async (id: string) => {
   } catch (error) {
     console.error("Failed to fetch article:", error);
     // 发生错误时再次尝试从本地查找
-    const found = articles.value.find((a: any) => a.id === Number(id));
-    if (found) {
-      processArticleData({ ...found });
-    } else {
-      article.value = null;
-    }
+    article.value = null;
   } finally {
     loading.value = false;
   }
@@ -154,7 +149,7 @@ const copyLink = () => {
 
     <div v-else class="error-state">
       <i class="fas fa-search" style="font-size: 3rem; margin-bottom: 20px"></i>
-      <p>抱歉，未找到该文章或已被删除</p>
+      <p>没有权限，请先登录再查看详情</p>
       <RouterLink to="/news" class="back-link">返回列表</RouterLink>
     </div>
   </main>

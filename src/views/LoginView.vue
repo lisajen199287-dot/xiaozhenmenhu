@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
 
-import { useRouter } from "vue-router";
+import { useRouter, useRoute } from "vue-router";
 
 const { push } = useRouter();
 import { ElInput, ElButton, ElMessage } from "element-plus";
@@ -11,10 +11,11 @@ import * as LoginApi from "@/api/login/index";
 import * as authUtil from "@/utils/auth";
 
 const router = useRouter();
+const route = useRoute();
 
 const { login } = useUser();
 
-const redirect = ref<string>("");
+const redirect = ref<string>(route.query.redirect as string || "");
 
 const qrCodeUrl = ref("");
 const wxToken = ref("");
@@ -107,32 +108,35 @@ const handleLogin = async () => {
     });
     console.log(res);
 
-    // try {
-    //   const res = await fetch("/api/identity/login", {
-    //     method: "POST",
+    try {
+      const res = await fetch("/api/identity/login", {
+        method: "POST",
 
-    //     headers: { "Content-Type": "application/json" },
+        headers: { "Content-Type": "application/json" },
 
-    //     body: JSON.stringify({
-    //       email: username.value,
-    //       password: password.value,
-    //     }),
-    //   });
+        body: JSON.stringify({
+          email: username.value,
+          password: password.value,
+        }),
+      });
 
-    //   if (res.ok) {
-    //     const data = await res.json();
-    //     console.log(data);
-    //     await login(data.user); // data contains {user, token, code}
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+        await login(data.user); // data contains {user, token, code}
 
-    //     // window.location.href = '/console.html'
-    //   } else {
-    //     const err = await res.json();
+        if (!redirect.value) {
+          redirect.value = "/"; // 默认为首页
+        }
+        await push({ path: redirect.value });
+      } else {
+        const err = await res.json();
 
-    //     loginError.value = err.msg || "登录失败，请检查账号密码";
-    //   }
-    // } catch (e) {
-    //   loginError.value = "服务器连接失败";
-    // }
+        loginError.value = err.msg || "登录失败，请检查账号密码";
+      }
+    } catch (e) {
+      loginError.value = "服务器连接失败";
+    }
   } else {
     // Phone/WeChat still mock for this demo but could be added similarly
 
@@ -143,7 +147,10 @@ const handleLogin = async () => {
       role: "user",
     });
 
-    window.location.href = "/console.html";
+    if (!redirect.value) {
+      redirect.value = "/"; // 默认为首页
+    }
+    await push({ path: redirect.value });
   }
 };
 

@@ -1,66 +1,214 @@
 <script setup lang="ts">
-import { ref, onMounted, onUnmounted, computed } from 'vue'
-import { RouterLink, useRouter } from 'vue-router'
-import { useUser } from '@/utils/userStore'
+import { ref, onMounted, onUnmounted, computed } from "vue";
+import { RouterLink, useRouter } from "vue-router";
+import { useUser } from "@/utils/userStore";
+import * as LoginApi from "@/api/login/index";
+import { resolveComponent } from "vue";
 
-const isMobileMenuOpen = ref(false)
-const isUserPopupOpen = ref(false)
+const isMobileMenuOpen = ref(false);
+const isUserPopupOpen = ref(false);
 
 const toggleMobileMenu = () => {
-    isMobileMenuOpen.value = !isMobileMenuOpen.value
-    if (isMobileMenuOpen.value) isUserPopupOpen.value = false
-}
+  isMobileMenuOpen.value = !isMobileMenuOpen.value;
+  if (isMobileMenuOpen.value) isUserPopupOpen.value = false;
+};
 
 const toggleUserPopup = () => {
-    isUserPopupOpen.value = !isUserPopupOpen.value
-    if (isUserPopupOpen.value) isMobileMenuOpen.value = false
-}
+  isUserPopupOpen.value = !isUserPopupOpen.value;
+  if (isUserPopupOpen.value) isMobileMenuOpen.value = false;
+};
 
-const router = useRouter()
-const { user, isLoggedIn, logout, refreshCredits } = useUser()
+const router = useRouter();
+const { user, isLoggedIn, logout, refreshCredits } = useUser();
 
 interface NavigationMenu {
-  id: number
-  parentId: number | null
-  title: string
-  titleEn: string
-  url: string
-  icon: string
-  type: 'internal' | 'external'
-  position: 'header' | 'footer'
-  sortOrder: number
-  isVisible: boolean
-  target: '_self' | '_blank'
-  children?: NavigationMenu[]
+  id: number;
+  parentId: number | null;
+  title: string;
+  titleEn: string;
+  url: string;
+  icon: string;
+  type: "internal" | "external";
+  position: "header" | "footer";
+  sortOrder: number;
+  isVisible: boolean;
+  target: "_self" | "_blank";
+  children?: NavigationMenu[];
 }
 
 const defaultNav: NavigationMenu[] = [
   {
-      id: 3, parentId: null, title: 'AI应用', titleEn: 'Apps', url: '/app-center', icon: '', type: 'internal', position: 'header', sortOrder: 2, isVisible: true, target: '_self'
+    id: 3,
+    parentId: null,
+    title: "AI应用",
+    titleEn: "Apps",
+    url: "/app-center",
+    icon: "",
+    type: "internal",
+    position: "header",
+    sortOrder: 2,
+    isVisible: true,
+    target: "_self",
   },
   {
-      id: 4, parentId: null, title: '行业解决方案', titleEn: 'Solutions', url: '/solutions', icon: '', type: 'internal', position: 'header', sortOrder: 3, isVisible: true, target: '_self',
-      children: [
-          { id: 41, parentId: 4, title: '电商与跨境出海', titleEn: 'Ecommerce', url: '/solutions/ecommerce', icon: '', type: 'internal', position: 'header', sortOrder: 1, isVisible: true, target: '_self' },
-          { id: 42, parentId: 4, title: '互联网与游戏', titleEn: 'Internet & Game', url: '/solutions/internet', icon: '', type: 'internal', position: 'header', sortOrder: 2, isVisible: true, target: '_self' },
-          { id: 43, parentId: 4, title: '汽车产业', titleEn: 'Automotive', url: '/solutions/auto', icon: '', type: 'internal', position: 'header', sortOrder: 3, isVisible: true, target: '_self' },
-          { id: 44, parentId: 4, title: '消费品行业', titleEn: 'Consumer Goods', url: '/solutions/consumer', icon: '', type: 'internal', position: 'header', sortOrder: 4, isVisible: true, target: '_self' },
-          { id: 45, parentId: 4, title: '智能制造', titleEn: 'Manufacturing', url: '/solutions/manufacturing', icon: '', type: 'internal', position: 'header', sortOrder: 5, isVisible: true, target: '_self' },
-          { id: 46, parentId: 4, title: '园区与产业服务', titleEn: 'Smart Park', url: '/solutions/park', icon: '', type: 'internal', position: 'header', sortOrder: 6, isVisible: true, target: '_self' },
-          { id: 47, parentId: 4, title: '医疗健康', titleEn: 'Medical & Healthcare', url: '/solutions/medical', icon: '', type: 'internal', position: 'header', sortOrder: 7, isVisible: true, target: '_self' },
-          { id: 48, parentId: 4, title: '政务与融媒体', titleEn: 'Gov & Media', url: '/solutions/gov-media', icon: '', type: 'internal', position: 'header', sortOrder: 8, isVisible: true, target: '_self' }
-      ]
+    id: 4,
+    parentId: null,
+    title: "行业解决方案",
+    titleEn: "Solutions",
+    url: "/solutions",
+    icon: "",
+    type: "internal",
+    position: "header",
+    sortOrder: 3,
+    isVisible: true,
+    target: "_self",
+    children: [
+      {
+        id: 41,
+        parentId: 4,
+        title: "电商与跨境出海",
+        titleEn: "Ecommerce",
+        url: "/solutions/ecommerce",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 1,
+        isVisible: true,
+        target: "_self",
+      },
+      {
+        id: 42,
+        parentId: 4,
+        title: "互联网与游戏",
+        titleEn: "Internet & Game",
+        url: "/solutions/internet",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 2,
+        isVisible: true,
+        target: "_self",
+      },
+      {
+        id: 43,
+        parentId: 4,
+        title: "汽车产业",
+        titleEn: "Automotive",
+        url: "/solutions/auto",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 3,
+        isVisible: true,
+        target: "_self",
+      },
+      {
+        id: 44,
+        parentId: 4,
+        title: "消费品行业",
+        titleEn: "Consumer Goods",
+        url: "/solutions/consumer",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 4,
+        isVisible: true,
+        target: "_self",
+      },
+      {
+        id: 45,
+        parentId: 4,
+        title: "智能制造",
+        titleEn: "Manufacturing",
+        url: "/solutions/manufacturing",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 5,
+        isVisible: true,
+        target: "_self",
+      },
+      {
+        id: 46,
+        parentId: 4,
+        title: "园区与产业服务",
+        titleEn: "Smart Park",
+        url: "/solutions/park",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 6,
+        isVisible: true,
+        target: "_self",
+      },
+      {
+        id: 47,
+        parentId: 4,
+        title: "医疗健康",
+        titleEn: "Medical & Healthcare",
+        url: "/solutions/medical",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 7,
+        isVisible: true,
+        target: "_self",
+      },
+      {
+        id: 48,
+        parentId: 4,
+        title: "政务与融媒体",
+        titleEn: "Gov & Media",
+        url: "/solutions/gov-media",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 8,
+        isVisible: true,
+        target: "_self",
+      },
+    ],
   },
   {
-      id: 5, parentId: null, title: '模型与算力', titleEn: 'Infrastructure', url: '/infra', icon: '', type: 'internal', position: 'header', sortOrder: 5, isVisible: true, target: '_self'
+    id: 5,
+    parentId: null,
+    title: "模型与算力",
+    titleEn: "Infrastructure",
+    url: "/infra",
+    icon: "",
+    type: "internal",
+    position: "header",
+    sortOrder: 5,
+    isVisible: true,
+    target: "_self",
   },
   {
-      id: 6, parentId: null, title: '案例', titleEn: 'Case Studies', url: '/cases', icon: '', type: 'internal', position: 'header', sortOrder: 6, isVisible: true, target: '_self'
+    id: 6,
+    parentId: null,
+    title: "案例",
+    titleEn: "Case Studies",
+    url: "/cases",
+    icon: "",
+    type: "internal",
+    position: "header",
+    sortOrder: 6,
+    isVisible: true,
+    target: "_self",
   },
   {
-      id: 2, parentId: null, title: '资讯与活动', titleEn: 'News', url: '/news', icon: '', type: 'internal', position: 'header', sortOrder: 7, isVisible: true, target: '_self'
-  }
-]
+    id: 2,
+    parentId: null,
+    title: "资讯与活动",
+    titleEn: "News",
+    url: "/news",
+    icon: "",
+    type: "internal",
+    position: "header",
+    sortOrder: 7,
+    isVisible: true,
+    target: "_self",
+  },
+];
 
 interface NavActivity {
   id: number;
@@ -70,70 +218,88 @@ interface NavActivity {
   externalLink: string;
 }
 
-const navActivities = ref<NavActivity[]>([])
+const navActivities = ref<NavActivity[]>([]);
 
 const fetchNavActivities = async () => {
-    try {
-        const res = await fetch('/api/articles/nav')
-        if (res.ok) {
-            navActivities.value = await res.json()
-        }
-    } catch(e) { console.error('Failed to load nav activities', e) }
-}
+  try {
+    const res = await LoginApi.nav();
+    navActivities.value = res || [];
+  } catch (e) {
+    console.error("Failed to load nav activities", e);
+  }
+};
 
-const headerMenus = ref<NavigationMenu[]>(defaultNav)
+const headerMenus = ref<NavigationMenu[]>(defaultNav);
 
-const goToLogin = () => router.push('/login')
-const goToConsole = () => window.location.href = '/console.html' 
+const goToLogin = () => router.push("/login");
+const goToConsole = () => (window.location.href = "/console.html");
 
 const activityCategories = computed(() => {
-    const map = new Map<string, NavActivity[]>()
-    navActivities.value.forEach(a => {
-        if (!map.has(a.category)) map.set(a.category, [])
-        map.get(a.category)!.push(a)
-    })
-    return Array.from(map.entries()).map(([k, v]) => ({ name: k, list: v }))
-})
+  const map = new Map<string, NavActivity[]>();
+  navActivities.value.forEach((a) => {
+    if (!map.has(a.category)) map.set(a.category, []);
+    map.get(a.category)!.push(a);
+  });
+  return Array.from(map.entries()).map(([k, v]) => ({ name: k, list: v }));
+});
 
-const windowWidth = ref(window.innerWidth)
+const windowWidth = ref(window.innerWidth);
 const handleResize = () => {
-    windowWidth.value = window.innerWidth
-    if (windowWidth.value > 1024) {
-        isMobileMenuOpen.value = false
-        isUserPopupOpen.value = false
-    }
-}
+  windowWidth.value = window.innerWidth;
+  if (windowWidth.value > 1024) {
+    isMobileMenuOpen.value = false;
+    isUserPopupOpen.value = false;
+  }
+};
 
 onMounted(() => {
-    fetchNavActivities()
-    if (isLoggedIn.value) {
-        refreshCredits()
-    }
-    window.addEventListener('resize', handleResize)
-})
+  fetchNavActivities();
+  if (isLoggedIn.value) {
+    refreshCredits();
+  }
+  window.addEventListener("resize", handleResize);
+});
 
 onUnmounted(() => {
-    window.removeEventListener('resize', handleResize)
-})
+  window.removeEventListener("resize", handleResize);
+});
 </script>
 
 <template>
   <nav class="nav-bar">
-    <div class="wrapper nav-wrapper" :class="{ 'mobile-open': isMobileMenuOpen }">
+    <div
+      class="wrapper nav-wrapper"
+      :class="{ 'mobile-open': isMobileMenuOpen }"
+    >
       <div class="nav-header-mobile">
-        <RouterLink to="/" class="logo home-link-logo" title="返回首页" @click="isMobileMenuOpen = false">
+        <RouterLink
+          to="/"
+          class="logo home-link-logo"
+          title="返回首页"
+          @click="isMobileMenuOpen = false"
+        >
           <div class="logo-text">
             <span class="main">仓山区人工智能公共服务平台</span>
             <span class="sub">CANGSHAN AI PUBLIC SERVICE PLATFORM</span>
           </div>
         </RouterLink>
-        
+
         <div class="nav-header-actions-mobile">
-          <button class="mobile-user-trigger" @click="toggleUserPopup" :class="{ 'active': isUserPopupOpen }">
-            <i class="fas" :class="isLoggedIn ? 'fa-user-check' : 'fa-user'"></i>
+          <button
+            class="mobile-user-trigger"
+            @click="toggleUserPopup"
+            :class="{ active: isUserPopupOpen }"
+          >
+            <i
+              class="fas"
+              :class="isLoggedIn ? 'fa-user-check' : 'fa-user'"
+            ></i>
           </button>
           <button class="hamburger-btn" @click="toggleMobileMenu">
-            <i class="fas" :class="isMobileMenuOpen ? 'fa-times' : 'fa-bars'"></i>
+            <i
+              class="fas"
+              :class="isMobileMenuOpen ? 'fa-times' : 'fa-bars'"
+            ></i>
           </button>
         </div>
       </div>
@@ -146,22 +312,50 @@ onUnmounted(() => {
               <div class="up-user-info">
                 <div class="up-avatar"><i class="fas fa-user-circle"></i></div>
                 <div class="up-details">
-                  <span class="up-name">{{ user?.nickname || user?.username || '用户' }}</span>
+                  <span class="up-name">{{
+                    user?.nickname || user?.username || "用户"
+                  }}</span>
                   <span class="up-role">已登录账号</span>
                 </div>
               </div>
               <div class="up-actions">
-                <button class="up-btn primary" @click="() => { goToConsole(); isUserPopupOpen = false; }">
+                <button
+                  class="up-btn primary"
+                  @click="
+                    () => {
+                      goToConsole();
+                      isUserPopupOpen = false;
+                    }
+                  "
+                >
                   <i class="fas fa-th-large"></i> 进入控制台
                 </button>
-                <button class="up-btn outline" @click="() => { logout(); isUserPopupOpen = false; }">
+                <button
+                  class="up-btn outline"
+                  @click="
+                    () => {
+                      logout();
+                      isUserPopupOpen = false;
+                    }
+                  "
+                >
                   <i class="fas fa-sign-out-alt"></i> 退出当前账号
                 </button>
               </div>
             </template>
             <template v-else>
               <div class="up-actions">
-                <button class="up-btn primary" @click="() => { goToLogin(); isUserPopupOpen = false; }">登录/注册</button>
+                <button
+                  class="up-btn primary"
+                  @click="
+                    () => {
+                      goToLogin();
+                      isUserPopupOpen = false;
+                    }
+                  "
+                >
+                  登录/注册
+                </button>
               </div>
             </template>
           </div>
@@ -169,86 +363,152 @@ onUnmounted(() => {
       </Transition>
 
       <div class="nav-links" v-show="isMobileMenuOpen || windowWidth > 1024">
-        <div 
-          v-for="item in headerMenus" 
-          :key="item.id" 
+        <div
+          v-for="item in headerMenus"
+          :key="item.id"
           class="nav-item-container"
-          :class="{ 'has-mega': (item.children && item.children.length > 0) || item.url === '/news' }"
+          :class="{
+            'has-mega':
+              (item.children && item.children.length > 0) ||
+              item.url === '/news',
+          }"
         >
           <template v-if="item.url && item.url !== '#'">
-            <RouterLink 
-              v-if="item.type === 'internal'" 
-              :to="item.url" 
-              class="nav-link" 
+            <RouterLink
+              v-if="item.type === 'internal'"
+              :to="item.url"
+              class="nav-link"
               :target="item.target"
-              :class="{ 'router-link-active': $route.path === item.url || (item.url === '/app-center' && $route.path === '/apps') }"
+              :class="{
+                'router-link-active':
+                  $route.path === item.url ||
+                  (item.url === '/app-center' && $route.path === '/apps'),
+              }"
             >
               {{ item.title }}
-              <i v-if="(item.children && item.children.length > 0) || item.url === '/news'" class="fas fa-chevron-down arrow"></i>
+              <i
+                v-if="
+                  (item.children && item.children.length > 0) ||
+                  item.url === '/news'
+                "
+                class="fas fa-chevron-down arrow"
+              ></i>
             </RouterLink>
-            <a 
-              v-else 
-              :href="item.url" 
-              class="nav-link" 
+            <a
+              v-else
+              :href="item.url"
+              class="nav-link"
               :target="item.target"
               :class="{ 'router-link-active': $route.path === item.url }"
             >
-             {{ item.title }}
-             <i v-if="(item.children && item.children.length > 0) || item.url === '/news'" class="fas fa-chevron-down arrow"></i>
+              {{ item.title }}
+              <i
+                v-if="
+                  (item.children && item.children.length > 0) ||
+                  item.url === '/news'
+                "
+                class="fas fa-chevron-down arrow"
+              ></i>
             </a>
           </template>
           <div v-else class="nav-link">
             {{ item.title }}
             <i class="fas fa-chevron-down arrow"></i>
           </div>
-          
+
           <!-- Activity Mega Menu -->
-          <div v-if="item.title === '最新活动' || item.title === '最新动态' || item.url === '/news'" class="mega-menu activity-mega">
-             <div class="wrapper activity-mega-wrapper">
-                 <div class="activity-mega-right" style="width: 100%;">
-                     <div class="am-categories">
-                         <div v-for="cat in activityCategories" :key="cat.name" class="am-category-block">
-                             <h3 class="am-cat-title">{{ cat.name }}</h3>
-                             <div class="am-links-grid">
-                                 <template v-for="act in cat.list" :key="act.id">
-                                     <a v-if="act.linkType === 'EXTERNAL_LANDING'" :href="act.externalLink" target="_blank" class="am-link-card">
-                                         <div class="am-card-main">
-                                            <span class="am-link-title">{{ act.title }}</span>
-                                            <span class="am-badge" v-if="act.id % 2 === 0">HOT</span>
-                                         </div>
-                                     </a>
-                                     <RouterLink v-else :to="'/news/' + act.id" class="am-link-card">
-                                         <div class="am-card-main">
-                                            <span class="am-link-title">{{ act.title }}</span>
-                                            <span class="am-badge new" v-if="act.id % 3 === 0">NEW</span>
-                                         </div>
-                                     </RouterLink>
-                                 </template>
-                             </div>
-                         </div>
-                         <div v-if="navActivities.length === 0" style="padding: 20px 0; color: #94a3b8; font-size: 0.85rem;">目前暂无配置导航栏推荐活动</div>
-                     </div>
-                 </div>
-             </div>
+          <div
+            v-if="
+              item.title === '最新活动' ||
+              item.title === '最新动态' ||
+              item.url === '/news'
+            "
+            class="mega-menu activity-mega"
+          >
+            <div class="wrapper activity-mega-wrapper">
+              <div class="activity-mega-right" style="width: 100%">
+                <div class="am-categories">
+                  <div
+                    v-for="cat in activityCategories"
+                    :key="cat.name"
+                    class="am-category-block"
+                  >
+                    <h3 class="am-cat-title">{{ cat.name }}</h3>
+                    <div class="am-links-grid">
+                      <template v-for="act in cat.list" :key="act.id">
+                        <a
+                          v-if="act.linkType === 'EXTERNAL_LANDING'"
+                          :href="act.externalLink"
+                          target="_blank"
+                          class="am-link-card"
+                        >
+                          <div class="am-card-main">
+                            <span class="am-link-title">{{ act.title }}</span>
+                            <span class="am-badge" v-if="act.id % 2 === 0"
+                              >HOT</span
+                            >
+                          </div>
+                        </a>
+                        <RouterLink
+                          v-else
+                          :to="'/news/' + act.id"
+                          class="am-link-card"
+                        >
+                          <div class="am-card-main">
+                            <span class="am-link-title">{{ act.title }}</span>
+                            <span class="am-badge new" v-if="act.id % 3 === 0"
+                              >NEW</span
+                            >
+                          </div>
+                        </RouterLink>
+                      </template>
+                    </div>
+                  </div>
+                  <div
+                    v-if="navActivities.length === 0"
+                    style="padding: 20px 0; color: #94a3b8; font-size: 0.85rem"
+                  >
+                    目前暂无配置导航栏推荐活动
+                  </div>
+                </div>
+              </div>
+            </div>
           </div>
-          
+
           <!-- Normal Mega Menu -->
-          <div v-else-if="item.children && item.children.length > 0" class="mega-menu">
+          <div
+            v-else-if="item.children && item.children.length > 0"
+            class="mega-menu"
+          >
             <div class="wrapper mega-wrapper">
               <div class="mega-column">
                 <div class="mega-links">
                   <template v-for="child in item.children" :key="child.id">
-                    <RouterLink v-if="child.type === 'internal'" :to="child.url" class="mega-link" :target="child.target">
-                        <div class="link-text">
-                             <span class="text">{{ child.title }}</span>
-                             <span v-if="child.titleEn" class="sub">{{ child.titleEn }}</span>
-                        </div>
+                    <RouterLink
+                      v-if="child.type === 'internal'"
+                      :to="child.url"
+                      class="mega-link"
+                      :target="child.target"
+                    >
+                      <div class="link-text">
+                        <span class="text">{{ child.title }}</span>
+                        <span v-if="child.titleEn" class="sub">{{
+                          child.titleEn
+                        }}</span>
+                      </div>
                     </RouterLink>
-                    <a v-else :href="child.url" class="mega-link" :target="child.target">
-                        <div class="link-text">
-                             <span class="text">{{ child.title }}</span>
-                             <span v-if="child.titleEn" class="sub">{{ child.titleEn }}</span>
-                        </div>
+                    <a
+                      v-else
+                      :href="child.url"
+                      class="mega-link"
+                      :target="child.target"
+                    >
+                      <div class="link-text">
+                        <span class="text">{{ child.title }}</span>
+                        <span v-if="child.titleEn" class="sub">{{
+                          child.titleEn
+                        }}</span>
+                      </div>
                     </a>
                   </template>
                 </div>
@@ -260,12 +520,18 @@ onUnmounted(() => {
 
       <div class="nav-actions" v-if="windowWidth > 1024">
         <template v-if="isLoggedIn">
-           <div class="user-brief-minimal">
-              <span class="mb-name">{{ user?.nickname || user?.username || '用户' }}</span>
-              <div class="mb-divider"></div>
-              <button class="btn-console-primary" @click="goToConsole">进入控制台</button>
-              <button class="btn-logout-icon" @click="logout" title="退出登录"><i class="fas fa-sign-out-alt"></i></button>
-           </div>
+          <div class="user-brief-minimal">
+            <span class="mb-name">{{
+              user?.nickname || user?.username || "用户"
+            }}</span>
+            <div class="mb-divider"></div>
+            <button class="btn-console-primary" @click="goToConsole">
+              进入控制台
+            </button>
+            <button class="btn-logout-icon" @click="logout" title="退出登录">
+              <i class="fas fa-sign-out-alt"></i>
+            </button>
+          </div>
         </template>
         <template v-else>
           <button class="btn-console" @click="goToConsole">控制台</button>
@@ -311,7 +577,8 @@ onUnmounted(() => {
   gap: 8px;
 }
 
-.hamburger-btn, .mobile-user-trigger {
+.hamburger-btn,
+.mobile-user-trigger {
   display: none;
   background: none;
   border: none;
@@ -324,7 +591,7 @@ onUnmounted(() => {
 }
 
 .mobile-user-trigger.active {
-  color: #3B82F6;
+  color: #3b82f6;
   background: #eff6ff;
 }
 
@@ -357,7 +624,7 @@ onUnmounted(() => {
 }
 
 .home-link-logo::after {
-  content: '返回首页';
+  content: "返回首页";
   position: absolute;
   top: 50%;
   left: 100%;
@@ -421,7 +688,7 @@ onUnmounted(() => {
 
 .nav-link:hover {
   background: transparent;
-  color: #3B82F6;
+  color: #3b82f6;
 }
 
 .router-link-active:not(.logo) {
@@ -447,7 +714,7 @@ onUnmounted(() => {
   width: 100vw;
   background: white;
   border-bottom: 1px solid #f1f5f9;
-  box-shadow: 0 10px 40px rgba(0,0,0,0.1);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
   padding: 24px 0;
   z-index: 99999;
 }
@@ -488,12 +755,12 @@ onUnmounted(() => {
 .mega-link:hover {
   background: #f8fafc;
   border-color: #e2e8f0;
-  box-shadow: 0 8px 16px -4px rgba(0,0,0,0.05);
+  box-shadow: 0 8px 16px -4px rgba(0, 0, 0, 0.05);
   transform: translateY(-2px);
 }
 
 .mega-link:hover .text {
-  color: #3B82F6;
+  color: #3b82f6;
 }
 
 .link-text .text {
@@ -536,7 +803,7 @@ onUnmounted(() => {
 }
 
 .btn-console-primary {
-  background: #3B82F6;
+  background: #3b82f6;
   color: white;
   border: none;
   padding: 8px 16px;
@@ -583,7 +850,7 @@ onUnmounted(() => {
 }
 
 .btn-login-reg {
-  background: #3B82F6;
+  background: #3b82f6;
   color: white;
   border: none;
   padding: 10px 24px;
@@ -639,9 +906,9 @@ onUnmounted(() => {
 
 .am-link-card:hover {
   background: #f8fafc;
-  color: #3B82F6;
+  color: #3b82f6;
   border-color: #e2e8f0;
-  box-shadow: 0 4px 12px -2px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 12px -2px rgba(0, 0, 0, 0.05);
   transform: translateY(-2px);
 }
 
@@ -679,24 +946,25 @@ onUnmounted(() => {
     height: auto;
     min-height: 72px;
   }
-  
+
   .nav-wrapper {
     flex-direction: column;
     align-items: stretch;
     padding: 0;
   }
-  
+
   .nav-header-mobile {
     height: 72px;
     padding: 0 16px;
   }
-  
-  .hamburger-btn, .mobile-user-trigger {
+
+  .hamburger-btn,
+  .mobile-user-trigger {
     display: flex;
     align-items: center;
     justify-content: center;
   }
-  
+
   .nav-links {
     flex-direction: column;
     padding: 10px 16px 30px;
@@ -705,21 +973,21 @@ onUnmounted(() => {
     max-height: calc(100vh - 72px);
     overflow-y: auto;
   }
-  
+
   .nav-item-container {
     flex-direction: column;
     align-items: stretch;
     width: 100%;
     margin-bottom: 4px;
   }
-  
+
   .nav-link {
     justify-content: space-between;
     height: 48px;
     font-size: 1rem;
     padding: 0 12px;
   }
-  
+
   .mega-menu {
     position: static;
     box-shadow: none;
@@ -734,7 +1002,7 @@ onUnmounted(() => {
     right: 0;
     background: white;
     border-bottom: 1px solid #f1f5f9;
-    box-shadow: 0 10px 30px -5px rgba(0,0,0,0.1);
+    box-shadow: 0 10px 30px -5px rgba(0, 0, 0, 0.1);
     z-index: 1999;
   }
 
@@ -749,7 +1017,7 @@ onUnmounted(() => {
 
   .up-welcome i {
     font-size: 2.5rem;
-    color: #3B82F6;
+    color: #3b82f6;
     margin-bottom: 12px;
     opacity: 0.8;
   }
@@ -779,7 +1047,7 @@ onUnmounted(() => {
 
   .up-avatar {
     font-size: 2.4rem;
-    color: #3B82F6;
+    color: #3b82f6;
   }
 
   .up-details {
@@ -820,7 +1088,7 @@ onUnmounted(() => {
   }
 
   .up-btn.primary {
-    background: #3B82F6;
+    background: #3b82f6;
     color: white;
     border: none;
   }
@@ -834,16 +1102,18 @@ onUnmounted(() => {
   .up-btn.text {
     background: transparent;
     border: none;
-    color: #3B82F6;
+    color: #3b82f6;
     height: auto;
     padding: 10px;
   }
 
   /* Transition Animation */
-  .fade-slide-enter-active, .fade-slide-leave-active {
+  .fade-slide-enter-active,
+  .fade-slide-leave-active {
     transition: all 0.3s ease;
   }
-  .fade-slide-enter-from, .fade-slide-leave-to {
+  .fade-slide-enter-from,
+  .fade-slide-leave-to {
     opacity: 0;
     transform: translateY(-10px);
   }

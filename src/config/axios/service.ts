@@ -1,5 +1,7 @@
 import axios from 'axios'
 import type { AxiosError, AxiosInstance, AxiosResponse, InternalAxiosRequestConfig } from 'axios'
+import { useRoute } from "vue-router";
+const route = useRoute();
 import router from '@/router'
 
 import { ElMessage, ElMessageBox, ElNotification } from 'element-plus'
@@ -136,16 +138,18 @@ service.interceptors.response.use(
     }
     const code = data.code || result_code
     // 获取错误信息
-    const msg = data.msg || errorCode[code] || errorCode['default']
+    const msg = data.msg || errorCode[code] || errorCode['default']    
     if (ignoreMsgs.indexOf(msg) !== -1) {
       // 如果是忽略的错误码，直接返回 msg 异常
       return Promise.reject(msg)
     } else if (code === 401) {
       // 如果未认证，并且未进行刷新令牌，说明可能是访问令牌过期了
       if (!isRefreshToken) {
+        
         isRefreshToken = true
         // 1. 如果获取不到刷新令牌，则只能执行登出操作
-        if (!localStorage.getItem('token')) {
+        if (!localStorage.getItem('refreshToken')) {
+          isRefreshToken = false
           return handleAuthorized()
         }
         // 2. 进行刷新访问令牌
@@ -223,7 +227,19 @@ const handleAuthorized = () => {
   localStorage.removeItem('token')
   localStorage.removeItem('refreshToken')
   localStorage.removeItem('user_info')
-  router.push('/')
+  // 询问用户是否前往登录页
+  ElMessageBox.confirm('注册/登录后可查看', '提示', {
+    confirmButtonText: '确定',
+    cancelButtonText: '取消',
+    type: 'warning'
+  }).then(() => {
+    // 确认去登录，携带当前页面地址
+    const currentPath = window.location.pathname + window.location.search
+    // 使用window.location.href进行跳转，确保页面能够正确改变
+    window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`
+  }).catch(() => {
+    // 取消登录
+  })
   return Promise.reject('登录超时,请重新登录!')
 }
 export { service }
