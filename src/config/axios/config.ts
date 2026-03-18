@@ -2,7 +2,8 @@ const config: {
   base_url: string
   result_code: number | string
   default_headers: string
-  request_timeout: number
+  request_timeout: number,
+  aiVideoUrl: string,
 } = {
   /**
    * api请求基础路径
@@ -10,6 +11,7 @@ const config: {
   // base_url: 'http://192.168.12.100:48080/app-api',
   base_url: '/app-api',
 
+  aiVideoUrl: 'https://www.cii-group.com/aivideo/',
   /**
    * 接口成功返回状态码
    */

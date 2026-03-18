@@ -172,8 +172,8 @@ const goToEvent = (id: number) => {
               <div class="nc-cat-badge">{{ item.category }}</div>
             </div>
             <div class="nc-content">
-              <h3 class="nc-title">{{ item.title }}</h3>
-              <p class="nc-desc">{{ extractExcerpt(item.content) }}</p>
+              <div class="nc-title">{{ item.title }}</div>
+              <div class="nc-desc">{{ extractExcerpt(item.content) }}</div>
               <div class="nc-meta">
                 <span class="nc-date"
                   ><i class="far fa-clock"></i>
@@ -403,7 +403,7 @@ const goToEvent = (id: number) => {
 }
 
 .nc-content {
-  padding: 24px;
+  padding: 15px 24px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -433,8 +433,8 @@ const goToEvent = (id: number) => {
 }
 
 .nc-meta {
-  margin-top: 16px;
-  padding-top: 16px;
+  margin-top: 10px;
+  padding-top: 10px;
   border-top: 1px solid #f1f5f9;
   font-size: 0.85rem;
   color: #94a3b8;

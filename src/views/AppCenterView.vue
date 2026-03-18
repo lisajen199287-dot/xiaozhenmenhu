@@ -78,8 +78,7 @@ const handleEnter = (app: Application) => {
     return;
   }
   if (app.url.startsWith("http") || app.url.startsWith("https")) {
-    const url = app.url + "?PermutationID=" + localStorage.getItem("token");
-    window.open(url, "_blank");
+    window.open(app.url, "_blank");
   } else {
     router.push(app.url);
   }

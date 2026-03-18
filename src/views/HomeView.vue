@@ -95,18 +95,10 @@ const solutions = [
     theme: "dark",
   },
 ];
-
+import { config } from "@/config/axios/config";
 const golink = () => {
-  if (!localStorage.getItem("token")) {
-    const url = "https://aivideo.aics.cii-group.com:48182";
-    window.open(url, "_blank");
-  } else {
-    const url =
-      "https://aivideo.aics.cii-group.com:48182/TransitPage" +
-      "?PermutationID=" +
-      localStorage.getItem("token");
-    window.open(url, "_blank");
-  }
+  const url = config.aiVideoUrl;
+  window.open(url, "_blank");
 };
 
 // Trust cards
@@ -2906,5 +2898,14 @@ onUnmounted(() => {
   .trust-card {
     padding: 24px;
   }
+}
+.hero-v2-text-area {
+  align-items: flex-start;
+}
+.hero-subtitle-v2 {
+  text-align: left;
+}
+.hero-title-v2 {
+  text-align: left;
 }
 </style>
