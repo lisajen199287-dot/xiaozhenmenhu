@@ -24,7 +24,7 @@ const handleResize = () => {
 const solutions = [
   {
     id: "ecommerce",
-    label: "电商与跨",
+    label: "电商与跨境",
     pain: "商品内容生产与投放成本高，转化效率难提升",
     desc: "AI生成商品内容与带货素材，结合投放与客户数据实现增长闭环",
     image: "/static/images/solutions/webp/ecommerce.webp",

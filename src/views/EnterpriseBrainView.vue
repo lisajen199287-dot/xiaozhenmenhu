@@ -1,71 +1,68 @@
 <script setup lang="ts">
-import { ref } from 'vue';
-
+import { ref } from "vue";
+import * as newApi from "@/api/newApi/index";
+import { ElMessage } from 'element-plus'
 const scenarios = [
   {
-    icon: 'fas fa-user-tie',
-    title: '行政人事助手',
-    desc: '自动回答社保、考勤、报销等制度问题。支持员工手册、入职指南等文档一键导入，释放 HR 80% 重复工作量',
-    color: '#6366F1'
+    icon: "fas fa-user-tie",
+    title: "行政人事助手",
+    desc: "自动回答社保、考勤、报销等制度问题。支持员工手册、入职指南等文档一键导入，释放 HR 80% 重复工作量",
+    color: "#6366F1",
   },
   {
-    icon: 'fas fa-gavel',
-    title: '法务合规顾问',
-    desc: '基于民法典及行业法规库，快速审核合同风险条款。提供智能法律咨询，降低企业经营合规风险',
-    color: '#8B5CF6'
+    icon: "fas fa-gavel",
+    title: "法务合规顾问",
+    desc: "基于民法典及行业法规库，快速审核合同风险条款。提供智能法律咨询，降低企业经营合规风险",
+    color: "#8B5CF6",
   },
   {
-    icon: 'fas fa-file-signature',
-    title: '招投标管理专家',
-    desc: '智能分析历史标书库，辅助生成高分投标文件。自动解析招标文件核心需求，提升中标率',
-    color: '#EC4899'
+    icon: "fas fa-file-signature",
+    title: "招投标管理专家",
+    desc: "智能分析历史标书库，辅助生成高分投标文件。自动解析招标文件核心需求，提升中标率",
+    color: "#EC4899",
   },
   {
-    icon: 'fas fa-chart-line',
-    title: '经营数据分析',
-    desc: '连接企业 ERP 与财务系统，通过自然语言查询经营报表。实时生成销售、库存与财务分析报告',
-    color: '#3B82F6'
-  }
+    icon: "fas fa-chart-line",
+    title: "经营数据分析",
+    desc: "连接企业 ERP 与财务系统，通过自然语言查询经营报表。实时生成销售、库存与财务分析报告",
+    color: "#3B82F6",
+  },
 ];
 
 const form = ref({
-  company: '',
-  contact: '',
-  phone: '',
-  demand: ''
+  company: "",
+  contact: "",
+  phone: "",
+  demand: "",
 });
 
 const submitting = ref(false);
 const submitted = ref(false);
 
 const handleSubmit = async () => {
-    if (!form.value.contact || !form.value.phone) return alert('请填写联系人与手机号');
-    
-    submitting.value = true;
-    try {
-        const solutionName = '企业知识大脑 - 落地咨询';
-        const res = await fetch('/api/solution-requests', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ ...form.value, solutionName })
-        });
-        const data = await res.json();
-        if (data.success) {
-            submitted.value = true;
-            form.value = { company: '', contact: '', phone: '', demand: '' };
-        } else {
-            alert(data.message);
-        }
-    } catch (e) {
-        alert('提交失败，请重试');
-    } finally {
-        submitting.value = false;
-    }
+  if (!form.value.contact || !form.value.phone)
+    return alert("请填写联系人与手机号");
+
+  submitting.value = true;
+
+  try {
+    const solutionName = "企业知识大脑 - 落地咨询";
+    newApi.apiAdmSolutionRequests(
+      JSON.stringify({ ...form.value, solutionName })
+    );
+    submitted.value = true;
+    form.value = { company: "", contact: "", phone: "", demand: "" };
+    ElMessage.success("提交成功，我们会尽快联系您");
+  } catch (e) {
+    ElMessage.info("提交失败，请重试");
+  } finally {
+    submitting.value = false;
+  }
 };
 
 const scrollToForm = () => {
-  const el = document.getElementById('consult-form');
-  if (el) el.scrollIntoView({ behavior: 'smooth' });
+  const el = document.getElementById("consult-form");
+  if (el) el.scrollIntoView({ behavior: "smooth" });
 };
 </script>
 
@@ -76,8 +73,13 @@ const scrollToForm = () => {
       <div class="hero-overlay"></div>
       <div class="wrapper hero-content">
         <div class="hero-badge">Enterprise Knowledge Brain</div>
-        <h1 class="hero-title">企业知识<span class="gradient-text">智慧大脑</span></h1>
-        <p class="hero-desc">基于 RAG 检索增强技术，构建企业专属知识库。打造 7×24 小时在线的业务专家，让每个员工都拥有金牌导师。</p>
+        <h1 class="hero-title">
+          企业知识<span class="gradient-text">智慧大脑</span>
+        </h1>
+        <p class="hero-desc">
+          基于 RAG 检索增强技术，构建企业专属知识库。打造 7×24
+          小时在线的业务专家，让每个员工都拥有金牌导师。
+        </p>
         <div class="hero-actions">
           <button class="btn-primary" @click="scrollToForm">预约演示</button>
         </div>
@@ -89,7 +91,9 @@ const scrollToForm = () => {
       <section class="premium-section">
         <div class="section-label">HOW IT WORKS</div>
         <h2 class="section-title">如何让 AI 更懂您的业务</h2>
-        <p class="section-subtitle">私有数据 + RAG 技术，解决通用大模型不了解企业内部深层背景的痛点</p>
+        <p class="section-subtitle">
+          私有数据 + RAG 技术，解决通用大模型不了解企业内部深层背景的痛点
+        </p>
 
         <div class="rag-flow-container">
           <div class="rag-node src">
@@ -154,23 +158,30 @@ const scrollToForm = () => {
                   <span>AI 助手离线演示版</span>
                 </div>
                 <div class="header-tools">
-                   <i class="fas fa-cog"></i>
+                  <i class="fas fa-cog"></i>
                 </div>
               </div>
               <div class="chat-content">
                 <div class="chat-msg bot">
-                  <div class="bubble">您好！我是企业知识助理。您可以询问任何关于公司制度或业务细节的问题。</div>
+                  <div class="bubble">
+                    您好！我是企业知识助理。您可以询问任何关于公司制度或业务细节的问题。
+                  </div>
                 </div>
                 <div class="chat-msg user">
-                  <div class="bubble">请问 2024 年的年假申请制度有哪些新变化？</div>
+                  <div class="bubble">
+                    请问 2024 年的年假申请制度有哪些新变化？
+                  </div>
                 </div>
                 <div class="chat-msg bot highlight">
                   <div class="bubble">
-                    根据《2024 人事管理增补指令》附件 2：<br><br>
-                    1. <strong>弹性调休</strong>：新增“工龄奖”假，每满 3 年增加 1 天。<br>
-                    2. <strong>提前量</strong>：3 天内申请需提前 24 小时报备。<br>
+                    根据《2024 人事管理增补指令》附件 2：<br /><br />
+                    1. <strong>弹性调休</strong>：新增“工龄奖”假，每满 3 年增加
+                    1 天。<br />
+                    2. <strong>提前量</strong>：3 天内申请需提前 24
+                    小时报备。<br />
                     <div class="source-tag">
-                      <i class="fas fa-file-pdf"></i> 来源：人事制度汇编.pdf (P14)
+                      <i class="fas fa-file-pdf"></i> 来源：人事制度汇编.pdf
+                      (P14)
                     </div>
                   </div>
                 </div>
@@ -192,29 +203,51 @@ const scrollToForm = () => {
           <div class="form-header">
             <div class="section-label">CONSULTATION</div>
             <h2>预约企业知识大脑定制化方案</h2>
-            <p>提交您的需求，我们的技术专家将在 24 小时内为您提供专属数字化建议</p>
+            <p>
+              提交您的需求，我们的技术专家将在 24 小时内为您提供专属数字化建议
+            </p>
           </div>
 
           <div v-if="!submitted" class="main-form">
             <div class="form-grid">
               <div class="input-group">
                 <label>公司名称</label>
-                <input v-model="form.company" type="text" placeholder="请输入您的企业全称">
+                <input
+                  v-model="form.company"
+                  type="text"
+                  placeholder="请输入您的企业全称"
+                />
               </div>
               <div class="input-group">
                 <label>联系人姓名 *</label>
-                <input v-model="form.contact" type="text" placeholder="如何称呼您">
+                <input
+                  v-model="form.contact"
+                  type="text"
+                  placeholder="如何称呼您"
+                />
               </div>
               <div class="input-group">
                 <label>联系电话 *</label>
-                <input v-model="form.phone" type="tel" placeholder="方便我们为您回传方案">
+                <input
+                  v-model="form.phone"
+                  type="tel"
+                  placeholder="方便我们为您回传方案"
+                />
               </div>
               <div class="input-group full">
                 <label>业务痛点/详细需求</label>
-                <textarea v-model="form.demand" rows="4" placeholder="请简单描述您的业务场景或希望解决的问题..."></textarea>
+                <textarea
+                  v-model="form.demand"
+                  rows="4"
+                  placeholder="请简单描述您的业务场景或希望解决的问题..."
+                ></textarea>
               </div>
             </div>
-            <button class="btn-submit" :disabled="submitting" @click="handleSubmit">
+            <button
+              class="btn-submit"
+              :disabled="submitting"
+              @click="handleSubmit"
+            >
               <span v-if="!submitting">提交咨询需求</span>
               <i v-else class="fas fa-spinner fa-spin"></i>
             </button>
@@ -224,7 +257,9 @@ const scrollToForm = () => {
             <div class="success-icon"><i class="fas fa-check-circle"></i></div>
             <h3>需求已成功提交</h3>
             <p>感谢您的信任！专属方案专家将尽快与您联系。</p>
-            <button class="btn-secondary" @click="submitted = false">再次提交</button>
+            <button class="btn-secondary" @click="submitted = false">
+              再次提交
+            </button>
           </div>
         </div>
       </div>
@@ -250,7 +285,7 @@ const scrollToForm = () => {
 .agent-hero {
   position: relative;
   padding: 160px 0 140px;
-  background-image: url('/static/images/apps/app-enterprise-brain.png');
+  background-image: url("/static/images/apps/app-enterprise-brain.png");
   background-size: cover;
   background-position: center;
   color: white;
@@ -265,7 +300,11 @@ const scrollToForm = () => {
   left: 0;
   width: 100%;
   height: 100%;
-  background: linear-gradient(to bottom, rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.6));
+  background: linear-gradient(
+    to bottom,
+    rgba(15, 23, 42, 0.8),
+    rgba(15, 23, 42, 0.6)
+  );
   z-index: 1;
 }
 
@@ -410,8 +449,14 @@ const scrollToForm = () => {
   box-shadow: 0 20px 40px rgba(79, 70, 229, 0.2);
 }
 
-.rag-node h4 { margin-bottom: 8px; font-weight: 700; }
-.rag-node p { font-size: 0.85rem; color: #94a3b8; }
+.rag-node h4 {
+  margin-bottom: 8px;
+  font-weight: 700;
+}
+.rag-node p {
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
 
 .flow-line {
   flex: 1;
@@ -433,8 +478,14 @@ const scrollToForm = () => {
 }
 
 @keyframes flowMove {
-  from { left: 0; opacity: 1; }
-  to { left: 100%; opacity: 0; }
+  from {
+    left: 0;
+    opacity: 1;
+  }
+  to {
+    left: 100%;
+    opacity: 0;
+  }
 }
 
 /* Premium Grid */
@@ -473,7 +524,9 @@ const scrollToForm = () => {
   transition: opacity 0.3s;
 }
 
-.premium-card:hover .card-glow { opacity: 0.2; }
+.premium-card:hover .card-glow {
+  opacity: 0.2;
+}
 
 .card-icon {
   width: 60px;
@@ -507,8 +560,13 @@ const scrollToForm = () => {
   padding: 100px 0;
 }
 
-.demo-info { flex: 1; }
-.text-left { text-align: left; margin-left: 0; }
+.demo-info {
+  flex: 1;
+}
+.text-left {
+  text-align: left;
+  margin-left: 0;
+}
 
 .desc-text {
   font-size: 1.15rem;
@@ -531,7 +589,9 @@ const scrollToForm = () => {
   color: #334155;
 }
 
-.feature-list i { color: #10b981; }
+.feature-list i {
+  color: #10b981;
+}
 
 .chat-mockup-v2 {
   flex: 1;
@@ -542,7 +602,7 @@ const scrollToForm = () => {
   background: white;
   border-radius: 20px;
   border: 1px solid #e2e8f0;
-  box-shadow: 0 40px 80px rgba(0,0,0,0.1);
+  box-shadow: 0 40px 80px rgba(0, 0, 0, 0.1);
   overflow: hidden;
   height: 520px;
   display: flex;
@@ -560,14 +620,34 @@ const scrollToForm = () => {
   font-weight: 700;
 }
 
-.header-status { display: flex; align-items: center; gap: 8px; }
-.status-dot { width: 8px; height: 8px; border-radius: 50%; background: #10b981; }
+.header-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #10b981;
+}
 
-.pulsed { animation: pulse 2s infinite; }
+.pulsed {
+  animation: pulse 2s infinite;
+}
 @keyframes pulse {
-  0% { transform: scale(1); opacity: 1; }
-  50% { transform: scale(1.5); opacity: 0.5; }
-  100% { transform: scale(1); opacity: 1; }
+  0% {
+    transform: scale(1);
+    opacity: 1;
+  }
+  50% {
+    transform: scale(1.5);
+    opacity: 0.5;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
 }
 
 .chat-content {
@@ -587,14 +667,23 @@ const scrollToForm = () => {
   max-width: 85%;
 }
 
-.chat-msg.bot .bubble { background: #f1f5f9; border-top-left-radius: 4px; }
-.chat-msg.user { align-self: flex-end; }
-.chat-msg.user .bubble { background: #4f46e5; color: white; border-top-right-radius: 4px; }
+.chat-msg.bot .bubble {
+  background: #f1f5f9;
+  border-top-left-radius: 4px;
+}
+.chat-msg.user {
+  align-self: flex-end;
+}
+.chat-msg.user .bubble {
+  background: #4f46e5;
+  color: white;
+  border-top-right-radius: 4px;
+}
 
 .source-tag {
   margin-top: 12px;
   padding-top: 12px;
-  border-top: 1px solid rgba(0,0,0,0.05);
+  border-top: 1px solid rgba(0, 0, 0, 0.05);
   font-size: 0.75rem;
   color: #64748b;
   display: flex;
@@ -631,128 +720,146 @@ const scrollToForm = () => {
 
 /* Consult Section & Form */
 .consult-section {
-    padding: 120px 0;
-    background: #0f172a;
-    color: white;
-    position: relative;
-    overflow: hidden;
+  padding: 120px 0;
+  background: #0f172a;
+  color: white;
+  position: relative;
+  overflow: hidden;
 }
 
 .form-container {
-    max-width: 900px;
-    margin: 0 auto;
-    background: rgba(255, 255, 255, 0.03);
-    backdrop-filter: blur(20px);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 40px;
-    padding: 80px;
+  max-width: 900px;
+  margin: 0 auto;
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 40px;
+  padding: 80px;
 }
 
 .form-header {
-    text-align: center;
-    margin-bottom: 60px;
+  text-align: center;
+  margin-bottom: 60px;
 }
 
 .form-header h2 {
-    font-size: 2.5rem;
-    font-weight: 800;
-    margin-bottom: 20px;
+  font-size: 2.5rem;
+  font-weight: 800;
+  margin-bottom: 20px;
 }
 
 .form-header p {
-    color: #94a3b8;
-    font-size: 1.1rem;
+  color: #94a3b8;
+  font-size: 1.1rem;
 }
 
 .form-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 30px;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 30px;
 }
 
 .input-group {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
 }
 
 .input-group.full {
-    grid-column: span 2;
+  grid-column: span 2;
 }
 
 .input-group label {
-    font-size: 0.9rem;
-    font-weight: 600;
-    color: #cbd5e1;
+  font-size: 0.9rem;
+  font-weight: 600;
+  color: #cbd5e1;
 }
 
-.input-group input, 
+.input-group input,
 .input-group textarea {
-    background: rgba(255, 255, 255, 0.05);
-    border: 1px solid rgba(255, 255, 255, 0.1);
-    border-radius: 12px;
-    padding: 16px;
-    color: white;
-    font-size: 1rem;
-    transition: all 0.3s;
+  background: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px;
+  padding: 16px;
+  color: white;
+  font-size: 1rem;
+  transition: all 0.3s;
 }
 
-.input-group input:focus, 
+.input-group input:focus,
 .input-group textarea:focus {
-    outline: none;
-    border-color: #6366f1;
-    background: rgba(255, 255, 255, 0.08);
+  outline: none;
+  border-color: #6366f1;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .btn-submit {
-    margin-top: 40px;
-    width: 100%;
-    padding: 20px;
-    background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
-    color: white;
-    border: none;
-    border-radius: 16px;
-    font-size: 1.1rem;
-    font-weight: 700;
-    cursor: pointer;
-    transition: all 0.3s;
-    box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
+  margin-top: 40px;
+  width: 100%;
+  padding: 20px;
+  background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%);
+  color: white;
+  border: none;
+  border-radius: 16px;
+  font-size: 1.1rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 10px 30px rgba(99, 102, 241, 0.3);
 }
 
 .btn-submit:hover:not(:disabled) {
-    transform: translateY(-2px);
-    box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
+  transform: translateY(-2px);
+  box-shadow: 0 15px 40px rgba(99, 102, 241, 0.4);
 }
 
 .btn-submit:disabled {
-    opacity: 0.6;
-    cursor: not-allowed;
+  opacity: 0.6;
+  cursor: not-allowed;
 }
 
 .success-message {
-    text-align: center;
-    padding: 40px 0;
+  text-align: center;
+  padding: 40px 0;
 }
 
 .success-icon {
-    font-size: 5rem;
-    color: #10b981;
-    margin-bottom: 24px;
+  font-size: 5rem;
+  color: #10b981;
+  margin-bottom: 24px;
 }
 
 .success-message h3 {
-    font-size: 2rem;
-    margin-bottom: 16px;
+  font-size: 2rem;
+  margin-bottom: 16px;
 }
 
 @media (max-width: 1024px) {
-  .hero-title { font-size: 3rem; }
-  .premium-grid { grid-template-columns: 1fr; }
-  .demo-flex { flex-direction: column; text-align: center; }
-  .text-left { text-align: center; }
-  .feature-list { display: inline-block; text-align: left; }
-  .form-container { padding: 40px; }
-  .form-grid { grid-template-columns: 1fr; }
-  .input-group.full { grid-column: span 1; }
+  .hero-title {
+    font-size: 3rem;
+  }
+  .premium-grid {
+    grid-template-columns: 1fr;
+  }
+  .demo-flex {
+    flex-direction: column;
+    text-align: center;
+  }
+  .text-left {
+    text-align: center;
+  }
+  .feature-list {
+    display: inline-block;
+    text-align: left;
+  }
+  .form-container {
+    padding: 40px;
+  }
+  .form-grid {
+    grid-template-columns: 1fr;
+  }
+  .input-group.full {
+    grid-column: span 1;
+  }
 }
 </style>

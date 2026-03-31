@@ -66,7 +66,7 @@ const defaultNav: NavigationMenu[] = [
       {
         id: 41,
         parentId: 4,
-        title: "电商与跨境出海",
+        title: "电商与跨境",
         titleEn: "Ecommerce",
         url: "/solutions/ecommerce",
         icon: "",
