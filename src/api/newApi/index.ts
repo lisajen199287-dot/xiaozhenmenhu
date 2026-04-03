@@ -129,3 +129,10 @@ export const apiPlatformIntroduction = () => {
     url: `/api/platform-introduction/1`,
   })
 }
+
+
+export const apiGoLumi = () => {
+  return request.get({
+    url: `/api/applumi/redirectToLumi`,
+  })
+}

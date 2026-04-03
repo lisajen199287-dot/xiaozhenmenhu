@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted, onUnmounted } from "vue";
+import { ref, computed, onMounted, onUnmounted, nextTick } from "vue";
 
 import { useRouter, RouterLink } from "vue-router";
 
@@ -330,6 +330,11 @@ const fetchSlides = async () => {
   }
 };
 
+const goLumi = async () => {
+  const res = await newApi.apiGoLumi();
+  window.open(res.redirect_url, "_blank");
+};
+
 const nextSlide = () => {
   if (slides.value.length === 0) return;
 
@@ -452,7 +457,6 @@ onMounted(async () => {
 
   startCaseTimer();
 });
-
 const navToExternal = (url: string) => {
   window.open(url, "_blank");
 };
@@ -479,10 +483,86 @@ const handleHeroAction = (link: string) => {
   }
 };
 
+// Seedance Carousel Logic
+const seedanceImages = ref([
+  {
+    id: 1,
+    src: "@/assets/images/cloth-bg.png",
+    alt: "City Skyline",
+  },
+  {
+    id: 2,
+    src: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=elegant%20woman%20in%20evening%20dress%20with%20flowing%20fabric%2C%20white%20background%2C%20fashion%20photography&image_size=landscape_16_9",
+    alt: "Fashion Model",
+  },
+  {
+    id: 3,
+    src: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20perfume%20bottle%20on%20rock%20with%20mountain%20background%2C%20soft%20lighting%2C%20product%20photography&image_size=landscape_16_9",
+    alt: "Perfume Bottle",
+  },
+  {
+    id: 4,
+    src: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=man%20in%20suit%20speaking%20with%20microphone%2C%20elegant%20background%2C%20professional%20portrait&image_size=landscape_16_9",
+    alt: "Business Speaker",
+  },
+  {
+    id: 5,
+    src: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=abstract%20technology%20background%20with%20blue%20and%20purple%20hues%2C%20digital%20art&image_size=landscape_16_9",
+    alt: "Technology Background",
+  },
+]);
+
+const currentSeedanceSlide = ref(2); // Start with the middle image
+let seedanceTimer: any = null;
+
+const startSeedanceCarousel = () => {
+  stopSeedanceCarousel();
+  seedanceTimer = setInterval(() => {
+    nextSeedanceSlide();
+  }, 3000);
+};
+
+const stopSeedanceCarousel = () => {
+  if (seedanceTimer) {
+    clearInterval(seedanceTimer);
+    seedanceTimer = null;
+  }
+};
+
+const nextSeedanceSlide = () => {
+  currentSeedanceSlide.value =
+    (currentSeedanceSlide.value + 1) % seedanceImages.value.length;
+};
+
+const prevSeedanceSlide = () => {
+  currentSeedanceSlide.value =
+    (currentSeedanceSlide.value - 1 + seedanceImages.value.length) %
+    seedanceImages.value.length;
+};
+
+const getSeedanceSlideClass = (index: number) => {
+  const length = seedanceImages.value.length;
+  const diff = (index - currentSeedanceSlide.value + length) % length;
+
+  // 计算每个图片的位置
+  if (diff === 0) return "active"; // 中间图片
+  if (diff === 1) return "next1"; // 右侧第一张
+  if (diff === 2) return "next2"; // 右侧第二张
+  if (diff === length - 1) return "prev1"; // 左侧第一张
+  if (diff === length - 2) return "prev2"; // 左侧第二张
+
+  return "";
+};
+
+onMounted(() => {
+  startSeedanceCarousel();
+});
+
 onUnmounted(() => {
   window.removeEventListener("resize", handleResize);
   if (timer) clearInterval(timer);
   stopCaseTimer();
+  stopSeedanceCarousel();
 });
 </script>
 
@@ -575,51 +655,93 @@ onUnmounted(() => {
         >
           <h2 class="section-title-v5">16+ AI 应用重构商业运作的每个环节</h2>
         </div>
-
         <div class="scenarios-grid-v5">
           <!-- Card 1: Video Gen (Hero - Spans 2 Columns) -->
-          <div class="scenario-card-v5 hero-card" @click="golink">
-            <div class="card-content-split">
-              <div class="card-info">
-                <div class="card-meta">
-                  <span class="model-tag">Lumi-Video-2.0</span>
-                  <i class="fas fa-bolt-lightning"></i>
-                </div>
-                <h3 class="card-title-v5">商品图转带货视频</h3>
-                <p class="card-subtitle-v5">
-                  一张图生成带货视频，真实效果自然，包含多国口播与动态字幕
-                </p>
-                <div class="card-footer-v5">
-                  <span class="action-btn"
-                    >立即体验 <i class="fas fa-arrow-right"></i
-                  ></span>
-                </div>
-              </div>
-              <div class="v5-visual video-flow-ui">
-                <div class="source-preview">
+          <div class="scenario-card-v5 hero-card">
+            <!-- Seedance 2.0 Section -->
+            <div class="seedance-content compact">
+              <div class="seedance-header compact">
+                <div class="seedance-logo-container compact">
                   <img
-                    src="/static/images/solutions/consumer.png"
-                    alt="Input"
+                    src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20technology%20logo%20with%20blue%20and%20purple%20gradient%2C%20abstract%20design&image_size=square"
+                    alt="Seedance Logo"
+                    class="seedance-logo compact"
                   />
-                  <div class="tag">输入原图</div>
+                  <h2 class="seedance-title compact">
+                    Seedance 2.0 抢先体验：让灵感，即刻实现
+                  </h2>
                 </div>
-                <div class="flow-arrow">
-                  <i class="fas fa-chevron-right"></i>
-                  <span class="glow"></span>
-                </div>
-                <div class="phone-mockup">
-                  <div class="phone-screen">
-                    <video
-                      src="/static/videos/product_to_video.mp4"
-                      autoplay
-                      muted
-                      loop
-                      playsinline
-                    ></video>
-                  </div>
-                  <div class="tag output">AI 生成预览</div>
+                <p class="seedance-subtitle compact">
+                  创意实现，1%的成本，100%的震感
+                </p>
+                <div class="seedance-features compact">
+                  <span class="seedance-feature compact"
+                    >数字模特"秒级"换装</span
+                  >
+                  <span class="seedance-feature compact"
+                    >产品图片到"史诗级"广告片</span
+                  >
+                  <span class="seedance-feature compact"
+                    >原生音画同步的"带货短剧"</span
+                  >
                 </div>
               </div>
+
+              <div
+                class="seedance-carousel compact"
+                @mouseenter="stopSeedanceCarousel"
+                @mouseleave="startSeedanceCarousel"
+              >
+                <div class="seedance-carousel-container">
+                  <div :class="['seedance-slide', getSeedanceSlideClass(0)]">
+                    <img
+                      src="@/assets/images/swipe_1.png"
+                      class="seedance-slide-img"
+                    />
+                  </div>
+                  <div :class="['seedance-slide', getSeedanceSlideClass(1)]">
+                    <img
+                      src="@/assets/images/swipe_2.png"
+                      class="seedance-slide-img"
+                    />
+                  </div>
+                  <div :class="['seedance-slide', getSeedanceSlideClass(2)]">
+                    <img
+                      src="@/assets/images/swipe_3.png"
+                      class="seedance-slide-img"
+                    />
+                  </div>
+                  <div :class="['seedance-slide', getSeedanceSlideClass(3)]">
+                    <img
+                      src="@/assets/images/swipe_4.png"
+                      class="seedance-slide-img"
+                    />
+                  </div>
+                  <div :class="['seedance-slide', getSeedanceSlideClass(4)]">
+                    <img
+                      src="@/assets/images/swipe_5.jpg"
+                      class="seedance-slide-img"
+                    />
+                  </div>
+                </div>
+                <button
+                  class="seedance-nav-btn prev"
+                  @click="prevSeedanceSlide"
+                >
+                  <i class="fas fa-chevron-left"></i>
+                </button>
+                <button
+                  class="seedance-nav-btn next"
+                  @click="nextSeedanceSlide"
+                >
+                  <i class="fas fa-chevron-right"></i>
+                </button>
+              </div>
+
+              <button class="seedance-btn compact" @click="goLumi()">
+                立即体验
+                <i class="fas fa-arrow-right"></i>
+              </button>
             </div>
           </div>
 
@@ -736,8 +858,8 @@ onUnmounted(() => {
             </div>
             <div class="card-footer-v5">
               <span class="action-btn"
-                >分析数据 <i class="fas fa-arrow-right"></i
-              ></span>
+                >分析数据 <i class="fas fa-arrow-right"></i> ></span
+              >
             </div>
           </div>
 
@@ -1213,6 +1335,312 @@ onUnmounted(() => {
 
 
 <style scoped>
+/* Seedance Carousel Styles */
+.seedance-carousel {
+  position: relative;
+  width: 100%;
+  margin: 40px 0;
+  overflow: hidden;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seedance-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+.seedance-slide {
+  position: absolute;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.seedance-slide-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.5s ease;
+}
+
+/* Active slide (center) */
+.seedance-slide.active {
+  width: 36%;
+  height: 80%;
+  z-index: 5;
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* First next slide (right side, closer) */
+.seedance-slide.next1 {
+  width: 32%;
+  height: 70%;
+  z-index: 4;
+  transform: translateX(65%) scale(0.9);
+}
+
+/* Second next slide (right side, farther) */
+.seedance-slide.next2 {
+  width: 28%;
+  height: 60%;
+  z-index: 3;
+  transform: translateX(105%) scale(0.8);
+}
+
+/* First previous slide (left side, closer) */
+.seedance-slide.prev1 {
+  width: 32%;
+  height: 70%;
+  z-index: 4;
+  transform: translateX(-65%) scale(0.9);
+}
+
+/* Second previous slide (left side, farther) */
+.seedance-slide.prev2 {
+  width: 28%;
+  height: 60%;
+  z-index: 3;
+  transform: translateX(-105%) scale(0.8);
+}
+
+/* Compact Seedance Section */
+.seedance-content.compact {
+  padding: 0;
+}
+
+.seedance-header.compact {
+  margin: 0;
+}
+
+.seedance-logo-container.compact {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 8px;
+}
+
+.seedance-logo.compact {
+  width: 32px;
+  height: 32px;
+}
+
+.seedance-title.compact {
+  font-size: 1rem;
+  margin: 0;
+}
+
+.seedance-subtitle.compact {
+  font-size: 0.8rem;
+  margin-bottom: 8px;
+  line-height: 1.3;
+}
+
+.seedance-features.compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-bottom: 10px;
+  margin: 0;
+}
+
+.seedance-feature.compact {
+  font-size: 0.7rem;
+  padding: 3px 10px;
+  border-radius: 12px;
+}
+
+.seedance-carousel.compact {
+  height: 250px;
+  margin: 0;
+}
+
+.seedance-carousel.compact .seedance-slide.active {
+  width: 36%;
+  height: 70%;
+}
+
+.seedance-carousel.compact .seedance-slide.next1,
+.seedance-carousel.compact .seedance-slide.prev1 {
+  width: 32%;
+  height: 60%;
+}
+
+.seedance-carousel.compact .seedance-slide.next2,
+.seedance-carousel.compact .seedance-slide.prev2 {
+  width: 28%;
+  height: 50%;
+}
+
+.seedance-btn.compact {
+  margin-top: 0;
+  padding: 8px 16px;
+  font-size: 0.8rem;
+}
+
+/* Navigation buttons */
+.seedance-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.seedance-nav-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.seedance-nav-btn.prev {
+  left: 20px;
+}
+
+.seedance-nav-btn.next {
+  right: 20px;
+}
+
+.seedance-nav-btn i {
+  font-size: 20px;
+  color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .seedance-carousel {
+    height: 300px;
+  }
+
+  .seedance-slide.active {
+    width: 70%;
+    height: 70%;
+  }
+
+  .seedance-slide.next,
+  .seedance-slide.prev {
+    width: 50%;
+    height: 50%;
+  }
+
+  .seedance-slide.inactive {
+    width: 30%;
+    height: 30%;
+  }
+
+  .seedance-nav-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .seedance-nav-btn i {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .seedance-carousel {
+    height: 250px;
+  }
+
+  .seedance-slide.active {
+    width: 80%;
+    height: 60%;
+  }
+
+  .seedance-slide.next,
+  .seedance-slide.prev {
+    width: 60%;
+    height: 40%;
+  }
+
+  .seedance-nav-btn {
+    width: 35px;
+    height: 35px;
+  }
+}
+.seedance-swiper .swiper-slide-active .seedance-slide-img {
+  transform: scale(1);
+  z-index: 3;
+}
+
+.seedance-swiper .swiper-slide-next .seedance-slide-img,
+.seedance-swiper .swiper-slide-prev .seedance-slide-img {
+  transform: scale(0.8);
+  z-index: 2;
+}
+
+.seedance-swiper .swiper-slide-next + .swiper-slide .seedance-slide-img,
+.seedance-swiper .swiper-slide-prev + .swiper-slide-prev .seedance-slide-img {
+  transform: scale(0.6);
+  z-index: 1;
+}
+
+/* Navigation buttons */
+.seedance-swiper .swiper-button-next,
+.seedance-swiper .swiper-button-prev {
+  color: #333;
+  top: 50%;
+  transform: translateY(-50%);
+  background: rgba(255, 255, 255, 0.8);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.seedance-swiper .swiper-button-next:hover,
+.seedance-swiper .swiper-button-prev:hover {
+  background: rgba(255, 255, 255, 1);
+}
+
+/* Pagination */
+.seedance-pagination {
+  position: absolute;
+  bottom: -30px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .seedance-swiper {
+    height: 200px;
+  }
+
+  .seedance-swiper .swiper-slide-next .seedance-slide-img,
+  .seedance-swiper .swiper-slide-prev .seedance-slide-img {
+    transform: scale(0.7);
+  }
+
+  .seedance-swiper .swiper-slide-next + .swiper-slide .seedance-slide-img,
+  .seedance-swiper .swiper-slide-prev + .swiper-slide-prev .seedance-slide-img {
+    transform: scale(0.5);
+  }
+}
+
 /* Carousel Transitions */
 
 .carousel-container {
@@ -1417,6 +1845,167 @@ onUnmounted(() => {
 
 .line-dot.active {
   background: #4f46e5;
+}
+
+/* Seedance 2.0 Section */
+.seedance-section {
+  margin-top: 60px;
+  margin-bottom: 40px;
+}
+
+.seedance-content {
+  text-align: center;
+  padding: 40px 20px;
+  border-radius: 16px;
+}
+
+.seedance-header {
+  margin-bottom: 30px;
+}
+
+.seedance-logo-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+.seedance-logo {
+  width: 48px;
+  height: 48px;
+  object-fit: contain;
+  border-radius: 50%;
+}
+
+.seedance-title {
+  font-size: 2rem;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 0;
+}
+
+.seedance-subtitle {
+  font-size: 1.125rem;
+  color: #64748b;
+  margin: 0 0 24px 0;
+}
+
+.seedance-features {
+  display: flex;
+  justify-content: center;
+  gap: 32px;
+  flex-wrap: wrap;
+  /* margin-bottom: 32px; */
+}
+
+.seedance-feature {
+  color: #475569;
+  font-size: 1.1rem;
+}
+
+/* Seedance Carousel */
+.seedance-carousel {
+  position: relative;
+  max-width: 1200px;
+  margin: 0 auto 32px;
+  overflow: visible;
+  border-radius: 12px;
+}
+
+.seedance-swiper {
+  width: 100%;
+  height: 220px;
+  overflow: visible;
+  padding: 20px 0;
+}
+
+.seedance-swiper .swiper-slide {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 260px !important;
+  height: 180px;
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.18);
+  transition: all 0.4s ease;
+}
+
+.seedance-swiper .swiper-slide img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
+}
+
+.seedance-swiper .swiper-slide-active {
+  box-shadow: 0 16px 40px rgba(0, 0, 0, 0.28);
+}
+
+.seedance-carousel-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.swiper-button-prev,
+.swiper-button-next {
+  color: #3b82f6;
+  background: rgba(255, 255, 255, 0.8);
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  transition: all 0.3s ease;
+}
+
+.swiper-button-prev:hover,
+.swiper-button-next:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: scale(1.1);
+}
+
+.swiper-pagination-bullet {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #94a3b8;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.swiper-pagination-bullet-active {
+  background: #3b82f6;
+  width: 12px;
+}
+
+.swiper-pagination {
+  bottom: 16px !important;
+}
+
+.seedance-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  padding: 12px 32px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.seedance-btn:hover {
+  background: #2563eb;
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.3);
+  transform: translateY(-1px);
 }
 
 .hero-tabs {
@@ -2907,5 +3496,8 @@ onUnmounted(() => {
 }
 .hero-title-v2 {
   text-align: left;
+}
+.seedance-title {
+  font-size: 1.8rem !important;
 }
 </style>
