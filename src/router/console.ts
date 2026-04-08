@@ -13,6 +13,7 @@ const routes: RouteRecordRaw[] = [
         children: [
             { path: '', name: 'UserDashboard', component: () => import('@/views/console/UserDashboardView.vue') },
             { path: 'apps', name: 'UserApps', component: () => import('@/views/console/UserAppsView.vue') },
+            { path: 'apikeys', name: 'UserApiKeys', component: () => import('@/views/console/UserApiKeyView.vue') },
             { path: 'api', name: 'UserAPI', component: () => import('@/views/console/UserApiView.vue') },
             { path: 'billing', name: 'UserBilling', component: () => import('@/views/console/UserBillingView.vue') },
             { path: 'support', name: 'UserSupport', component: () => import('@/views/console/UserSupportView.vue') },

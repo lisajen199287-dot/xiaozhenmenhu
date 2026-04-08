@@ -136,3 +136,66 @@ export const apiGoLumi = () => {
     url: `/api/applumi/redirectToLumi`,
   })
 }
+
+// ==================== API Key 管理 ====================
+
+// 获取 API Key 列表
+export const apiGetApiKeys = () => {
+  return request.get({
+    url: `/apikey/keys`,
+  })
+}
+
+// 创建 API Key
+export const apiCreateApiKey = (data: { name: string }) => {
+  return request.post({
+    url: `/apikey/keys`,
+    data,
+  })
+}
+
+// 更新 API Key
+export const apiUpdateApiKey = (id: number, data: { name: string }) => {
+  return request.put({
+    url: `/apikey/keys`,
+    data: { id, ...data },
+  })
+}
+
+// 删除 API Key
+export const apiDeleteApiKey = (id: number) => {
+  return request.delete({
+    url: `/apikey/keys/${id}`,
+  })
+}
+
+// 启用/禁用 API Key
+export const apiToggleApiKeyStatus = (id: number, status: number) => {
+  return request.put({
+    url: `/apikey/keys/${id}/status`,
+    data: { status },
+  })
+}
+
+// 获取调用日志
+export const apiGetApiCallLogs = (params: { page: number; size: number; model?: string; status?: string }) => {
+  return request.get({
+    url: `/apikey/logs`,
+    params,
+  })
+}
+
+// 获取使用量统计
+export const apiGetApiUsage = (days: number = 7) => {
+  return request.get({
+    url: `/apikey/usage`,
+    params: { days },
+  })
+}
+
+// 获取完整密钥（点击眼睛图标时调用）
+export const apiGetFullKey = (id: number) => {
+  return request.get({
+    url: `/apikey/keys/${id}/full`,
+  })
+}

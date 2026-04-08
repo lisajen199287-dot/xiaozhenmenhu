@@ -14,6 +14,8 @@ const menuItems = [
 
   { name: "我的应用", icon: "fas fa-cubes", path: "/apps" },
 
+  { name: "API Key 管理", icon: "fas fa-key", path: "/apikeys" },
+
   { name: "费用中心", icon: "fas fa-wallet", path: "/billing" },
 
   { name: "工单支持", icon: "fas fa-headset", path: "/support" },
