@@ -16,6 +16,8 @@ const menuItems = [
 
   { name: "费用中心", icon: "fas fa-wallet", path: "/billing" },
 
+  { name: "lumi账单", icon: "fas fa-wallet", path: "/lumiBilling" },
+
   { name: "工单支持", icon: "fas fa-headset", path: "/support" },
 
   { name: "操作记录", icon: "fas fa-history", path: "/logs" },

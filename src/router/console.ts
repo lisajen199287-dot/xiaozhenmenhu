@@ -15,6 +15,7 @@ const routes: RouteRecordRaw[] = [
             { path: 'apps', name: 'UserApps', component: () => import('@/views/console/UserAppsView.vue') },
             { path: 'api', name: 'UserAPI', component: () => import('@/views/console/UserApiView.vue') },
             { path: 'billing', name: 'UserBilling', component: () => import('@/views/console/UserBillingView.vue') },
+            { path: 'lumiBilling', name: 'UserLumiBilling', component: () => import('@/views/console/UserLumiBillingView.vue') },
             { path: 'support', name: 'UserSupport', component: () => import('@/views/console/UserSupportView.vue') },
             { path: 'settings', name: 'UserSettings', component: () => import('@/views/console/UserSettingsView.vue') },
             { path: 'logs', name: 'UserLogs', component: () => import('@/views/console/UserLogsView.vue') }

@@ -136,3 +136,16 @@ export const apiGoLumi = () => {
     url: `/api/applumi/redirectToLumi`,
   })
 }
+
+export const redirectToLumi = () => {
+  return request.get({
+    url: `/api/applumi/redirectToLumi`,
+  })
+}
+
+export const apiLumiPage = (data: any) => {
+  return request.get({
+    url: `/api/applumi/lumi-page`,
+    params: data,
+  })
+}
