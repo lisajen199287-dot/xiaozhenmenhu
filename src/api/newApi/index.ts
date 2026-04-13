@@ -142,14 +142,14 @@ export const apiGoLumi = () => {
 // 获取 API Key 列表
 export const apiGetApiKeys = () => {
   return request.get({
-    url: `/apikey/keys`,
+    url: `/api/apikey/keys`,
   })
 }
 
 // 创建 API Key
 export const apiCreateApiKey = (data: { name: string }) => {
   return request.post({
-    url: `/apikey/keys`,
+    url: `/api/apikey/keys`,
     data,
   })
 }
@@ -157,7 +157,7 @@ export const apiCreateApiKey = (data: { name: string }) => {
 // 更新 API Key
 export const apiUpdateApiKey = (id: number, data: { name: string }) => {
   return request.put({
-    url: `/apikey/keys`,
+    url: `/api/apikey/keys`,
     data: { id, ...data },
   })
 }
@@ -165,14 +165,14 @@ export const apiUpdateApiKey = (id: number, data: { name: string }) => {
 // 删除 API Key
 export const apiDeleteApiKey = (id: number) => {
   return request.delete({
-    url: `/apikey/keys/${id}`,
+    url: `/api/apikey/keys/${id}`,
   })
 }
 
 // 启用/禁用 API Key
 export const apiToggleApiKeyStatus = (id: number, status: number) => {
   return request.put({
-    url: `/apikey/keys/${id}/status`,
+    url: `/api/apikey/keys/${id}/status`,
     data: { status },
   })
 }
@@ -180,7 +180,7 @@ export const apiToggleApiKeyStatus = (id: number, status: number) => {
 // 获取调用日志
 export const apiGetApiCallLogs = (params: { page: number; size: number; model?: string; status?: string }) => {
   return request.get({
-    url: `/apikey/logs`,
+    url: `/api/apikey/logs`,
     params,
   })
 }
@@ -188,7 +188,7 @@ export const apiGetApiCallLogs = (params: { page: number; size: number; model?: 
 // 获取使用量统计
 export const apiGetApiUsage = (days: number = 7) => {
   return request.get({
-    url: `/apikey/usage`,
+    url: `/api/apikey/usage`,
     params: { days },
   })
 }
@@ -196,7 +196,7 @@ export const apiGetApiUsage = (days: number = 7) => {
 // 获取完整密钥（点击眼睛图标时调用）
 export const apiGetFullKey = (id: number) => {
   return request.get({
-    url: `/apikey/keys/${id}/full`,
+    url: `/api/apikey/keys/${id}/full`,
   })
 }
 
