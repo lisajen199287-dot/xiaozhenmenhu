@@ -84,7 +84,7 @@ Filter.**Status** `string[]` `可选`
       "AssetId": "ast-xxxxxxxx",
       "AssetGroupId": "ag-xxxxxxxx",
       "AssetType": "Image",
-      "AssetName": "我的图片",
+      "Name": "我的图片",
       "Status": "Active",
       "CreatedAt": "2026-04-14T10:00:00Z",
       "UpdatedAt": "2026-04-14T10:00:00Z"

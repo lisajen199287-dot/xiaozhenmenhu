@@ -42,7 +42,7 @@ API Key 鉴权凭证，格式为 `Bearer <your-api-key>`。
 
 ---
 
-**AssetName** `string` `可选` `默认值 ""`
+**Name** `string` `可选` `默认值 ""`
 素材名称。不传时默认为空字符串。
 
 ---
@@ -53,7 +53,7 @@ API Key 鉴权凭证，格式为 `Bearer <your-api-key>`。
 {
   "AssetGroupId": "ag-xxxxxxxx",
   "AssetType": "Image",
-  "AssetName": "我的图片",
+  "Name": "我的图片",
   "ImageUrl": "https://example.com/image.jpg"
 }
 ```
@@ -73,7 +73,7 @@ API Key 鉴权凭证，格式为 `Bearer <your-api-key>`。
   "AssetId": "ast-xxxxxxxx",
   "AssetGroupId": "ag-xxxxxxxx",
   "AssetType": "Image",
-  "AssetName": "我的图片",
+  "Name": "我的图片",
   "Status": "Active",
   "CreatedAt": "2026-04-14T10:00:00Z",
   "UpdatedAt": "2026-04-14T10:00:00Z"

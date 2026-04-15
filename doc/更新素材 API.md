@@ -33,7 +33,7 @@ API Key 鉴权凭证，格式为 `Bearer <your-api-key>`。
 
 ---
 
-**AssetName** `string` `可选`
+**Name** `string` `可选`
 新的素材名称。
 
 ---
@@ -42,7 +42,7 @@ API Key 鉴权凭证，格式为 `Bearer <your-api-key>`。
 
 ```json
 {
-  "AssetName": "新名称"
+  "Name": "新名称"
 }
 ```
 
@@ -56,7 +56,7 @@ Authorization: Bearer <your-api-key>
 Content-Type: application/json
 
 {
-  "AssetName": "新名称"
+  "Name": "新名称"
 }
 ```
 
@@ -75,7 +75,7 @@ Content-Type: application/json
   "AssetId": "ast-xxxxxxxx",
   "AssetGroupId": "ag-xxxxxxxx",
   "AssetType": "Image",
-  "AssetName": "新名称",
+  "Name": "新名称",
   "Status": "Active",
   "CreatedAt": "2026-04-14T10:00:00Z",
   "UpdatedAt": "2026-04-14T12:00:00Z"
