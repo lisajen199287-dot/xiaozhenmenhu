@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from 'vue'
+import { ref, onMounted, defineAsyncComponent } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { init } from 'echarts'
 import type { EChartsOption } from 'echarts'
@@ -13,6 +13,8 @@ import {
   apiGetApiUsage,
   apiGetFullKey
 } from '@/api/newApi/index'
+
+const ApiDocsTab = defineAsyncComponent(() => import('./components/ApiDocsTab.vue'))
 
 interface ApiKey {
   id: number
@@ -496,6 +498,9 @@ onMounted(() => {
         <button :class="['tab', { active: activeTab === 'logs' }]" @click="activeTab = 'logs'">
           <i class="fas fa-history"></i> 调用日志
         </button>
+        <button :class="['tab', { active: activeTab === 'docs' }]" @click="activeTab = 'docs'">
+          <i class="fas fa-book"></i> API文档
+        </button>
       </div>
     </div>
 
@@ -623,6 +628,11 @@ onMounted(() => {
           @current-change="handleLogsPageChange"
         />
       </div>
+    </div>
+
+    <!-- API文档 -->
+    <div v-show="activeTab === 'docs'" class="content-card docs-card">
+      <ApiDocsTab />
     </div>
 
     <!-- 创建弹窗 -->
@@ -956,5 +966,12 @@ onMounted(() => {
   display: flex;
   justify-content: center;
   border-top: 1px solid #f1f5f9;
+}
+
+/* API文档卡片 */
+.docs-card {
+  padding: 0;
+  min-height: 600px;
+  overflow: hidden;
 }
 </style>
