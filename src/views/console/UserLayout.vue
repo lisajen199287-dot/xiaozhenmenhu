@@ -10,21 +10,7 @@ const { user, isLoggedIn, logout } = useUser();
 const route = useRoute();
 
 const menuItems = [
-  { name: "控制台概览", icon: "fas fa-chart-pie", path: "/" },
-
-  { name: "我的应用", icon: "fas fa-cubes", path: "/apps" },
-
-  { name: "API Key 管理", icon: "fas fa-key", path: "/apikeys" },
-
-  { name: "费用中心", icon: "fas fa-wallet", path: "/billing" },
-
-  { name: "lumi账单", icon: "fas fa-wallet", path: "/lumiBilling" },
-
-  { name: "工单支持", icon: "fas fa-headset", path: "/support" },
-
-  { name: "操作记录", icon: "fas fa-history", path: "/logs" },
-
-  { name: "账号设置", icon: "fas fa-cog", path: "/settings" },
+  { name: "API 管理", icon: "fas fa-key", path: "/apikeys" },
 ];
 
 const sidebarCollapsed = ref(false);

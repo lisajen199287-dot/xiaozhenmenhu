@@ -17,7 +17,7 @@ const config: {
   /**
    * API 文档网关域名（用于文档中的接口地址展示）
    */
-  gateway_domain: 'http://127.0.0.1:48080',
+  gateway_domain: 'https://www.cii-group.com/app-api',
   // gateway_domain: 'https://api.your-domain.com',
 
   /**
