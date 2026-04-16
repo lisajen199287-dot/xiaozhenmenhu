@@ -1,4 +1,4 @@
-`GET {{GATEWAY_DOMAIN}}/app-api/api/v1/assets/assets/{assetId}`
+`GET {{GATEWAY_DOMAIN}}/api/v1/assets/assets/{assetId}`
 
 本文介绍查询素材详情 API 的输入输出参数，供您使用接口时查阅字段含义。调用本接口可根据素材 ID 查询该素材的详细信息。
 
@@ -32,7 +32,7 @@ API Key 鉴权凭证，格式为 `Bearer <your-api-key>`。
 ### 请求示例
 
 ```
-GET /app-api/api/v1/assets/assets/ast-xxxxxxxx
+GET /api/v1/assets/assets/ast-xxxxxxxx
 Authorization: Bearer <your-api-key>
 ```
 

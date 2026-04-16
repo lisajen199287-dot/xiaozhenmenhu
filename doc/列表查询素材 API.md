@@ -1,4 +1,4 @@
-`POST {{GATEWAY_DOMAIN}}/app-api/api/v1/assets/assets/list`
+`POST {{GATEWAY_DOMAIN}}/api/v1/assets/assets/list`
 
 本文介绍列表查询素材 API 的输入输出参数，供您使用接口时查阅字段含义。调用本接口可分页查询指定素材组下的所有素材，支持按状态进行过滤。
 

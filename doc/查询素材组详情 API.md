@@ -1,4 +1,4 @@
-`GET {{GATEWAY_DOMAIN}}/app-api/api/v1/assets/asset-groups/{groupId}`
+`GET {{GATEWAY_DOMAIN}}/api/v1/assets/asset-groups/{groupId}`
 
 本文介绍查询素材组详情 API 的输入输出参数，供您使用接口时查阅字段含义。调用本接口可根据素材组 ID 查询该素材组的详细信息。
 
@@ -32,7 +32,7 @@ API Key 鉴权凭证，格式为 `Bearer <your-api-key>`。
 ### 请求示例
 
 ```
-GET /app-api/api/v1/assets/asset-groups/ag-xxxxxxxx
+GET /api/v1/assets/asset-groups/ag-xxxxxxxx
 Authorization: Bearer <your-api-key>
 ```
 

@@ -1,4 +1,4 @@
-`PUT {{GATEWAY_DOMAIN}}/app-api/api/v1/assets/asset-groups/{groupId}`
+`PUT {{GATEWAY_DOMAIN}}/api/v1/assets/asset-groups/{groupId}`
 
 本文介绍更新素材组 API 的输入输出参数，供您使用接口时查阅字段含义。调用本接口可修改指定素材组的名称和描述信息。
 
@@ -57,7 +57,7 @@ API Key 鉴权凭证，格式为 `Bearer <your-api-key>`。
 ### 请求示例
 
 ```
-PUT /app-api/api/v1/assets/asset-groups/ag-xxxxxxxx
+PUT /api/v1/assets/asset-groups/ag-xxxxxxxx
 Authorization: Bearer <your-api-key>
 Content-Type: application/json
 

@@ -1,4 +1,4 @@
-`POST {{GATEWAY_DOMAIN}}/app-api/api/v1/assets/asset-groups`
+`POST {{GATEWAY_DOMAIN}}/api/v1/assets/asset-groups`
 
 本文介绍创建素材组 API 的输入输出参数，供您使用接口时查阅字段含义。调用本接口可在当前用户下创建一个新的素材组，用于管理图片、视频等素材资源。
 
