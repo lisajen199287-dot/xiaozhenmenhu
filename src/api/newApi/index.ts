@@ -149,3 +149,26 @@ export const apiLumiPage = (data: any) => {
     params: data,
   })
 }
+
+
+//获取协议接口
+export const apiAgAgreement = () => {
+  return request.get({
+    url: `/member/agreement/get-agreed`,
+  })
+}
+
+//确认用户是否有协议
+export const apiAgAgreementHasAgreed = () => {
+  return request.get({
+    url: `/member/agreement/has-agreed`,
+  })
+}
+
+// 协议和用户关联接口
+export const apiAgAgreementSave = (data: any) => {
+  return request.post({
+    url: `/member/agreement/save`,
+    data: data,
+  })
+}
