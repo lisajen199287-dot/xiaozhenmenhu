@@ -1,4 +1,4 @@
-`POST {{GATEWAY_DOMAIN}}/app-api/api/v1/assets/assets`
+`POST {{GATEWAY_DOMAIN}}/api/v1/assets/assets`
 
 本文介绍创建素材 API 的输入输出参数，供您使用接口时查阅字段含义。调用本接口可在指定素材组中创建一个新的素材（图片/视频等），通过公网 URL 上传素材资源。
 
