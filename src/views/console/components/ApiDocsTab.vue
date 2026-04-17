@@ -17,6 +17,7 @@ const docList: DocItem[] = [
   { id: 'query-task', title: '查询视频生成任务', icon: 'fas fa-search', fileName: '查询视频生成任务 API.md' },
   { id: 'query-task-list', title: '查询视频生成任务列表', icon: 'fas fa-list', fileName: '查询视频生成任务列表.md' },
   { id: 'cancel-delete', title: '取消或删除任务', icon: 'fas fa-trash-alt', fileName: '取消或删除视频生成任务.md' },
+  { id: 'image-gen', title: '图片生成', icon: 'fas fa-image', fileName: '图片生成API.md' },
   { id: 'create-material-group', title: '创建素材组', icon: 'fas fa-folder-plus', fileName: '创建素材组 API.md' },
   { id: 'list-material-group', title: '列表查询素材组', icon: 'fas fa-th-list', fileName: '列表查询素材组 API.md' },
   { id: 'query-material-group', title: '查询素材组详情', icon: 'fas fa-folder-open', fileName: '查询素材组详情 API.md' },

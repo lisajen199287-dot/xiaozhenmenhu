@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, defineAsyncComponent } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
-import { init } from 'echarts'
-import type { EChartsOption } from 'echarts'
 import { useUser } from '@/utils/userStore'
 import {
   apiGetApiKeys,
   apiCreateApiKey,
   apiDeleteApiKey,
   apiToggleApiKeyStatus,
-  apiGetApiCallLogs,
   apiGetApiUsage,
   apiGetFullKey
 } from '@/api/newApi/index'
@@ -28,28 +25,6 @@ interface ApiKey {
   createTime: string
 }
 
-interface ApiCallLog {
-  id: number
-  requestId: string
-  model: string
-  endpoint: string
-  status: string
-  durationMs: number
-  promptTokens: number
-  completionTokens: number
-  totalTokens: number
-  errorMsg: string
-  createTime: string
-}
-
-interface DailyStat {
-  date: string
-  callCount: number
-  promptTokens: number
-  completionTokens: number
-  totalTokens: number
-}
-
 const { user } = useUser()
 
 // API Key 列表
@@ -61,18 +36,6 @@ const loadedFullKeys = ref<Set<number>>(new Set())
 // 正在加载完整密钥的 Key ID
 const loadingFullKeys = ref<Set<number>>(new Set())
 
-// 统计数据
-const dailyStats = ref<DailyStat[]>([])
-const todayCalls = ref(0)
-const todayTokens = ref(0)
-
-// 日志分页
-const logs = ref<ApiCallLog[]>([])
-const logsLoading = ref(false)
-const logsPage = ref(1)
-const logsPageSize = ref(10)
-const logsTotal = ref(0)
-
 // 创建弹窗
 const createDialogVisible = ref(false)
 const newKeyName = ref('')
@@ -82,9 +45,24 @@ const newCreatedKey = ref('')
 // 当前显示的 Tab
 const activeTab = ref('keys')
 
-// 图表引用
-const chartRef = ref<HTMLElement | null>(null)
-let chartInstance: any = null
+// 今日统计
+const todayCalls = ref(0)
+const todayCredits = ref(0)
+
+// 获取使用量统计
+const fetchUsage = async () => {
+  try {
+    const res = await apiGetApiUsage(1)
+    const stats = res?.dailyStats || res?.data?.dailyStats || []
+    if (Array.isArray(stats) && stats.length > 0) {
+      const today = stats[stats.length - 1]
+      todayCalls.value = today.callCount || 0
+      todayCredits.value = today.actualTokens || 0
+    }
+  } catch {
+    // 接口不可用时保持默认值 0
+  }
+}
 
 // 获取 API Key 列表
 const fetchApiKeys = async () => {
@@ -109,65 +87,6 @@ const fetchApiKeys = async () => {
     apiKeys.value = []
   } finally {
     loading.value = false
-  }
-}
-
-// 获取使用量统计
-const fetchUsage = async () => {
-  try {
-    const res = await apiGetApiUsage(7)
-    console.log('API Usage response:', res)
-    // 兼容不同的响应格式
-    if (res?.dailyStats && Array.isArray(res.dailyStats)) {
-      dailyStats.value = res.dailyStats
-    } else if (res?.data?.dailyStats && Array.isArray(res.data.dailyStats)) {
-      dailyStats.value = res.data.dailyStats
-    } else {
-      dailyStats.value = []
-    }
-
-    // 计算今日数据
-    const today = new Date().toISOString().split('T')[0]
-    const todayStat = dailyStats.value.find((s: DailyStat) => s.date === today)
-    if (todayStat) {
-      todayCalls.value = todayStat.callCount
-      todayTokens.value = todayStat.totalTokens
-    }
-
-    // 渲染图表
-    renderChart()
-  } catch (e) {
-    console.error('Fetch Usage error:', e)
-    dailyStats.value = []
-  }
-}
-
-// 获取调用日志
-const fetchLogs = async () => {
-  logsLoading.value = true
-  try {
-    const res = await apiGetApiCallLogs({ page: logsPage.value, size: logsPageSize.value })
-    console.log('API Logs response:', res)
-    // 兼容不同的响应格式
-    if (res?.list && Array.isArray(res.list)) {
-      logs.value = res.list
-      logsTotal.value = res.total || 0
-    } else if (res?.data?.list && Array.isArray(res.data.list)) {
-      logs.value = res.data.list
-      logsTotal.value = res.data.total || 0
-    } else if (Array.isArray(res)) {
-      logs.value = res
-      logsTotal.value = res.length
-    } else {
-      logs.value = []
-      logsTotal.value = 0
-    }
-  } catch (e) {
-    console.error('Fetch Logs error:', e)
-    logs.value = []
-    logsTotal.value = 0
-  } finally {
-    logsLoading.value = false
   }
 }
 
@@ -331,120 +250,13 @@ const handleDelete = async (key: ApiKey) => {
   }
 }
 
-// 渲染图表
-const renderChart = () => {
-  if (!chartRef.value || dailyStats.value.length === 0) return
-
-  if (chartInstance) {
-    chartInstance.dispose()
-  }
-
-  chartInstance = init(chartRef.value)
-
-  const dates = dailyStats.value.map(s => s.date).reverse()
-  const calls = dailyStats.value.map(s => s.callCount).reverse()
-  const tokens = dailyStats.value.map(s => s.totalTokens).reverse()
-
-  const option: EChartsOption = {
-    tooltip: {
-      trigger: 'axis',
-      axisPointer: { type: 'cross' }
-    },
-    legend: {
-      data: ['调用次数', 'Token 数量'],
-      bottom: 0
-    },
-    grid: {
-      left: '3%',
-      right: '4%',
-      bottom: '15%',
-      containLabel: true
-    },
-    xAxis: {
-      type: 'category',
-      data: dates,
-      axisLine: { lineStyle: { color: '#e2e8f0' } },
-      axisLabel: { color: '#64748b' }
-    },
-    yAxis: [
-      {
-        type: 'value',
-        name: '调用次数',
-        axisLine: { show: false },
-        axisTick: { show: false },
-        axisLabel: { color: '#64748b' },
-        splitLine: { lineStyle: { color: '#f1f5f9' } }
-      },
-      {
-        type: 'value',
-        name: 'Token 数',
-        axisLine: { show: false },
-        axisTick: { show: false },
-        axisLabel: { color: '#64748b' },
-        splitLine: { show: false }
-      }
-    ],
-    series: [
-      {
-        name: '调用次数',
-        type: 'bar',
-        data: calls,
-        itemStyle: { color: '#4f46e5', borderRadius: [4, 4, 0, 0] },
-        barWidth: '40%'
-      },
-      {
-        name: 'Token 数量',
-        type: 'line',
-        yAxisIndex: 1,
-        data: tokens,
-        smooth: true,
-        lineStyle: { color: '#10b981', width: 2 },
-        itemStyle: { color: '#10b981' },
-        areaStyle: {
-          color: {
-            type: 'linear',
-            x: 0, y: 0, x2: 0, y2: 1,
-            colorStops: [
-              { offset: 0, color: 'rgba(16, 185, 129, 0.3)' },
-              { offset: 1, color: 'rgba(16, 185, 129, 0.05)' }
-            ]
-          }
-        }
-      }
-    ]
-  }
-
-  chartInstance.setOption(option)
-}
-
-// 日志分页改变
-const handleLogsPageChange = (page: number) => {
-  logsPage.value = page
-  fetchLogs()
-}
-
 // 状态颜色
 const getStatusType = (status: number) => status === 1 ? 'success' : 'danger'
 const getStatusText = (status: number) => status === 1 ? '启用' : '禁用'
 
-// 日志状态颜色
-const getLogStatusType = (status: string) => {
-  if (status === 'success') return 'success'
-  if (status === 'failed') return 'danger'
-  return 'warning'
-}
-
 onMounted(() => {
   fetchApiKeys()
   fetchUsage()
-  fetchLogs()
-
-  // 监听窗口大小变化
-  window.addEventListener('resize', () => {
-    if (chartInstance) {
-      chartInstance.resize()
-    }
-  })
 })
 </script>
 
@@ -480,7 +292,7 @@ onMounted(() => {
       <div class="stat-card">
         <div class="stat-icon tokens"><i class="fas fa-microchip"></i></div>
         <div class="stat-info">
-          <div class="stat-value">{{ todayTokens.toLocaleString() }}</div>
+          <div class="stat-value">{{ todayCredits.toLocaleString() }}</div>
           <div class="stat-label">今日 Token 消耗</div>
         </div>
       </div>
@@ -491,12 +303,6 @@ onMounted(() => {
       <div class="tabs">
         <button :class="['tab', { active: activeTab === 'keys' }]" @click="activeTab = 'keys'">
           <i class="fas fa-key"></i> 密钥管理
-        </button>
-        <button :class="['tab', { active: activeTab === 'usage' }]" @click="activeTab = 'usage'">
-          <i class="fas fa-chart-bar"></i> 使用量统计
-        </button>
-        <button :class="['tab', { active: activeTab === 'logs' }]" @click="activeTab = 'logs'">
-          <i class="fas fa-history"></i> 调用日志
         </button>
         <button :class="['tab', { active: activeTab === 'docs' }]" @click="activeTab = 'docs'">
           <i class="fas fa-book"></i> API文档
@@ -572,62 +378,6 @@ onMounted(() => {
           </tr>
         </tbody>
       </table>
-    </div>
-
-    <!-- 使用量统计 -->
-    <div v-show="activeTab === 'usage'" class="content-card">
-      <div class="card-header">
-        <h3>近 7 天使用趋势</h3>
-      </div>
-      <div ref="chartRef" class="chart-container"></div>
-    </div>
-
-    <!-- 调用日志 -->
-    <div v-show="activeTab === 'logs'" class="content-card">
-      <div v-if="logsLoading" class="loading-state">加载中...</div>
-
-      <table v-else class="data-table">
-        <thead>
-          <tr>
-            <th>请求 ID</th>
-            <th>模型</th>
-            <th>接口</th>
-            <th>状态</th>
-            <th>耗时</th>
-            <th>Token</th>
-            <th>时间</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="log in logs" :key="log.id">
-            <td class="code-font">{{ log.requestId?.substring(0, 8) }}...</td>
-            <td>{{ log.model }}</td>
-            <td>{{ log.endpoint }}</td>
-            <td>
-              <span :class="['status-badge', getLogStatusType(log.status)]">
-                {{ log.status }}
-              </span>
-            </td>
-            <td>{{ log.durationMs }}ms</td>
-            <td>{{ log.totalTokens }}</td>
-            <td class="text-muted">{{ new Date(log.createTime).toLocaleString() }}</td>
-          </tr>
-          <tr v-if="logs.length === 0">
-            <td colspan="7" class="empty-state">暂无调用记录</td>
-          </tr>
-        </tbody>
-      </table>
-
-      <div v-if="logsTotal > logsPageSize" class="pagination">
-        <el-pagination
-          background
-          layout="prev, pager, next"
-          :total="logsTotal"
-          :page-size="logsPageSize"
-          :current-page="logsPage"
-          @current-change="handleLogsPageChange"
-        />
-      </div>
     </div>
 
     <!-- API文档 -->
