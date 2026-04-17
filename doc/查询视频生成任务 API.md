@@ -1,7 +1,6 @@
 `GET {{GATEWAY_DOMAIN}}/api/v1/contents/generations/tasks/{id}`  [运行](https://api.volcengine.com/api-explorer/?action=GetContentsGenerationsTask&data=%7B%22id%22%3A%22cgt-20250331175019-68d9t%22%7D&groupName=%E8%A7%86%E9%A2%91%E7%94%9F%E6%88%90API&query=%7B%7D&serviceCode=ark&version=2024-01-01)
 查询视频生成任务的状态。
-:::tip
-仅支持查询最近 7 天的历史数据。时间计算统一采用UTC时间戳，返回的7天历史数据范围以用户实际发起查询请求的时刻为基准（精确到秒），时间戳区间为 [T\-7天, T)。
+
 
 :::
 ```mixin-react
