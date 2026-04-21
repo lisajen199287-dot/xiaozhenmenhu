@@ -123,6 +123,11 @@ const routes: RouteRecordRaw[] = [
         name: 'EcommerceLanding',
         component: () => import('@/views/EcommerceLandingView.vue')
     },
+    {
+        path: '/lumi',
+        name: 'Lumi',
+        component: () => import('@/views/lumiView.vue')
+    },
     // New routes to fix warnings
     {
         path: '/brain',

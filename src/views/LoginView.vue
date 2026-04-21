@@ -15,7 +15,7 @@ const route = useRoute();
 
 const { login } = useUser();
 
-const redirect = ref<string>(route.query.redirect as string || "");
+const redirect = ref<string>((route.query.redirect as string) || "");
 
 const qrCodeUrl = ref("");
 const wxToken = ref("");
@@ -264,9 +264,13 @@ const lLogin = async (type?: string) => {
     wxToken: loginType.value == "2" ? qrcodeToken.value : "",
   };
   let res = await LoginApi.validateCaptcha(params);
+  localStorage.setItem("token", res.accessToken);
+  let res1 = await LoginApi.getFrontUserInfo();
+  const item = res;
+  item.nickname = res1.nickname;
   // authUtil.setToken(res);
   //存储用户信息
-  await login(res);
+  await login(item);
   if (!redirect.value) {
     redirect.value = "/";
   }

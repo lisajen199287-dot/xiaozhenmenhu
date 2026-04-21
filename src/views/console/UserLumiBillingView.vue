@@ -45,21 +45,21 @@ const formatDate = (timestamp: number): string => {
 
 // Scene dictionary
 const sceneDict = {
-  'ai_video_generation': '智能视频',
-  'ai_picture_generation': '智能生图',
-  'custom_training': '风格定制',
-  'workflow_square': 'workflow 广场',
-  'workflow_workbench': 'workflow 工作台',
-  'batch_flow': '数据批量',
-  'model_center': '模型中心'
+  ai_video_generation: "智能视频",
+  ai_picture_generation: "智能生图",
+  custom_training: "风格定制",
+  workflow_square: "workflow 广场",
+  workflow_workbench: "workflow 工作台",
+  batch_flow: "数据批量",
+  model_center: "模型中心",
 };
 
 // Status dictionary
 const statusDict = {
-  'confirm': '确认扣减',
-  'cancel': '取消扣减',
-  'withholding': '预扣减',
-  'expire': '过期自动取消'
+  confirm: "确认扣减",
+  cancel: "取消扣减",
+  withholding: "预扣减",
+  expire: "过期自动取消",
 };
 
 // Get scene display text
@@ -72,6 +72,7 @@ const getStatusText = (status: string): string => {
   return statusDict[status] || status;
 };
 
+const totalValue = ref(0);
 // Fetch billing data
 const fetchBillingData = async () => {
   loading.value = true;
@@ -81,7 +82,7 @@ const fetchBillingData = async () => {
       pageNo: searchParams.value.pageNo,
       pageSize: searchParams.value.pageSize,
     });
-
+    totalValue.value = response.extra?.totalPoint || 0;
     billingList.value = response.list || [];
     pagination.value.total = response.total || 0;
   } catch (error) {
@@ -123,8 +124,52 @@ const handlePageSizeChange = (size: number) => {
   fetchBillingData();
 };
 
+// Set default date range to today
+const setDefaultDateRange = () => {
+  const today = new Date();
+
+  // 今天 00:00:00
+  const startOfDay = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    0,
+    0,
+    0
+  );
+  // 今天 23:59:59
+  const endOfDay = new Date(
+    today.getFullYear(),
+    today.getMonth(),
+    today.getDate(),
+    23,
+    59,
+    59
+  );
+
+  // 格式化成本地时间字符串（YYYY-MM-DD HH:mm:ss）
+  const formatDate = (date) => {
+    const y = date.getFullYear();
+    const m = String(date.getMonth() + 1).padStart(2, "0");
+    const d = String(date.getDate()).padStart(2, "0");
+    const hh = String(date.getHours()).padStart(2, "0");
+    const mm = String(date.getMinutes()).padStart(2, "0");
+    const ss = String(date.getSeconds()).padStart(2, "0");
+    return `${y}-${m}-${d} ${hh}:${mm}:${ss}`;
+  };
+
+  const startStr = formatDate(startOfDay);
+  const endStr = formatDate(endOfDay);
+
+  dateRange.value = [startStr, endStr];
+  searchParams.value.createTime = [startStr, endStr];
+};
+
 // Initial data fetch
-onMounted(fetchBillingData);
+onMounted(() => {
+  setDefaultDateRange();
+  fetchBillingData();
+});
 </script>
 
 <template>
@@ -159,6 +204,10 @@ onMounted(fetchBillingData);
         <el-button type="primary" @click="handleSearch">
           <i class="fas fa-search"></i> 搜索
         </el-button>
+
+        <div class="total-consumption">
+          总消耗量：<span class="total-value">{{ totalValue }}</span>
+        </div>
       </div>
     </div>
 
@@ -177,11 +226,25 @@ onMounted(fetchBillingData);
             {{ getSceneText(scope.row.scene) }}
           </template>
         </el-table-column>
-        <el-table-column prop="value" label="消耗量" />
+        <el-table-column prop="value" label="消耗量">
+          <template #default="scope">
+            -{{ Number(scope.row.value).toFixed(2) }}
+          </template>
+        </el-table-column>
         <el-table-column prop="operateUserId" label="用户火山侧ID" />
         <el-table-column label="状态">
           <template #default="scope">
-            <el-tag :type="scope.row.status === 'confirm' ? 'success' : scope.row.status === 'cancel' ? 'danger' : scope.row.status === 'withholding' ? 'warning' : 'info'">
+            <el-tag
+              :type="
+                scope.row.status === 'confirm'
+                  ? 'success'
+                  : scope.row.status === 'cancel'
+                  ? 'danger'
+                  : scope.row.status === 'withholding'
+                  ? 'warning'
+                  : 'info'
+              "
+            >
               {{ getStatusText(scope.row.status) }}
             </el-tag>
           </template>
@@ -315,6 +378,28 @@ onMounted(fetchBillingData);
 
 .btn-search:hover {
   background: #1e293b;
+}
+
+/* 总消耗量样式 */
+.total-consumption {
+  margin-left: auto;
+  font-size: 1rem;
+  font-weight: 600;
+  color: #334155;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 16px;
+  background: #f8fafc;
+  border-radius: 8px;
+  border: 1px solid #e2e8f0;
+}
+
+.total-value {
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: #4f46e5;
+  font-family: "Courier New", monospace;
 }
 
 .loading-state,
