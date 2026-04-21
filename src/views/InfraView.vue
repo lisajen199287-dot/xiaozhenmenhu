@@ -36,7 +36,7 @@
 
           <span class="divider">|</span>
 
-          <a href="#">API文档</a>
+          <a href="/console.html#/apikeys?tab=docs">API文档</a>
 
         </div>
 

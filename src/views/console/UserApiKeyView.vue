@@ -1,7 +1,10 @@
 <script setup lang="ts">
 import { ref, onMounted, onUnmounted, defineAsyncComponent, nextTick, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useRoute } from 'vue-router'
 import { useUser } from '@/utils/userStore'
+
+const route = useRoute()
 import {
   apiGetApiKeys,
   apiCreateApiKey,
@@ -62,7 +65,11 @@ const loadingFullKeys = ref<Set<number>>(new Set())
 const createDialogVisible = ref(false)
 const newKeyName = ref('')
 const newCreatedKey = ref('')
-const activeTab = ref('keys')
+
+// 当前显示的 Tab
+const activeTab = ref(route.query.tab === 'docs' ? 'docs' : 'keys')
+
+// 今日统计
 const todayCalls = ref(0)
 const todayCredits = ref(0)
 
