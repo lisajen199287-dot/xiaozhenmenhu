@@ -13,7 +13,8 @@ const config: {
   base_url: 'http://192.168.12.100:48080/app-api',
   // base_url: '/app-api',
 
-  aiVideoUrl: 'https://www.cii-group.com/aivideo/',
+  // aiVideoUrl: 'https://www.cii-group.com/aivideo/',
+  aiVideoUrl: 'http://portalgray.cii-group.com:49861/aivideo/',
 
   // 真人口播登录地址
   trueLoginUrl: 'http://portalgray.cii-group.com:49861/digitalHuman/login',

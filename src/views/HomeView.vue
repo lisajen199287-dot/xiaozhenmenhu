@@ -97,8 +97,20 @@ const solutions = [
 ];
 import { config } from "@/config/axios/config";
 const golink = () => {
-  const url = config.aiVideoUrl;
-  window.open(url, "_blank");
+  if (localStorage.getItem("token")) {
+    const url =
+      config.aiVideoUrl +
+      "TransitPage" +
+      "?token=" +
+      localStorage.getItem("token") +
+      "&refreshToken=" +
+      localStorage.getItem("refreshToken");
+      console.log(url);
+    // window.open(url, "_blank");
+  } else {
+    const url = config.aiVideoUrl;
+    window.open(url, "_blank");
+  }
 };
 
 // Trust cards
