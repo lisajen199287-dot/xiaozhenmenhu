@@ -1,7 +1,12 @@
 <script setup lang="ts">
 import { ref, onMounted, defineAsyncComponent } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
+import { useRoute } from 'vue-router'
+import { init } from 'echarts'
+import type { EChartsOption } from 'echarts'
 import { useUser } from '@/utils/userStore'
+
+const route = useRoute()
 import {
   apiGetApiKeys,
   apiCreateApiKey,
@@ -43,7 +48,7 @@ const newKeyName = ref('')
 const newCreatedKey = ref('')
 
 // 当前显示的 Tab
-const activeTab = ref('keys')
+const activeTab = ref(route.query.tab === 'docs' ? 'docs' : 'keys')
 
 // 今日统计
 const todayCalls = ref(0)
