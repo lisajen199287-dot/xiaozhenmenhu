@@ -235,3 +235,18 @@ export const apiAgAgreementSave = (data: any) => {
     data: data,
   })
 }
+
+// 获得用户积分记录分页
+export const apiAgPointRecordAllPage = (data: any) => {
+  return request.get({
+    url: `/member/point/record/page`,
+    params: data,
+  })
+}
+
+// 获得基本信息
+export const apiAgUserGet = () => {
+  return request.get({
+    url: `/member/user/get`,
+  })
+}

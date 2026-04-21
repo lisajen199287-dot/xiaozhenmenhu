@@ -76,6 +76,13 @@ export const validateCaptcha = (data: any) => {
   })
 }
 
+// token置换token, 获取用户信息
+export const getFrontUserInfo = async () => {
+    return request.get({
+        url: `/member/user/getFrontUserInfo`,
+    })
+}
+
 // 获取完善注册信息
 export const updateName = (data: any) => {
   return request.put({

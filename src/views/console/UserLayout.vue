@@ -11,6 +11,8 @@ const route = useRoute();
 
 const menuItems = [
   { name: "API 管理", icon: "fas fa-key", path: "/apikeys" },
+  { name: "lumi账单", icon: "fas fa-wallet", path: "/lumiBilling" },
+  { name: "费用中心", icon: "fas fa-wallet", path: "/billing" },
 ];
 
 const sidebarCollapsed = ref(false);

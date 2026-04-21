@@ -4,15 +4,20 @@ const config: {
   default_headers: string
   request_timeout: number,
   aiVideoUrl: string,
+  trueLoginUrl: string,
   gateway_domain: string,
 } = {
   /**
    * api请求基础路径
    */
-  base_url: 'http://127.0.0.1:48080/app-api',
+  base_url: 'http://192.168.12.100:48080/app-api',
   // base_url: '/app-api',
 
   aiVideoUrl: 'https://www.cii-group.com/aivideo/',
+
+  // 真人口播登录地址
+  trueLoginUrl: 'http://portalgray.cii-group.com:49861/digitalHuman/login',
+
 
   /**
    * API 文档网关域名（用于文档中的接口地址展示）

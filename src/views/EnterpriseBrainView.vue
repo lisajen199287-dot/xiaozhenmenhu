@@ -1,7 +1,7 @@
 <script setup lang="ts">
 import { ref } from "vue";
 import * as newApi from "@/api/newApi/index";
-import { ElMessage } from 'element-plus'
+import { ElMessage } from "element-plus";
 const scenarios = [
   {
     icon: "fas fa-user-tie",
@@ -64,6 +64,13 @@ const scrollToForm = () => {
   const el = document.getElementById("consult-form");
   if (el) el.scrollIntoView({ behavior: "smooth" });
 };
+
+const handleClick = () => {
+  window.open(
+    "https://zntkfpt.aics.cii-group.com/login?TenantName=aicangshan",
+    "_blank"
+  );
+};
 </script>
 
 <template>
@@ -81,6 +88,7 @@ const scrollToForm = () => {
           小时在线的业务专家，让每个员工都拥有金牌导师。
         </p>
         <div class="hero-actions">
+          <button class="btn-primary" @click="handleClick">立即使用</button>
           <button class="btn-primary" @click="scrollToForm">预约演示</button>
         </div>
       </div>
