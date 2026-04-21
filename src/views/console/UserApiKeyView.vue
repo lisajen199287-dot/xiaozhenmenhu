@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted, defineAsyncComponent } from 'vue'
+import { ref, onMounted, onUnmounted, defineAsyncComponent, nextTick, watch } from 'vue'
 import { ElMessage, ElMessageBox } from 'element-plus'
 import { useUser } from '@/utils/userStore'
 import {
@@ -8,16 +8,21 @@ import {
   apiDeleteApiKey,
   apiToggleApiKeyStatus,
   apiGetApiUsage,
-  apiGetFullKey
+  apiGetFullKey,
+  apiGetApiCallLogs,
+  apiGetUsageStats,
+  apiGetModels
 } from '@/api/newApi/index'
+import { init } from 'echarts'
+import type { EChartsOption, EChartsType } from 'echarts'
 
 const ApiDocsTab = defineAsyncComponent(() => import('./components/ApiDocsTab.vue'))
 
 interface ApiKey {
   id: number
   name: string
-  keyPreview: string  // 预览格式：sk-AbcD...7890
-  fullKey?: string    // 完整密钥（点击眼睛后加载）
+  keyPreview: string
+  fullKey?: string
   status: number
   monthlyLimit: number
   monthlyUsage: number
@@ -25,29 +30,70 @@ interface ApiKey {
   createTime: string
 }
 
+interface LogItem {
+  id: number
+  taskId: string
+  model: string
+  status: string
+  inputType: string
+  audioMode: string
+  seed: number | null
+  duration: number | null
+  resolution: string
+  ratio: string
+  actualTokens: number
+  generateAudio: boolean | null
+  draft: boolean | null
+  actualCost: number | null
+  createdAt: number | null
+  updatedAt: number | null
+  createTime: string
+  errorMsg: string
+  endpoint: string
+}
+
 const { user } = useUser()
 
 // API Key 列表
 const apiKeys = ref<ApiKey[]>([])
 const loading = ref(false)
-
-// 已加载完整密钥的 Key ID 集合
 const loadedFullKeys = ref<Set<number>>(new Set())
-// 正在加载完整密钥的 Key ID
 const loadingFullKeys = ref<Set<number>>(new Set())
-
-// 创建弹窗
 const createDialogVisible = ref(false)
 const newKeyName = ref('')
-// 新创建的完整密钥（仅创建后显示一次）
 const newCreatedKey = ref('')
-
-// 当前显示的 Tab
 const activeTab = ref('keys')
-
-// 今日统计
 const todayCalls = ref(0)
 const todayCredits = ref(0)
+
+// ==================== 用量统计 ====================
+const statsInterval = ref('Day')
+const statsApiKey = ref<number | undefined>(undefined)
+const statsModel = ref('')
+const statsDateRange = ref<string[]>([])
+const statsMetric = ref('tokens') // 'tokens' | 'credits'
+const statsLoading = ref(false)
+const statsDataPoints = ref<any[]>([])
+let chartInstance: EChartsType | null = null
+const chartRef = ref<HTMLElement | null>(null)
+const modelOptions = ref<string[]>([])
+
+const fetchModels = async () => {
+  try {
+    const res = await apiGetModels()
+    const list = Array.isArray(res) ? res : (res?.data || [])
+    modelOptions.value = list
+  } catch { modelOptions.value = [] }
+}
+
+// ==================== 调用日志 ====================
+const logs = ref<LogItem[]>([])
+const logsLoading = ref(false)
+const logsPage = ref(1)
+const logsPageSize = ref(20)
+const logsTotal = ref(0)
+const logsModel = ref('')
+const logsStatus = ref('')
 
 // 获取使用量统计
 const fetchUsage = async () => {
@@ -60,7 +106,7 @@ const fetchUsage = async () => {
       todayCredits.value = today.actualTokens || 0
     }
   } catch {
-    // 接口不可用时保持默认值 0
+    // keep defaults
   }
 }
 
@@ -69,21 +115,12 @@ const fetchApiKeys = async () => {
   loading.value = true
   try {
     const res = await apiGetApiKeys()
-    console.log('API Keys response:', res)
-    // 兼容不同的响应格式
-    if (Array.isArray(res)) {
-      apiKeys.value = res
-    } else if (res?.data && Array.isArray(res.data)) {
-      apiKeys.value = res.data
-    } else if (res?.list && Array.isArray(res.list)) {
-      apiKeys.value = res.list
-    } else {
-      apiKeys.value = []
-    }
-    // 清空已加载的完整密钥
+    if (Array.isArray(res)) apiKeys.value = res
+    else if (res?.data && Array.isArray(res.data)) apiKeys.value = res.data
+    else if (res?.list && Array.isArray(res.list)) apiKeys.value = res.list
+    else apiKeys.value = []
     loadedFullKeys.value.clear()
-  } catch (e) {
-    console.error('Fetch API Keys error:', e)
+  } catch {
     apiKeys.value = []
   } finally {
     loading.value = false
@@ -92,177 +129,158 @@ const fetchApiKeys = async () => {
 
 // 创建 API Key
 const handleCreate = async () => {
-  if (!newKeyName.value.trim()) {
-    ElMessage.warning('请输入密钥名称')
-    return
-  }
+  if (!newKeyName.value.trim()) { ElMessage.warning('请输入密钥名称'); return }
   try {
     const res = await apiCreateApiKey({ name: newKeyName.value })
-    console.log('Create API Key response:', res)
-    // 获取新创建的完整密钥
-    let key = ''
-    if (typeof res === 'string') {
-      key = res
-    } else if (res?.key) {
-      key = res.key
-    } else if (res?.data?.key) {
-      key = res.data.key
-    }
+    let key = typeof res === 'string' ? res : res?.key || res?.data?.key || ''
     newCreatedKey.value = key
-
-    if (!key) {
-      ElMessage.error('创建成功但未获取到密钥，请刷新列表查看')
-      createDialogVisible.value = false
-      newKeyName.value = ''
-      fetchApiKeys()
-      return
-    }
-
-    // 显示成功弹窗
+    if (!key) { ElMessage.error('创建成功但未获取到密钥'); createDialogVisible.value = false; newKeyName.value = ''; fetchApiKeys(); return }
     ElMessageBox.alert(
-      'API Key 创建成功！请立即复制并妥善保存，系统不会再次显示完整密钥。',
-      '创建成功',
-      {
-        confirmButtonText: '我已保存',
-        type: 'success',
-        dangerouslyUseHTMLString: true,
-        message: `
-          <div style="margin: 16px 0;">
-            <div style="margin-bottom: 8px; font-weight: bold;">密钥名称：${newKeyName.value}</div>
-            <div style="display: flex; align-items: center; gap: 8px;">
-              <code style="background: #f1f5f9; padding: 8px 12px; border-radius: 4px; font-family: monospace; flex: 1; word-break: break-all;">
-                ${key}
-              </code>
-            </div>
-          </div>
-        `
-      }
+      `<div style="margin:16px 0"><div style="margin-bottom:8px;font-weight:bold">密钥名称：${newKeyName.value}</div><div style="display:flex;align-items:center;gap:8px"><code style="background:#f1f5f9;padding:8px 12px;border-radius:4px;font-family:monospace;flex:1;word-break:break-all">${key}</code></div></div>`,
+      '创建成功', { confirmButtonText: '我已保存', type: 'success', dangerouslyUseHTMLString: true }
     )
-
-    createDialogVisible.value = false
-    newKeyName.value = ''
-    fetchApiKeys()
-  } catch (e: any) {
-    console.error('Create API Key error:', e)
-    ElMessage.error(e.message || '创建失败')
-  }
+    createDialogVisible.value = false; newKeyName.value = ''; fetchApiKeys()
+  } catch (e: any) { ElMessage.error(e.message || '创建失败') }
 }
 
-// 切换显示完整密钥（点击眼睛图标）
 const toggleShowFullKey = async (key: ApiKey) => {
-  // 如果已经加载过，直接切换显示/隐藏
-  if (loadedFullKeys.value.has(key.id)) {
-    loadedFullKeys.value.delete(key.id)
-    return
-  }
-
-  // 加载完整密钥
+  if (loadedFullKeys.value.has(key.id)) { loadedFullKeys.value.delete(key.id); return }
   loadingFullKeys.value.add(key.id)
   try {
     const res = await apiGetFullKey(key.id)
-    console.log('Get full key response:', res)
-
-    let fullKey = ''
-    if (res?.fullKey) {
-      fullKey = res.fullKey
-    } else if (res?.data?.fullKey) {
-      fullKey = res.data.fullKey
-    } else if (typeof res === 'string') {
-      fullKey = res
-    }
-
-    if (fullKey) {
-      key.fullKey = fullKey
-      loadedFullKeys.value.add(key.id)
-    } else {
-      ElMessage.error('获取完整密钥失败')
-    }
-  } catch (e: any) {
-    console.error('Get full key error:', e)
-    ElMessage.error(e.message || '获取完整密钥失败')
-  } finally {
-    loadingFullKeys.value.delete(key.id)
-  }
+    let fullKey = res?.fullKey || res?.data?.fullKey || (typeof res === 'string' ? res : '')
+    if (fullKey) { key.fullKey = fullKey; loadedFullKeys.value.add(key.id) }
+    else ElMessage.error('获取完整密钥失败')
+  } catch (e: any) { ElMessage.error(e.message || '获取完整密钥失败') }
+  finally { loadingFullKeys.value.delete(key.id) }
 }
 
-// 获取显示的密钥文本
-const getDisplayKey = (key: ApiKey) => {
-  if (loadedFullKeys.value.has(key.id) && key.fullKey) {
-    // 显示完整密钥
-    return key.fullKey
-  }
-  // 显示预览格式
-  return key.keyPreview
-}
+const getDisplayKey = (key: ApiKey) => loadedFullKeys.value.has(key.id) && key.fullKey ? key.fullKey : key.keyPreview
 
-// 复制密钥
 const copyKey = async (key: ApiKey) => {
-  // 只有加载了完整密钥才能复制
-  if (!loadedFullKeys.value.has(key.id) || !key.fullKey) {
-    ElMessage.warning('请先点击眼睛图标显示完整密钥')
-    return
-  }
-  try {
-    await navigator.clipboard.writeText(key.fullKey)
-    ElMessage.success('已复制到剪贴板')
-  } catch (e) {
-    ElMessage.error('复制失败')
-  }
+  if (!loadedFullKeys.value.has(key.id) || !key.fullKey) { ElMessage.warning('请先点击眼睛图标显示完整密钥'); return }
+  try { await navigator.clipboard.writeText(key.fullKey); ElMessage.success('已复制') } catch { ElMessage.error('复制失败') }
 }
 
-// 复制新创建的密钥
-const copyNewKey = async () => {
-  try {
-    await navigator.clipboard.writeText(newCreatedKey.value)
-    ElMessage.success('已复制到剪贴板')
-  } catch (e) {
-    ElMessage.error('复制失败')
-  }
-}
-
-// 启用/禁用
 const handleToggleStatus = async (key: ApiKey) => {
-  const newStatus = key.status === 1 ? 0 : 1
-  try {
-    await apiToggleApiKeyStatus(key.id, newStatus)
-    ElMessage.success(newStatus === 1 ? '已启用' : '已禁用')
-    fetchApiKeys()
-  } catch (e: any) {
-    ElMessage.error(e.message || '操作失败')
-  }
+  const s = key.status === 1 ? 0 : 1
+  try { await apiToggleApiKeyStatus(key.id, s); ElMessage.success(s === 1 ? '已启用' : '已禁用'); fetchApiKeys() }
+  catch (e: any) { ElMessage.error(e.message || '操作失败') }
 }
 
-// 删除
 const handleDelete = async (key: ApiKey) => {
   try {
-    await ElMessageBox.confirm(
-      '删除后该密钥将立即失效，确定要删除吗？',
-      '删除确认',
-      { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' }
-    )
-    await apiDeleteApiKey(key.id)
-    ElMessage.success('删除成功')
-    fetchApiKeys()
-  } catch (e: any) {
-    if (e !== 'cancel') {
-      ElMessage.error(e.message || '删除失败')
-    }
-  }
+    await ElMessageBox.confirm('删除后该密钥将立即失效，确定要删除吗？', '删除确认', { confirmButtonText: '确定', cancelButtonText: '取消', type: 'warning' })
+    await apiDeleteApiKey(key.id); ElMessage.success('删除成功'); fetchApiKeys()
+  } catch (e: any) { if (e !== 'cancel') ElMessage.error(e.message || '删除失败') }
 }
 
-// 状态颜色
 const getStatusType = (status: number) => status === 1 ? 'success' : 'danger'
 const getStatusText = (status: number) => status === 1 ? '启用' : '禁用'
 
+// ==================== 用量统计图表 ====================
+const fetchUsageStats = async () => {
+  statsLoading.value = true
+  try {
+    const params: any = { interval: statsInterval.value }
+    if (statsDateRange.value && statsDateRange.value.length === 2) {
+      const start = new Date(statsDateRange.value[0])
+      const end = new Date(statsDateRange.value[1])
+      const diffDays = Math.ceil((end.getTime() - start.getTime()) / (1000 * 60 * 60 * 24))
+      if (diffDays > 30) {
+        ElMessage.warning('时间跨度不能超过 30 天')
+        statsLoading.value = false
+        return
+      }
+      params.startDate = statsDateRange.value[0]
+      params.endDate = statsDateRange.value[1]
+    } else {
+      params.days = 7
+    }
+    if (statsApiKey.value) params.apiKeyId = statsApiKey.value
+    if (statsModel.value) params.model = statsModel.value
+    const res = await apiGetUsageStats(params)
+    const data = res?.data || res
+    const points = data?.dataPoints || []
+    statsDataPoints.value = points
+    renderChart(points)
+  } catch { ElMessage.error('获取统计数据失败') }
+  finally { statsLoading.value = false }
+}
+
+const renderChart = (points: any[]) => {
+  if (!chartRef.value) return
+  if (!chartInstance) chartInstance = init(chartRef.value)
+  const times = points.map((p: any) => p.timeKey)
+  const isTokens = statsMetric.value === 'tokens'
+  const values = points.map((p: any) => Number(isTokens ? (p.actualTokens || 0) : (p.totalCost || 0)))
+  const seriesName = isTokens ? 'Token 消耗' : '积分消耗'
+  const color = isTokens ? '#4f46e5' : '#f59e0b'
+  const option: EChartsOption = {
+    tooltip: { trigger: 'axis' },
+    grid: { left: 60, right: 30, top: 30, bottom: 30 },
+    xAxis: { type: 'category', data: times, axisLabel: { rotate: times.length > 15 ? 45 : 0, fontSize: 11 } },
+    yAxis: { type: 'value', name: isTokens ? 'Token' : '积分' },
+    series: [
+      {
+        name: seriesName,
+        type: 'bar',
+        data: values,
+        itemStyle: { color, borderRadius: [4, 4, 0, 0] },
+        barMaxWidth: 40,
+      }
+    ]
+  }
+  chartInstance.setOption(option, true)
+}
+
+const handleResize = () => chartInstance?.resize()
+
+// ==================== 调用日志 ====================
+const fetchLogs = async () => {
+  logsLoading.value = true
+  try {
+    const params: any = { page: logsPage.value, size: logsPageSize.value }
+    if (logsModel.value) params.model = logsModel.value
+    if (logsStatus.value) params.status = logsStatus.value
+    const res = await apiGetApiCallLogs(params)
+    const data = res?.data || res
+    logs.value = data?.list || data?.records || []
+    logsTotal.value = data?.total || 0
+  } catch { ElMessage.error('获取日志失败') }
+  finally { logsLoading.value = false }
+}
+
+const handleLogsPageChange = (page: number) => { logsPage.value = page; fetchLogs() }
+
+// Tab 切换时触发数据加载
+watch(statsMetric, () => {
+  if (statsDataPoints.value.length > 0) renderChart(statsDataPoints.value)
+})
+
+watch(activeTab, (tab) => {
+  if (tab === 'usage') {
+    nextTick(() => fetchUsageStats())
+  } else if (tab === 'logs') {
+    fetchLogs()
+  }
+})
+
 onMounted(() => {
   fetchApiKeys()
+  fetchModels()
   fetchUsage()
+  window.addEventListener('resize', handleResize)
+})
+
+onUnmounted(() => {
+  window.removeEventListener('resize', handleResize)
+  chartInstance?.dispose()
 })
 </script>
 
 <template>
   <div class="api-key-view">
-    <!-- 页面头部 -->
     <div class="page-header">
       <div class="header-text">
         <h2>API Key 管理</h2>
@@ -307,29 +325,26 @@ onMounted(() => {
         <button :class="['tab', { active: activeTab === 'docs' }]" @click="activeTab = 'docs'">
           <i class="fas fa-book"></i> API文档
         </button>
+        <button :class="['tab', { active: activeTab === 'usage' }]" @click="activeTab = 'usage'">
+          <i class="fas fa-chart-area"></i> 用量统计
+        </button>
+        <button :class="['tab', { active: activeTab === 'logs' }]" @click="activeTab = 'logs'">
+          <i class="fas fa-list-alt"></i> 调用日志
+        </button>
       </div>
     </div>
 
     <!-- 密钥管理 -->
     <div v-show="activeTab === 'keys'" class="content-card">
       <div v-if="loading" class="loading-state">加载中...</div>
-
       <div v-else-if="apiKeys.length === 0" class="empty-state">
         <i class="fas fa-key"></i>
         <p>暂无 API Key</p>
         <button class="btn-primary" @click="createDialogVisible = true">立即创建</button>
       </div>
-
       <table v-else class="data-table">
         <thead>
-          <tr>
-            <th>名称</th>
-            <th>密钥</th>
-            <th>状态</th>
-            <th>本月用量</th>
-            <th>最后使用</th>
-            <th>操作</th>
-          </tr>
+          <tr><th>名称</th><th>密钥</th><th>状态</th><th>本月用量</th><th>最后使用</th><th>操作</th></tr>
         </thead>
         <tbody>
           <tr v-for="key in apiKeys" :key="key.id">
@@ -337,43 +352,21 @@ onMounted(() => {
             <td>
               <div class="key-display">
                 <code class="key-value">{{ getDisplayKey(key) }}</code>
-                <button
-                  class="btn-icon"
-                  @click="toggleShowFullKey(key)"
-                  :title="loadedFullKeys.has(key.id) ? '隐藏' : '显示完整密钥'"
-                  :disabled="loadingFullKeys.has(key.id)"
-                >
+                <button class="btn-icon" @click="toggleShowFullKey(key)" :disabled="loadingFullKeys.has(key.id)">
                   <i v-if="loadingFullKeys.has(key.id)" class="fas fa-spinner fa-spin"></i>
                   <i v-else :class="loadedFullKeys.has(key.id) ? 'fas fa-eye-slash' : 'fas fa-eye'"></i>
                 </button>
-                <button
-                  v-if="loadedFullKeys.has(key.id)"
-                  class="btn-icon"
-                  @click="copyKey(key)"
-                  title="复制"
-                >
-                  <i class="fas fa-copy"></i>
-                </button>
+                <button v-if="loadedFullKeys.has(key.id)" class="btn-icon" @click="copyKey(key)"><i class="fas fa-copy"></i></button>
               </div>
             </td>
-            <td>
-              <span :class="['status-badge', getStatusType(key.status)]">
-                {{ getStatusText(key.status) }}
-              </span>
-            </td>
+            <td><span :class="['status-badge', getStatusType(key.status)]">{{ getStatusText(key.status) }}</span></td>
             <td>{{ key.monthlyUsage }} / {{ key.monthlyLimit || '不限' }}</td>
             <td class="text-muted">{{ key.lastUsedAt ? new Date(key.lastUsedAt).toLocaleString() : '从未使用' }}</td>
             <td class="actions">
-              <button
-                :class="['btn-action', key.status === 1 ? 'warning' : 'success']"
-                @click="handleToggleStatus(key)"
-                :title="key.status === 1 ? '禁用' : '启用'"
-              >
+              <button :class="['btn-action', key.status === 1 ? 'warning' : 'success']" @click="handleToggleStatus(key)">
                 <i :class="key.status === 1 ? 'fas fa-pause' : 'fas fa-play'"></i>
               </button>
-              <button class="btn-action danger" @click="handleDelete(key)" title="删除">
-                <i class="fas fa-trash"></i>
-              </button>
+              <button class="btn-action danger" @click="handleDelete(key)"><i class="fas fa-trash"></i></button>
             </td>
           </tr>
         </tbody>
@@ -383,6 +376,97 @@ onMounted(() => {
     <!-- API文档 -->
     <div v-show="activeTab === 'docs'" class="content-card docs-card">
       <ApiDocsTab />
+    </div>
+
+    <!-- 用量统计 -->
+    <div v-show="activeTab === 'usage'" class="content-card">
+      <div class="filter-bar">
+        <select v-model="statsApiKey" class="filter-select">
+          <option :value="undefined">全部 Key</option>
+          <option v-for="k in apiKeys" :key="k.id" :value="k.id">{{ k.name }}</option>
+        </select>
+        <select v-model="statsModel" class="filter-select">
+          <option value="">全部模型</option>
+          <option v-for="m in modelOptions" :key="m" :value="m">{{ m }}</option>
+        </select>
+        <div class="metric-toggle">
+          <button :class="['metric-btn', { active: statsMetric === 'tokens' }]" @click="statsMetric = 'tokens'">Token</button>
+          <button :class="['metric-btn', { active: statsMetric === 'credits' }]" @click="statsMetric = 'credits'">积分</button>
+        </div>
+        <el-date-picker
+          v-model="statsDateRange"
+          type="daterange"
+          range-separator="至"
+          start-placeholder="开始日期"
+          end-placeholder="结束日期"
+          value-format="YYYY-MM-DD"
+          :disabled-date="(d: Date) => d > new Date()"
+          :clearable="true"
+          style="width: 280px"
+        />
+        <select v-model="statsInterval" class="filter-select">
+          <option value="Day">按天</option>
+          <option value="Hour">按小时</option>
+        </select>
+        <button class="btn-primary btn-sm" @click="fetchUsageStats" :disabled="statsLoading">
+          {{ statsLoading ? '加载中...' : '查询' }}
+        </button>
+      </div>
+      <div ref="chartRef" class="chart-container"></div>
+    </div>
+
+    <!-- 调用日志 -->
+    <div v-show="activeTab === 'logs'" class="content-card">
+      <div class="filter-bar">
+        <select v-model="logsModel" class="filter-select">
+          <option value="">全部模型</option>
+          <option v-for="m in modelOptions" :key="m" :value="m">{{ m }}</option>
+        </select>
+        <select v-model="logsStatus" class="filter-select">
+          <option value="">全部状态</option>
+          <option value="succeeded">成功</option>
+          <option value="failed">失败</option>
+          <option value="queued">排队中</option>
+          <option value="running">运行中</option>
+        </select>
+        <button class="btn-primary btn-sm" @click="logsPage = 1; fetchLogs()" :disabled="logsLoading">
+          {{ logsLoading ? '加载中...' : '查询' }}
+        </button>
+      </div>
+      <div class="table-scroll">
+        <table class="data-table logs-table">
+          <thead>
+            <tr>
+              <th>Task ID</th><th>模型</th><th>状态</th><th>输入</th><th>音频</th>
+              <th>时长</th><th>分辨率</th><th>宽高比</th><th>Token</th>
+              <th>积分</th><th>Draft</th><th>创建时间</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr v-if="logsLoading && logs.length === 0"><td colspan="12" class="loading-state">加载中...</td></tr>
+            <tr v-else-if="logs.length === 0"><td colspan="12" class="empty-state small">暂无日志</td></tr>
+            <tr v-for="log in logs" :key="log.id">
+              <td class="text-mono task-id-cell" :title="log.taskId">{{ log.taskId || '-' }}</td>
+              <td>{{ log.model || '-' }}</td>
+              <td><span :class="['status-badge', log.status === 'succeeded' || log.status === '成功' ? 'success' : log.status === 'failed' || log.status === '失败' ? 'danger' : 'warning']">{{ log.status }}</span></td>
+              <td>{{ log.inputType || '-' }}</td>
+              <td>{{ log.audioMode || '-' }}</td>
+              <td>{{ log.duration != null ? log.duration + 's' : '-' }}</td>
+              <td>{{ log.resolution || '-' }}</td>
+              <td>{{ log.ratio || '-' }}</td>
+              <td>{{ log.actualTokens || 0 }}</td>
+              <td>{{ log.actualCost || 0 }}</td>
+              <td>{{ log.draft ? '是' : '否' }}</td>
+              <td class="text-muted">{{ log.createTime ? new Date(log.createTime).toLocaleString() : (log.createdAt ? new Date(log.createdAt * 1000).toLocaleString() : '-') }}</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <div v-if="logsTotal > logsPageSize" class="pagination">
+        <button class="btn-page" :disabled="logsPage <= 1" @click="handleLogsPageChange(logsPage - 1)">上一页</button>
+        <span class="page-info">{{ logsPage }} / {{ Math.ceil(logsTotal / logsPageSize) }}</span>
+        <button class="btn-page" :disabled="logsPage >= Math.ceil(logsTotal / logsPageSize)" @click="handleLogsPageChange(logsPage + 1)">下一页</button>
+      </div>
     </div>
 
     <!-- 创建弹窗 -->
@@ -401,327 +485,83 @@ onMounted(() => {
 </template>
 
 <style scoped>
-.api-key-view {
-  max-width: 1200px;
-}
+.api-key-view { max-width: 1200px; }
+.page-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 32px; }
+.header-text h2 { font-size: 1.8rem; font-weight: 850; color: #0f172a; margin-bottom: 8px; }
+.header-text p { color: #64748b; }
 
-.page-header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 32px;
-}
+.btn-primary { background: #4f46e5; color: white; border: none; padding: 12px 24px; border-radius: 8px; font-weight: 700; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+.btn-primary:hover { background: #4338ca; }
+.btn-primary:disabled { opacity: 0.6; cursor: not-allowed; }
+.btn-sm { padding: 8px 16px; font-size: 0.85rem; }
 
-.header-text h2 {
-  font-size: 1.8rem;
-  font-weight: 850;
-  color: #0f172a;
-  margin-bottom: 8px;
-}
+.stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 32px; }
+.stat-card { background: white; padding: 24px; border-radius: 12px; border: 1px solid #e2e8f0; display: flex; align-items: center; gap: 16px; }
+.stat-icon { width: 48px; height: 48px; background: #eef2ff; color: #4f46e5; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 1.25rem; }
+.stat-icon.calls { background: #ecfdf5; color: #10b981; }
+.stat-icon.tokens { background: #fef3c7; color: #f59e0b; }
+.stat-value { font-size: 1.75rem; font-weight: 850; color: #0f172a; }
+.stat-label { color: #64748b; font-size: 0.9rem; font-weight: 600; }
 
-.header-text p {
-  color: #64748b;
-}
+.tabs-wrapper { margin-bottom: 24px; }
+.tabs { display: flex; gap: 8px; background: white; padding: 6px; border-radius: 10px; border: 1px solid #e2e8f0; width: fit-content; }
+.tab { background: none; border: none; padding: 10px 20px; border-radius: 6px; font-weight: 700; color: #64748b; cursor: pointer; display: flex; align-items: center; gap: 8px; transition: all 0.2s; }
+.tab:hover { color: #0f172a; }
+.tab.active { background: #4f46e5; color: white; }
 
-.btn-primary {
-  background: #4f46e5;
-  color: white;
-  border: none;
-  padding: 12px 24px;
-  border-radius: 8px;
-  font-weight: 700;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-}
+.content-card { background: white; border-radius: 12px; border: 1px solid #e2e8f0; overflow: hidden; }
+.docs-card { padding: 0; min-height: 600px; }
 
-.btn-primary:hover {
-  background: #4338ca;
-}
+.filter-bar { display: flex; gap: 12px; padding: 16px 24px; border-bottom: 1px solid #f1f5f9; flex-wrap: wrap; align-items: center; }
+.filter-select, .filter-input { padding: 8px 12px; border: 1px solid #e2e8f0; border-radius: 6px; font-size: 0.85rem; background: white; }
+.filter-input { min-width: 150px; }
+.filter-select:focus, .filter-input:focus { outline: none; border-color: #4f46e5; }
 
-/* 统计卡片 */
-.stats-grid {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
-  margin-bottom: 32px;
-}
+.chart-container { height: 380px; padding: 16px 24px; }
 
-.stat-card {
-  background: white;
-  padding: 24px;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  display: flex;
-  align-items: center;
-  gap: 16px;
-}
+.table-scroll { overflow-x: auto; }
+.data-table { width: 100%; border-collapse: collapse; }
+.data-table th { text-align: left; padding: 12px 16px; background: #f8fafc; color: #64748b; font-size: 0.8rem; font-weight: 700; border-bottom: 1px solid #e2e8f0; white-space: nowrap; }
+.data-table td { padding: 12px 16px; border-bottom: 1px solid #f1f5f9; font-size: 0.85rem; color: #334155; white-space: nowrap; }
+.logs-table th, .logs-table td { padding: 10px 12px; font-size: 0.8rem; }
 
-.stat-icon {
-  width: 48px;
-  height: 48px;
-  background: #eef2ff;
-  color: #4f46e5;
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.25rem;
-}
+.key-name { font-weight: 700; color: #0f172a; }
+.key-display { display: flex; align-items: center; gap: 8px; }
+.key-value { background: #f1f5f9; padding: 6px 12px; border-radius: 4px; font-family: monospace; font-size: 0.85rem; letter-spacing: 0.5px; }
 
-.stat-icon.calls {
-  background: #ecfdf5;
-  color: #10b981;
-}
+.btn-icon { background: none; border: none; color: #64748b; cursor: pointer; padding: 6px; border-radius: 4px; transition: all 0.2s; }
+.btn-icon:hover:not(:disabled) { background: #f1f5f9; color: #4f46e5; }
+.btn-icon:disabled { cursor: not-allowed; opacity: 0.5; }
 
-.stat-icon.tokens {
-  background: #fef3c7;
-  color: #f59e0b;
-}
+.status-badge { padding: 3px 10px; border-radius: 20px; font-size: 0.75rem; font-weight: 700; }
+.status-badge.success { background: #dcfce7; color: #166534; }
+.status-badge.warning { background: #fef3c7; color: #92400e; }
+.status-badge.danger { background: #fee2e2; color: #991b1b; }
 
-.stat-value {
-  font-size: 1.75rem;
-  font-weight: 850;
-  color: #0f172a;
-}
+.text-muted { color: #94a3b8; }
+.text-mono { font-family: monospace; font-size: 0.8rem; }
+.task-id-cell { white-space: normal; word-break: break-all; max-width: 220px; min-width: 140px; }
 
-.stat-label {
-  color: #64748b;
-  font-size: 0.9rem;
-  font-weight: 600;
-}
+.metric-toggle { display: inline-flex; border: 1px solid #e2e8f0; border-radius: 6px; overflow: hidden; }
+.metric-btn { padding: 6px 16px; border: none; background: white; cursor: pointer; font-size: 0.8rem; font-weight: 600; color: #64748b; transition: all 0.2s; }
+.metric-btn.active { background: #4f46e5; color: white; }
+.metric-btn:hover:not(.active) { background: #f8fafc; }
 
-/* Tab 切换 */
-.tabs-wrapper {
-  margin-bottom: 24px;
-}
+.actions { display: flex; gap: 8px; }
+.btn-action { width: 32px; height: 32px; border: none; border-radius: 6px; cursor: pointer; display: flex; align-items: center; justify-content: center; transition: all 0.2s; }
+.btn-action.success { background: #dcfce7; color: #166534; }
+.btn-action.warning { background: #fef3c7; color: #92400e; }
+.btn-action.danger { background: #fee2e2; color: #991b1b; }
+.btn-action:hover { transform: scale(1.1); }
 
-.tabs {
-  display: flex;
-  gap: 8px;
-  background: white;
-  padding: 6px;
-  border-radius: 10px;
-  border: 1px solid #e2e8f0;
-  width: fit-content;
-}
+.empty-state { padding: 60px 24px; text-align: center; color: #94a3b8; }
+.empty-state.small { padding: 40px 24px; }
+.empty-state i { font-size: 3rem; margin-bottom: 16px; display: block; }
+.empty-state p { margin-bottom: 24px; }
+.loading-state { padding: 60px 24px; text-align: center; color: #94a3b8; }
 
-.tab {
-  background: none;
-  border: none;
-  padding: 10px 20px;
-  border-radius: 6px;
-  font-weight: 700;
-  color: #64748b;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  transition: all 0.2s;
-}
-
-.tab:hover {
-  color: #0f172a;
-}
-
-.tab.active {
-  background: #4f46e5;
-  color: white;
-}
-
-/* 内容卡片 */
-.content-card {
-  background: white;
-  border-radius: 12px;
-  border: 1px solid #e2e8f0;
-  overflow: hidden;
-}
-
-.card-header {
-  padding: 20px 24px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.card-header h3 {
-  font-size: 1.1rem;
-  font-weight: 700;
-  color: #0f172a;
-}
-
-/* 数据表格 */
-.data-table {
-  width: 100%;
-  border-collapse: collapse;
-}
-
-.data-table th {
-  text-align: left;
-  padding: 12px 24px;
-  background: #f8fafc;
-  color: #64748b;
-  font-size: 0.8rem;
-  font-weight: 700;
-  border-bottom: 1px solid #e2e8f0;
-}
-
-.data-table td {
-  padding: 16px 24px;
-  border-bottom: 1px solid #f1f5f9;
-  font-size: 0.9rem;
-  color: #334155;
-}
-
-.key-name {
-  font-weight: 700;
-  color: #0f172a;
-}
-
-/* 密钥显示 */
-.key-display {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.key-value {
-  background: #f1f5f9;
-  padding: 6px 12px;
-  border-radius: 4px;
-  font-family: monospace;
-  font-size: 0.85rem;
-  letter-spacing: 0.5px;
-}
-
-.btn-icon {
-  background: none;
-  border: none;
-  color: #64748b;
-  cursor: pointer;
-  padding: 6px;
-  border-radius: 4px;
-  transition: all 0.2s;
-}
-
-.btn-icon:hover:not(:disabled) {
-  background: #f1f5f9;
-  color: #4f46e5;
-}
-
-.btn-icon:disabled {
-  cursor: not-allowed;
-  opacity: 0.5;
-}
-
-.status-badge {
-  padding: 4px 12px;
-  border-radius: 20px;
-  font-size: 0.8rem;
-  font-weight: 700;
-}
-
-.status-badge.success {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.status-badge.warning {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.status-badge.danger {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.text-muted {
-  color: #94a3b8;
-}
-
-.code-font {
-  font-family: monospace;
-  color: #64748b;
-}
-
-.actions {
-  display: flex;
-  gap: 8px;
-}
-
-.btn-action {
-  width: 32px;
-  height: 32px;
-  border: none;
-  border-radius: 6px;
-  cursor: pointer;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.2s;
-}
-
-.btn-action.success {
-  background: #dcfce7;
-  color: #166534;
-}
-
-.btn-action.warning {
-  background: #fef3c7;
-  color: #92400e;
-}
-
-.btn-action.danger {
-  background: #fee2e2;
-  color: #991b1b;
-}
-
-.btn-action:hover {
-  transform: scale(1.1);
-}
-
-/* 图表容器 */
-.chart-container {
-  height: 300px;
-  padding: 24px;
-}
-
-/* 空状态 */
-.empty-state {
-  padding: 80px 24px;
-  text-align: center;
-  color: #94a3b8;
-}
-
-.empty-state i {
-  font-size: 3rem;
-  margin-bottom: 16px;
-  display: block;
-}
-
-.empty-state p {
-  margin-bottom: 24px;
-}
-
-.loading-state {
-  padding: 80px 24px;
-  text-align: center;
-  color: #94a3b8;
-}
-
-/* 分页 */
-.pagination {
-  padding: 20px 24px;
-  display: flex;
-  justify-content: center;
-  border-top: 1px solid #f1f5f9;
-}
-
-/* API文档卡片 */
-.docs-card {
-  padding: 0;
-  min-height: 600px;
-  overflow: hidden;
-}
+.pagination { padding: 16px 24px; display: flex; justify-content: center; align-items: center; gap: 12px; border-top: 1px solid #f1f5f9; }
+.btn-page { padding: 6px 16px; border: 1px solid #e2e8f0; border-radius: 6px; background: white; cursor: pointer; font-size: 0.85rem; }
+.btn-page:disabled { opacity: 0.5; cursor: not-allowed; }
+.page-info { font-size: 0.85rem; color: #64748b; }
 </style>

@@ -200,6 +200,21 @@ export const apiGetFullKey = (id: number) => {
   })
 }
 
+// 获取用量趋势统计（支持按天/小时，可选 model / API Key 筛选）
+export const apiGetUsageStats = (params: { interval: string; startDate?: string; endDate?: string; days?: number; apiKeyId?: number; model?: string }) => {
+  return request.get({
+    url: `/api/apikey/stats/usage`,
+    params,
+  })
+}
+
+// 获取可用模型列表
+export const apiGetModels = () => {
+  return request.get({
+    url: `/api/apikey/models`,
+  })
+}
+
 export const redirectToLumi = () => {
   return request.get({
     url: `/api/applumi/redirectToLumi`,
