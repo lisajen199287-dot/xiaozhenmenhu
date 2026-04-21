@@ -10,8 +10,8 @@ const config: {
   /**
    * api请求基础路径
    */
-  // base_url: 'http://127.0.0.1:48080/app-api',
-  base_url: '/app-api',
+  base_url: 'http://127.0.0.1:48080/app-api',
+  // base_url: '/app-api',
 
   // aiVideoUrl: 'https://www.cii-group.com/aivideo/',
   aiVideoUrl: 'http://portalgray.cii-group.com:49861/aivideo/',
