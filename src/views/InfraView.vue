@@ -59,7 +59,7 @@ const handleSubmit = async () => {
           <span class="divider">|</span>
           <div class="text" @click="Application()">申请算力补贴</div>
           <span class="divider">|</span>
-          <a href="/console.html#/apikeys?tab=docs" class="text">API文档</a>
+          <a href="/docs.html" class="text">API文档</a>
         </div>
       </div>
     </header>
