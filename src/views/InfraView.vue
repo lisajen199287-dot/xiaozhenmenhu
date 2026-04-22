@@ -1,13 +1,40 @@
 <script setup lang="ts">
-// resourceCards logic removed as it was unused
+import { ref } from "vue";
 import { useRouter } from "vue-router";
+import { ElMessage } from "element-plus";
+import * as newApi from "@/api/newApi/index";
+
 const router = useRouter();
+
+const formVisible = ref(false);
+const submitting = ref(false);
+const form = ref({ company: "", contact: "", phone: "", demand: "" });
+
 const Application = () => {
   router.push("/news/" + 3);
 };
-const Connect = () => {};
-const API = () => {
-  window.open("", "_blank");
+const Connect = () => {
+  formVisible.value = true;
+};
+
+const handleSubmit = async () => {
+  if (!form.value.contact || !form.value.phone) {
+    ElMessage.warning("请填写联系人与手机号");
+    return;
+  }
+  submitting.value = true;
+  try {
+    await newApi.apiAdmSolutionRequests(
+      JSON.stringify({ ...form.value, solutionName: "模型与算力" })
+    );
+    ElMessage.success("提交成功，我们会尽快联系您");
+    form.value = { company: "", contact: "", phone: "", demand: "" };
+    formVisible.value = false;
+  } catch {
+    ElMessage.error("提交失败，请重试");
+  } finally {
+    submitting.value = false;
+  }
 };
 </script>
 
@@ -32,9 +59,7 @@ const API = () => {
           <span class="divider">|</span>
           <div class="text" @click="Application()">申请算力补贴</div>
           <span class="divider">|</span>
-
-          <a href="/console.html#/apikeys?tab=docs">API文档</a>
-
+          <a href="/console.html#/apikeys?tab=docs" class="text">API文档</a>
         </div>
       </div>
     </header>
@@ -270,6 +295,38 @@ const API = () => {
         </div>
       </section>
     </div>
+
+    <!-- 接入咨询弹窗 -->
+    <el-dialog v-model="formVisible" width="480px" :close-on-click-modal="false" :show-close="true" class="consult-dialog">
+      <form class="consult-form" @submit.prevent="handleSubmit">
+        <div class="form-header-minimal">
+          <h3>接入咨询</h3>
+          <p>请留下您的联系方式</p>
+        </div>
+        <div class="form-group">
+          <label>企业/品牌名称</label>
+          <input v-model="form.company" type="text" placeholder="输入企业主体名称" />
+        </div>
+        <div class="form-row">
+          <div class="form-group">
+            <label>您的姓名 <span class="required">*</span></label>
+            <input v-model="form.contact" type="text" placeholder="怎么称呼" required />
+          </div>
+          <div class="form-group">
+            <label>联系电话 <span class="required">*</span></label>
+            <input v-model="form.phone" type="text" placeholder="用于接收方案" required />
+          </div>
+        </div>
+        <div class="form-group">
+          <label>核心诉求描述</label>
+          <textarea v-model="form.demand" rows="3" placeholder="请描述您的需求..."></textarea>
+        </div>
+        <button type="submit" class="btn-submit" :disabled="submitting">
+          {{ submitting ? '信息加密上传..' : '提交需求' }}
+        </button>
+        <p class="privacy-note"><i class="fas fa-lock"></i> 信息已采用端到端加密保护</p>
+      </form>
+    </el-dialog>
   </div>
 </template>
 
@@ -1294,13 +1351,15 @@ input[type="range"] {
   transition: all 0.3s;
   border-radius: 30px;
   font-size: 0.95rem;
+  cursor: pointer;
 }
 
-.hero-links a:hover {
+.hero-links .text:hover {
   background: #ffffff;
   color: #2563eb;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
+
 
 .divider {
   display: none; /* Hide divider in the new button design */
@@ -1556,5 +1615,84 @@ input[type="range"] {
   .section-title-v2 {
     font-size: 1.6rem;
   }
+}
+
+.form-header-minimal {
+  margin-bottom: 28px;
+}
+.form-header-minimal h3 {
+  font-size: 1.5rem;
+  color: #0f172a;
+  margin-bottom: 6px;
+  font-weight: 800;
+}
+.form-header-minimal p {
+  color: #64748b;
+  font-size: 0.95rem;
+}
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 16px;
+}
+.form-group {
+  margin-bottom: 20px;
+}
+.form-group label {
+  display: block;
+  font-weight: 700;
+  color: #334155;
+  margin-bottom: 8px;
+  font-size: 0.9rem;
+}
+.required {
+  color: #ef4444;
+}
+.form-group input,
+.form-group textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #e2e8f0;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: all 0.2s;
+  font-family: inherit;
+}
+.form-group input:focus,
+.form-group textarea:focus {
+  border-color: #4f46e5;
+  box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
+}
+.btn-submit {
+  width: 100%;
+  padding: 16px;
+  background: linear-gradient(135deg, #4f46e5, #3b82f6);
+  color: white;
+  border: none;
+  border-radius: 12px;
+  font-size: 1.05rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: all 0.3s;
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.2);
+}
+.btn-submit:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 24px rgba(79, 70, 229, 0.3);
+}
+.btn-submit:disabled {
+  opacity: 0.7;
+  cursor: not-allowed;
+}
+.privacy-note {
+  text-align: center;
+  margin-top: 14px;
+  font-size: 0.85rem;
+  color: #94a3b8;
+}
+.privacy-note i {
+  color: #10b981;
+  margin-right: 4px;
 }
 </style>
