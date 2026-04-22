@@ -265,3 +265,11 @@ export const apiAgUserGet = () => {
     url: `/member/user/get`,
   })
 }
+
+
+// 门户服务端获取aippt的accessCode返回给门户前端
+export const apiPortalAiPptAccessCode = () => {
+  return request.post({
+    url: `/portal/ai-ppt/access-code`,
+  })
+}

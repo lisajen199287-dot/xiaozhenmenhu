@@ -44,19 +44,19 @@ const coreValues = [
 const advantages = [
   {
     title: "可以直接产出结果",
-    desc: "区别于传统AI对话工具，仓龙Claw能直接完成任务并输出结果",
+    desc: "区别于传统 AI 对话工具，仓龙 Claw预制行业主虾 + 子虾，直接完成任务并输出成品",
   },
   {
     title: "能力可沉淀",
-    desc: "所有使用过程可以沉淀为技能，形成企业自己的能力体系",
+    desc: "所有使用过程可沉淀为技能，主虾 / 子虾可迭代升级，构建企业专属能力体系",
   },
   {
     title: "流程自动化",
-    desc: "支持任务自动执行，减少人工参与，提高效率",
+    desc: "主虾统筹规划，子虾批量执行，全流程自动化，减少人工参与",
   },
   {
     title: "适配多行业",
-    desc: "适用于电商、营销、企业服务、园区管理等多种业务场景",
+    desc: "预制电商、内容、教育、汽车、金融、企业服务等多行业主虾与子虾，开箱即用",
   },
 ];
 import { scenarios } from "@/data/arkclawData";
@@ -127,6 +127,13 @@ const quantities = ref({
   ultimate: 0,
 });
 
+const bindOptions = ref({
+  starter: false,
+  standard: false,
+  premium: false,
+  ultimate: false,
+});
+
 const increaseQuantity = (plan: string) => {
   if (quantities.value[plan as keyof typeof quantities.value] !== undefined) {
     quantities.value[plan as keyof typeof quantities.value]++;
@@ -142,13 +149,48 @@ const decreaseQuantity = (plan: string) => {
   }
 };
 
-const subscribe = (plan: string) => {
-  const quantity = quantities.value[plan as keyof typeof quantities.value];
-  if (quantity === 0) {
-    alert("请选择订阅数量");
-    return;
+const toggleBindOption = (plan: string) => {
+  if (bindOptions.value[plan as keyof typeof bindOptions.value] !== undefined) {
+    bindOptions.value[plan as keyof typeof bindOptions.value] = !bindOptions.value[plan as keyof typeof bindOptions.value];
   }
-  ElMessage.success(`已成功订阅 ${quantity} 个 ${plan} 版本`);
+};
+
+const getTotalPrice = (plan: string) => {
+  const basePrices = {
+    starter: 210,
+    standard: 430,
+    premium: 860,
+    ultimate: 1720
+  };
+  const bindPrices = {
+    starter: 120,
+    standard: 120,
+    premium: 600,
+    ultimate: 600
+  };
+  
+  const basePrice = basePrices[plan as keyof typeof basePrices] || 0;
+  const bindPrice = bindOptions.value[plan as keyof typeof bindOptions.value] ? (bindPrices[plan as keyof typeof bindPrices] || 0) : 0;
+  
+  return basePrice ;
+};
+
+const subscribe = (plan: string) => {
+  // const quantity = quantities.value[plan as keyof typeof quantities.value];
+  // if (quantity === 0) {
+  //   alert("请选择订阅数量");
+  //   return;
+  // }
+  // ElMessage.success(`已成功订阅 ${quantity} 个 ${plan} 版本`);
+  // 跳转到表单区域
+  scrollToForm();
+};
+
+const scrollToForm = () => {
+  const formElement = document.getElementById("contact-form");
+  if (formElement) {
+    formElement.scrollIntoView({ behavior: "smooth" });
+  }
 };
 </script>
 
@@ -168,6 +210,9 @@ const subscribe = (plan: string) => {
           <div class="cta-group justify-center">
             <button class="primary-btn pulse-glow" @click="handleClick">
               开始体验
+            </button>
+            <button class="primary-btn pulse-glow" @click="subscribe('starter')">
+              咨询我们
             </button>
           </div>
         </div>
@@ -204,17 +249,57 @@ const subscribe = (plan: string) => {
           <div
             v-for="(scene, index) in scenarios"
             :key="index"
-            class="scenario-item"
+            class="scenario-item1"
             @click="goToDetail(index)"
             style="cursor: pointer"
           >
             <div class="scene-header">
               <img :src="scene.logo" alt="Scenario Image" class="scene-image" />
               <h3>{{ scene.title }}</h3>
-              <p class="scene-desc">{{ scene.desc }}</p>
+              <p class="scene-desc">{{ scene.desc1 }}</p>
               <!-- <div class="tag-group">
                 <span v-for="tag in scene.tags" :key="tag" class="pill-tag">{{ tag }}</span>
               </div> -->
+            </div>
+            <div class="shrimp-info">
+              <div v-if="index === 0" class="shrimp-content">
+                <div class="shrimp-details">
+                  <p><strong>主虾：</strong>电商全域运营主虾</p>
+                  <p>
+                    <strong>子虾：</strong
+                    >商品上架子虾、营销推广子虾、数据分析子虾、客服应答子虾
+                  </p>
+                </div>
+              </div>
+              <div v-else-if="index === 1" class="shrimp-content">
+
+                <div class="shrimp-details">
+                  <p><strong>主虾：</strong>短剧内容创作主虾</p>
+                  <p>
+                    <strong>子虾：</strong
+                    >创意生成子虾、分镜设计子虾、视频合成子虾、成片输出子虾
+                  </p>
+                </div>
+              </div>
+              <div v-else-if="index === 2" class="shrimp-content">
+
+                <div class="shrimp-details">
+                  <p><strong>主虾：</strong>行业研究主虾</p>
+                  <p>
+                    <strong>子虾：</strong
+                    >信息采集子虾、数据清洗子虾、报告撰写子虾、趋势研判子虾
+                  </p>
+                </div>
+              </div>
+              <div v-else-if="index === 3" class="shrimp-content">
+                <div class="shrimp-details">
+                  <p><strong>主虾：</strong>直播运营主虾</p>
+                  <p>
+                    <strong>子虾：</strong
+                    >选品分析子虾、机会评估子虾、策略生成子虾、复盘总结子虾
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
@@ -283,17 +368,23 @@ const subscribe = (plan: string) => {
             <div class="pricing-header">
               <h3>轻量版 Starter</h3>
               <div class="price-tag">
-                <span class="price">210</span>
+                <span class="price">{{ getTotalPrice('starter') }}</span>
                 <span class="unit">元/月</span>
+                <div v-if="bindOptions.starter" class="bind-price">+ 120 元/月</div>
               </div>
               <div class="plan-tag">基础体验</div>
             </div>
             <div class="pricing-body">
               <div class="plan-info">
-                <div class="info-item"><strong>标签：</strong>简单测试场景</div>
                 <div class="info-item">
-                  <strong>绑定选项：</strong>绑定 CodingPlan Team Lite ¥120 /
-                  月（后续无法取消或重新绑定）
+                  <strong>标签：</strong>简单测试场景
+                </div>
+                <div class="info-item bind-option">
+                  <label class="bind-checkbox">
+                    <input type="checkbox" v-model="bindOptions.starter">
+                    <span class="checkmark"></span>
+                    <span class="bind-text">绑定 CodingPlan Team Lite ¥120 / 月（后续无法取消或重新绑定）</span>
+                  </label>
                 </div>
                 <!-- <div class="info-item">
                   <strong>数量选择：</strong>
@@ -329,8 +420,9 @@ const subscribe = (plan: string) => {
               <div class="popular-badge">最受欢迎</div>
               <h3>标准版 Standard</h3>
               <div class="price-tag">
-                <span class="price">430</span>
+                <span class="price">{{ getTotalPrice('standard') }}</span>
                 <span class="unit">元/月</span>
+                <div v-if="bindOptions.standard" class="bind-price">+ 120 元/月</div>
               </div>
               <div class="plan-tag">更高性能</div>
             </div>
@@ -340,9 +432,12 @@ const subscribe = (plan: string) => {
                   <strong>标签：</strong
                   >自动化办公场景、流程审批场景、知识检索场景
                 </div>
-                <div class="info-item">
-                  <strong>绑定选项：</strong>绑定 CodingPlan Team Lite ¥120 /
-                  月（后续无法取消或重新绑定）
+                <div class="info-item bind-option">
+                  <label class="bind-checkbox">
+                    <input type="checkbox" v-model="bindOptions.standard">
+                    <span class="checkmark"></span>
+                    <span class="bind-text">绑定 CodingPlan Team Lite ¥120 / 月（后续无法取消或重新绑定）</span>
+                  </label>
                 </div>
                 <!-- <div class="info-item">
                   <strong>数量选择：</strong>
@@ -367,7 +462,12 @@ const subscribe = (plan: string) => {
               </div>
             </div>
             <div class="pricing-footer">
-              <button class="btn-subscribe primary">立即订阅</button>
+              <button
+                class="btn-subscribe primary"
+                @click="subscribe('premium')"
+              >
+                立即订阅
+              </button>
             </div>
           </div>
 
@@ -376,8 +476,9 @@ const subscribe = (plan: string) => {
             <div class="pricing-header">
               <h3>高级版 Premium</h3>
               <div class="price-tag">
-                <span class="price">860</span>
+                <span class="price">{{ getTotalPrice('premium') }}</span>
                 <span class="unit">元/月</span>
+                <div v-if="bindOptions.premium" class="bind-price">+ 600 元/月</div>
               </div>
               <div class="plan-tag">全面进阶</div>
             </div>
@@ -386,9 +487,12 @@ const subscribe = (plan: string) => {
                 <div class="info-item">
                   <strong>标签：</strong>大规模数据处理、长文本解析、视觉识别
                 </div>
-                <div class="info-item">
-                  <strong>绑定选项：</strong>绑定 CodingPlan Team Pro ¥600 /
-                  月（后续无法取消或重新绑定）
+                <div class="info-item bind-option">
+                  <label class="bind-checkbox">
+                    <input type="checkbox" v-model="bindOptions.premium">
+                    <span class="checkmark"></span>
+                    <span class="bind-text">绑定 CodingPlan Team Pro ¥600 / 月（后续无法取消或重新绑定）</span>
+                  </label>
                 </div>
                 <!-- <div class="info-item">
                   <strong>数量选择：</strong>
@@ -425,8 +529,9 @@ const subscribe = (plan: string) => {
             <div class="pricing-header">
               <h3>旗舰版 Ultimate</h3>
               <div class="price-tag">
-                <span class="price">1720</span>
+                <span class="price">{{ getTotalPrice('ultimate') }}</span>
                 <span class="unit">元/月</span>
+                <div v-if="bindOptions.ultimate" class="bind-price">+ 600 元/月</div>
               </div>
               <div class="plan-tag">顶级配置</div>
             </div>
@@ -435,9 +540,12 @@ const subscribe = (plan: string) => {
                 <div class="info-item">
                   <strong>标签：</strong>多模态处理、多智能体协同、复杂循环任务
                 </div>
-                <div class="info-item">
-                  <strong>绑定选项：</strong>绑定 CodingPlan Team Pro ¥600 /
-                  月（后续无法取消或重新绑定）
+                <div class="info-item bind-option">
+                  <label class="bind-checkbox">
+                    <input type="checkbox" v-model="bindOptions.ultimate">
+                    <span class="checkmark"></span>
+                    <span class="bind-text">绑定 CodingPlan Team Pro ¥600 / 月（后续无法取消或重新绑定）</span>
+                  </label>
                 </div>
                 <!-- <div class="info-item">
                   <strong>数量选择：</strong>
@@ -473,7 +581,7 @@ const subscribe = (plan: string) => {
       </div>
     </section>
     <!-- Consultation Form Section -->
-    <section class="section-padding bg-white">
+    <section id="contact-form" class="section-padding bg-white">
       <div class="container">
         <div class="form-container">
           <div class="form-container-left">
@@ -903,14 +1011,11 @@ const subscribe = (plan: string) => {
 /* Scenarios List */
 .scenario-list {
   display: grid;
-  grid-template-columns: repeat(4, 1fr);
+  grid-template-columns: repeat(2, 1fr);
   gap: 24px;
 }
 
-.scenario-item {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
+.scenario-item1 {
   background: #ffffff;
   border-radius: 16px;
   padding: 24px;
@@ -919,9 +1024,15 @@ const subscribe = (plan: string) => {
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  .scene-header{
+    flex: 1;
+  }
+  .shrimp-info{
+    flex: 1;
+  }
 }
 
-.scenario-item::before {
+.scenario-item1::before {
   content: "";
   position: absolute;
   top: 0;
@@ -932,7 +1043,7 @@ const subscribe = (plan: string) => {
   border-radius: 16px 16px 0 0;
 }
 
-.scenario-item:hover {
+.scenario-item1:hover {
   transform: translateY(-8px);
   box-shadow: 0 20px 25px -5px rgba(79, 70, 229, 0.15);
   border-color: #4f46e5;
@@ -1490,15 +1601,15 @@ const subscribe = (plan: string) => {
 }
 
 .price {
-  font-size: 2.5rem;
+  font-size: 1.1rem;
   font-weight: 800;
   color: #4f46e5;
   margin-right: 8px;
 }
 
 .unit {
-  font-size: 1rem;
-  color: #64748b;
+  font-size: 1.1rem;
+  color: #4f46e5;
 }
 
 .plan-tag {
@@ -1639,5 +1750,114 @@ const subscribe = (plan: string) => {
   .pricing-grid {
     grid-template-columns: 1fr;
   }
+}
+.shrimp-info {
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 1px solid #f0f0f0;
+}
+
+.shrimp-tagline {
+  font-size: 14px;
+  color: #333;
+  margin-bottom: 10px;
+  line-height: 1.4;
+}
+
+.shrimp-details {
+  font-size: 13px;
+  color: #666;
+  line-height: 1.5;
+}
+
+.shrimp-details p {
+  margin-bottom: 5px;
+}
+
+.shrimp-details strong {
+  color: #333;
+}
+
+.scenario-item {
+  align-items: none !important;
+}
+
+/* Bind option checkbox styles */
+.bind-option {
+  margin-top: 10px;
+}
+
+.bind-checkbox {
+  display: flex;
+  align-items: flex-start;
+  cursor: pointer;
+  user-select: none;
+}
+
+.bind-checkbox input {
+  position: absolute;
+  opacity: 0;
+  cursor: pointer;
+  height: 0;
+  width: 0;
+}
+
+.checkmark {
+  height: 20px;
+  width: 20px;
+  background-color: #fff;
+  border: 2px solid #ddd;
+  border-radius: 4px;
+  margin-right: 10px;
+  margin-top: 2px;
+  position: relative;
+}
+
+.bind-checkbox:hover input ~ .checkmark {
+  border-color: #409eff;
+}
+
+.bind-checkbox input:checked ~ .checkmark {
+  background-color: #409eff;
+  border-color: #409eff;
+}
+
+.checkmark:after {
+  content: "";
+  position: absolute;
+  display: none;
+}
+
+.bind-checkbox input:checked ~ .checkmark:after {
+  display: block;
+}
+
+.bind-checkbox .checkmark:after {
+  left: 6px;
+  top: 2px;
+  width: 4px;
+  height: 10px;
+  border: solid white;
+  border-width: 0 2px 2px 0;
+  transform: rotate(45deg);
+}
+
+.bind-text {
+  flex: 1;
+  font-size: 14px;
+  color: #666;
+  line-height: 1.4;
+}
+
+/* Price display styles */
+.bind-price {
+  font-size: 1.1rem;
+  color: #4f46e5;
+  margin-top: 5px;
+  font-weight: 600;
+}
+
+.price-tag {
+  position: relative;
 }
 </style>

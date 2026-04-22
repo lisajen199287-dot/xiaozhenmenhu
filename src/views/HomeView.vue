@@ -105,8 +105,7 @@ const golink = () => {
       localStorage.getItem("token") +
       "&refreshToken=" +
       localStorage.getItem("refreshToken");
-      console.log(url);
-    // window.open(url, "_blank");
+    window.open(url, "_blank");
   } else {
     const url = config.aiVideoUrl;
     window.open(url, "_blank");
@@ -491,6 +490,16 @@ const handleHeroAction = (link: string) => {
   }
 };
 
+const goPPT = async () => {
+  try {
+    const res = await newApi.apiPortalAiPptAccessCode();
+    const url = `https://industry.aics.cii-group.com/#/pptDocs?accessCode=${res}`;
+    window.open(url, "_blank");
+  } catch (e) {
+    console.error("Failed to get access code:", e);
+  }
+};
+
 onUnmounted(() => {
   window.removeEventListener("resize", handleResize);
   if (timer) clearInterval(timer);
@@ -754,14 +763,7 @@ onUnmounted(() => {
           </div>
 
           <!-- Card 5: Industry Analysis (Business Strategy) -->
-          <div
-            class="scenario-card-v5"
-            @click="
-              navToExternal(
-                'https://industry-manage.aics.cii-group.com/account-management?loginType=sso'
-              )
-            "
-          >
+          <div class="scenario-card-v5" @click="goPPT()">
             <div class="card-meta">
               <span class="model-tag">Industry-PPT-Gen</span>
               <i class="fas fa-file-powerpoint"></i>

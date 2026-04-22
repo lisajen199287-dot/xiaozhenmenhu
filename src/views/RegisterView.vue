@@ -118,13 +118,13 @@ const handleRegister = async () => {
 
         <div class="logo-white" @click="router.push('/')">
 
-          <span>仓山区人工智能公共服务平台</span>
+          <span>福州市仓山区人工智能公共服务平台</span>
 
         </div>
 
         <div class="hero-quote">
 
-          <h2 class="animate-up">仓山区人工智能公共服务平台</h2>
+          <h2 class="animate-up">福州市仓山区人工智能公共服务平台</h2>
 
           <p class="animate-up delay-1">开启您的全天候智能服务之旅</p>
 
@@ -148,7 +148,7 @@ const handleRegister = async () => {
 
            <div class="mini-logo">
 
-              <span>仓山区人工智能公共服务平台</span>
+              <span>福州市仓山区人工智能公共服务平台</span>
 
            </div>
 
