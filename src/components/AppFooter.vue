@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref } from 'vue'
+import { useRoute } from 'vue-router'
 
+const route = useRoute()
 const activeIndex = ref<number | null>(null)
 
 const toggle = (index: number) => {
@@ -13,7 +15,7 @@ const toggle = (index: number) => {
 </script>
 
 <template>
-  <footer class="app-footer-v3">
+  <footer v-if="route.path !== '/arkclaw/detail'" class="app-footer-v3">
     <!-- Top Modules Area -->
     <div class="footer-modules wrapper">
         <!-- Col 1: Contact -->

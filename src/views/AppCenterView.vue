@@ -56,7 +56,20 @@ const categories = computed(() => {
     }
     groups[cat].apps.push(app);
   });
-  return Object.values(groups);
+
+  // 转成数组
+  let result = Object.values(groups);
+
+  // ====================== 核心代码 ======================
+  // 把 AI 工具 提到最前面
+  const aiToolIndex = result.findIndex(item => item.title === "AI 工具");
+  if (aiToolIndex > 0) {
+    const aiToolItem = result.splice(aiToolIndex, 1)[0];
+    result.unshift(aiToolItem);
+  }
+  // ======================================================
+
+  return result;
 });
 
 onMounted(() => {

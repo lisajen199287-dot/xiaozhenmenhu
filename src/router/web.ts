@@ -119,6 +119,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/DigitalHumanLandingView.vue')
     },
     {
+        path: '/arkclaw',
+        name: 'Arkclaw',
+        component: () => import('@/views/arkclaw.vue')
+    },
+    {
+        path: '/arkclaw/detail',
+        name: 'ArkclawDetail',
+        component: () => import('@/views/arkclaw/ArkclawDetailView.vue')
+    },
+    {
         path: '/ecommerce-ai',
         name: 'EcommerceLanding',
         component: () => import('@/views/EcommerceLandingView.vue')

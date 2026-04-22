@@ -1,301 +1,286 @@
 <script setup lang="ts">
-
 // resourceCards logic removed as it was unused
-
+import { useRouter } from "vue-router";
+const router = useRouter();
+const Application = () => {
+  router.push("/news/" + 3);
+};
+const Connect = () => {};
+const API = () => {
+  window.open("", "_blank");
+};
 </script>
 
 
 
 <template>
-
   <div class="infra-page">
-
     <!-- new Header Section -->
 
     <header class="new-hero-section">
-
       <video autoplay muted loop playsinline class="hero-video">
-
-        <source src="/static/videos/mirror-bg-video.mp4" type="video/mp4">
-
+        <source src="/static/videos/mirror-bg-video.mp4" type="video/mp4" />
       </video>
 
       <div class="hero-content">
-
         <h1 class="hero-title">普惠算力，灵活调度</h1>
 
         <p class="hero-subtitle">AI算力聚合平台</p>
 
         <div class="hero-links">
-
-          <a href="/login">接入</a>
-
+          <div class="text" @click="Connect()">接入</div>
           <span class="divider">|</span>
-
-          <a href="#">申请算力补贴</a>
-
+          <div class="text" @click="Application()">申请算力补贴</div>
           <span class="divider">|</span>
-
-          <a href="#">API文档</a>
-
+          <div class="text" @click="API()">API文档</div>
         </div>
-
       </div>
-
     </header>
-
-
 
     <!-- Recommended Models Section -->
 
     <div class="wrapper">
+      <section class="content-section recommended-models">
+        <h2 class="section-title-v2">推荐模型</h2>
 
-    <section class="content-section recommended-models">
+        <div class="models-grid">
+          <!-- Model Card 1 -->
 
-      <h2 class="section-title-v2">推荐模型</h2>
+          <div class="model-card">
+            <div class="model-tag">[视频生成]</div>
 
-      <div class="models-grid">
+            <a
+              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&modelId=doubao-seedance-2-0-260128&tab=GenVideo"
+              target="_blank"
+              class="model-img video-gen"
+              style="display: block"
+            >
+              <img
+                src="@/assets/images/doubao-seedance.png"
+                alt="Doubao-Seedance-2.0"
+                class="model-inner-img"
+              />
+            </a>
 
-        <!-- Model Card 1 -->
+            <h3>Doubao-Seedance-2.0</h3>
 
-        <div class="model-card">
+            <p>豆包多模态创作视频模型，音视图文均可生成</p>
 
-          <div class="model-tag">[视频生成]</div>
+            <a
+              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&modelId=doubao-seedance-2-0-260128&tab=GenVideo"
+              target="_blank"
+              class="details-link"
+              >[详情]</a
+            >
+          </div>
 
-          <a href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&modelId=doubao-seedance-2-0-260128&tab=GenVideo" target="_blank" class="model-img video-gen" style="display: block;">
+          <!-- Model Card 2 -->
 
-             <img src="@/assets/images/doubao-seedance.png" alt="Doubao-Seedance-2.0" class="model-inner-img">
+          <div class="model-card">
+            <div class="model-tag">[图片生成]</div>
 
-          </a>
+            <a
+              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&tab=GenImage"
+              target="_blank"
+              class="model-img image-gen"
+              style="display: block"
+            >
+              <img
+                src="@/assets/images/doubao-seedream.png"
+                alt="Doubao-Seedream-5.0"
+                class="model-inner-img"
+              />
+            </a>
 
-          <h3>Doubao-Seedance-2.0</h3>
+            <h3>Doubao-Seedream-5.0</h3>
 
-          <p>豆包多模态创作视频模型，音视图文均可生成</p>
+            <p>豆包图像创作模型，联网检索，海量世界知识</p>
 
-          <a href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&modelId=doubao-seedance-2-0-260128&tab=GenVideo" target="_blank" class="details-link">[详情]</a>
+            <a
+              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&tab=GenImage"
+              target="_blank"
+              class="details-link"
+              >[详情]</a
+            >
+          </div>
 
+          <!-- Model Card 3 -->
+
+          <div class="model-card">
+            <div class="model-tag">[多模态]</div>
+
+            <a
+              href="https://exp.volcengine.com/ark?_vtm_=0.0.c70961.d701978.0"
+              target="_blank"
+              class="model-img multimodal"
+              style="display: block"
+            >
+              <img
+                src="@/assets/images/doubao-seed-pro.png"
+                alt="Doubao-Seed-2.0-pro"
+                class="model-inner-img"
+              />
+            </a>
+
+            <h3>Doubao-Seed-2.0-pro</h3>
+
+            <p>豆包 Agent 通用模型，复杂任务规划与执行能力全方位跃迁</p>
+
+            <a
+              href="https://exp.volcengine.com/ark?_vtm_=0.0.c70961.d701978.0"
+              target="_blank"
+              class="details-link"
+              >[详情]</a
+            >
+          </div>
+        </div>
+      </section>
+
+      <!-- Smart Infrastructure Section -->
+
+      <section class="content-section smart-infra-v2">
+        <div class="section-title-wrapper">
+          <h2 class="section-title-v2">智能基建</h2>
+
+          <p class="section-subtitle">全栈能力，支撑海量垂直行业需求</p>
         </div>
 
-        <!-- Model Card 2 -->
+        <div class="infra-grid-v2">
+          <div class="infra-card-v2">
+            <div class="card-glass-bg"></div>
 
-        <div class="model-card">
+            <div class="card-icon-floating">
+              <i class="fas fa-microchip"></i>
+            </div>
 
-          <div class="model-tag">[图片生成]</div>
+            <h3>GPU算力服务</h3>
 
-          <a href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&tab=GenImage" target="_blank" class="model-img image-gen" style="display: block;">
+            <p>
+              GPU 算力的弹性计算服务，可高效支撑生成式
+              AI、自动驾驶等多场景算力需求
+            </p>
+          </div>
 
-             <img src="@/assets/images/doubao-seedream.png" alt="Doubao-Seedream-5.0" class="model-inner-img">
+          <div class="infra-card-v2">
+            <div class="card-glass-bg"></div>
 
-          </a>
+            <div class="card-icon-floating"><i class="fas fa-server"></i></div>
 
-          <h3>Doubao-Seedream-5.0</h3>
+            <h3>CPU算力服务</h3>
 
-          <p>豆包图像创作模型，联网检索，海量世界知识</p>
+            <p>安全稳定、可弹性伸缩的云计算服务，提供CPU 为主的通用算力</p>
+          </div>
 
-          <a href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&tab=GenImage" target="_blank" class="details-link">[详情]</a>
+          <div class="infra-card-v2">
+            <div class="card-glass-bg"></div>
 
+            <div class="card-icon-floating">
+              <i class="fas fa-network-wired"></i>
+            </div>
+
+            <h3>CDN内容分发网络</h3>
+
+            <p>提供通用加速与游戏加速两大场景化解决方案，按需选择更适配</p>
+          </div>
+
+          <div class="infra-card-v2">
+            <div class="card-glass-bg"></div>
+
+            <div class="card-icon-floating"><i class="fas fa-cube"></i></div>
+
+            <h3>AICC可信空间</h3>
+
+            <p>安全可信的 AI 运行环境，保障数据与模型全链路安全</p>
+          </div>
         </div>
-
-        <!-- Model Card 3 -->
-
-        <div class="model-card">
-
-          <div class="model-tag">[多模态]</div>
-
-          <a href="https://exp.volcengine.com/ark?_vtm_=0.0.c70961.d701978.0" target="_blank" class="model-img multimodal" style="display: block;">
-
-             <img src="@/assets/images/doubao-seed-pro.png" alt="Doubao-Seed-2.0-pro" class="model-inner-img">
-
-          </a>
-
-          <h3>Doubao-Seed-2.0-pro</h3>
-
-          <p>豆包 Agent 通用模型，复杂任务规划与执行能力全方位跃迁</p>
-
-          <a href="https://exp.volcengine.com/ark?_vtm_=0.0.c70961.d701978.0" target="_blank" class="details-link">[详情]</a>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
-
-    <!-- Smart Infrastructure Section -->
-
-    <section class="content-section smart-infra-v2">
-
-      <div class="section-title-wrapper">
-
-        <h2 class="section-title-v2">智能基建</h2>
-
-        <p class="section-subtitle">全栈能力，支撑海量垂直行业需求</p>
-
-      </div>
-
-      <div class="infra-grid-v2">
-
-        <div class="infra-card-v2">
-
-          <div class="card-glass-bg"></div>
-
-          <div class="card-icon-floating"><i class="fas fa-microchip"></i></div>
-
-          <h3>GPU算力服务</h3>
-
-          <p>GPU 算力的弹性计算服务，可高效支撑生成式 AI、自动驾驶等多场景算力需求</p>
-
-        </div>
-
-        <div class="infra-card-v2">
-
-          <div class="card-glass-bg"></div>
-
-          <div class="card-icon-floating"><i class="fas fa-server"></i></div>
-
-          <h3>CPU算力服务</h3>
-
-          <p>安全稳定、可弹性伸缩的云计算服务，提供CPU 为主的通用算力</p>
-
-        </div>
-
-        <div class="infra-card-v2">
-
-          <div class="card-glass-bg"></div>
-
-          <div class="card-icon-floating"><i class="fas fa-network-wired"></i></div>
-
-          <h3>CDN内容分发网络</h3>
-
-          <p>提供通用加速与游戏加速两大场景化解决方案，按需选择更适配</p>
-
-        </div>
-
-        <div class="infra-card-v2">
-
-          <div class="card-glass-bg"></div>
-
-          <div class="card-icon-floating"><i class="fas fa-cube"></i></div>
-
-          <h3>AICC可信空间</h3>
-
-          <p>安全可信的 AI 运行环境，保障数据与模型全链路安全</p>
-
-        </div>
-
-      </div>
-
-    </section>
-
-
+      </section>
 
       <!-- Security Architecture (Replaces Model Square) -->
 
       <section id="security" class="content-section security-section-v2">
-
         <div class="security-inner">
-
           <div class="section-header">
-
             <h2 class="section-title-v2">金融级安全架构</h2>
 
-            <p class="section-desc-v2">全链路数据加密与隔离，通过等保三级认证</p>
-
+            <p class="section-desc-v2">
+              全链路数据加密与隔离，通过等保三级认证
+            </p>
           </div>
 
           <div class="security-grid-v2">
-
             <div class="sec-card-v2">
-
-              <div class="sec-icon-circle"><i class="fas fa-shield-alt"></i></div>
+              <div class="sec-icon-circle">
+                <i class="fas fa-shield-alt"></i>
+              </div>
 
               <div class="sec-content-v2">
-
                 <h3>数据不出域</h3>
 
-                <p>基于 AICC 可信数据空间，确保训练数据与模型权重在本地闭环流转，物理隔离公网</p>
-
+                <p>
+                  基于 AICC
+                  可信数据空间，确保训练数据与模型权重在本地闭环流转，物理隔离公网
+                </p>
               </div>
-
             </div>
 
             <div class="sec-card-v2">
-
-              <div class="sec-icon-circle blue"><i class="fas fa-lock"></i></div>
+              <div class="sec-icon-circle blue">
+                <i class="fas fa-lock"></i>
+              </div>
 
               <div class="sec-content-v2">
-
                 <h3>模型防火墙</h3>
 
-                <p>内置输入输出过滤机制，自动拦截敏感词与恶意注入攻击，保障生成内容合规</p>
-
+                <p>
+                  内置输入输出过滤机制，自动拦截敏感词与恶意注入攻击，保障生成内容合规
+                </p>
               </div>
-
             </div>
 
             <div class="sec-card-v2">
-
-              <div class="sec-icon-circle green"><i class="fas fa-user-secret"></i></div>
+              <div class="sec-icon-circle green">
+                <i class="fas fa-user-secret"></i>
+              </div>
 
               <div class="sec-content-v2">
-
                 <h3>隐私计算</h3>
 
-                <p>支持联邦学习与多方安全计算，在不共享原始数据的前提下实现联合建模</p>
-
+                <p>
+                  支持联邦学习与多方安全计算，在不共享原始数据的前提下实现联合建模
+                </p>
               </div>
-
             </div>
 
             <div class="sec-card-v2">
-
-              <div class="sec-icon-circle purple"><i class="fas fa-server"></i></div>
-
-              <div class="sec-content-v2">
-
-                <h3>专属云部署</h3>
-
-                <p>提供独占物理机群，资源完全物理隔离，避免多租户环境下的资源争抢与数据泄露风险</p>
-
+              <div class="sec-icon-circle purple">
+                <i class="fas fa-server"></i>
               </div>
 
+              <div class="sec-content-v2">
+                <h3>专属云部署</h3>
+
+                <p>
+                  提供独占物理机群，资源完全物理隔离，避免多租户环境下的资源争抢与数据泄露风险
+                </p>
+              </div>
             </div>
-
           </div>
-
         </div>
-
       </section>
-
-
-
-
-
-
-
     </div>
-
   </div>
-
 </template>
 
 
 
 <style scoped>
-
 .infra-page {
-
   background: #fdfdfe;
 
   min-height: 100vh;
-
 }
 
-
-
 .page-hero-v2 {
-
   position: relative;
 
   width: 100%;
@@ -307,49 +292,41 @@
   overflow: hidden;
 
   background: #0f172a;
-
 }
 
-
-
 .infra-hero {
-
-  background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)), url('@/assets/images/infra-bg.jpg');
+  background: linear-gradient(rgba(15, 23, 42, 0.8), rgba(15, 23, 42, 0.8)),
+    url("@/assets/images/infra-bg.jpg");
 
   background-size: cover;
 
   background-position: center;
-
 }
 
-
-
 .page-hero-v2::after {
-
-  content: '';
+  content: "";
 
   position: absolute;
 
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-  background-image: 
-
-    radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0),
-
-    linear-gradient(to right, rgba(255,255,255,0.02) 1px, transparent 1px),
-
-    linear-gradient(to bottom, rgba(255,255,255,0.02) 1px, transparent 1px);
+  background-image: radial-gradient(
+      circle at 2px 2px,
+      rgba(255, 255, 255, 0.03) 1px,
+      transparent 0
+    ),
+    linear-gradient(to right, rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
 
   background-size: 40px 40px, 80px 80px, 80px 80px;
 
   pointer-events: none;
-
 }
 
-
-
 .hero-content {
-
   position: relative;
 
   z-index: 10;
@@ -359,13 +336,9 @@
   margin: 0 auto;
 
   padding: 0 80px;
-
 }
 
-
-
 .hero-badge-v2 {
-
   display: inline-block;
 
   padding: 6px 16px;
@@ -389,13 +362,9 @@
   letter-spacing: 0.15em;
 
   text-transform: uppercase;
-
 }
 
-
-
 .main-title {
-
   font-size: 3.8rem;
 
   font-weight: 900;
@@ -405,13 +374,9 @@
   margin-bottom: 24px;
 
   letter-spacing: -0.02em;
-
 }
 
-
-
 .main-desc {
-
   font-size: 1.2rem;
 
   color: rgba(255, 255, 255, 0.6);
@@ -421,29 +386,17 @@
   margin: 0 auto;
 
   line-height: 1.6;
-
 }
-
-
 
 .content-section {
-
   margin: 60px 0 100px;
-
 }
-
-
 
 .section-header {
-
   margin-bottom: 48px;
-
 }
 
-
-
 .section-title-v2 {
-
   font-size: 2.2rem;
 
   font-weight: 800;
@@ -451,41 +404,30 @@
   color: #0f172a;
 
   margin-bottom: 12px;
-
 }
 
-
-
 .section-desc-v2 {
-
   font-size: 1.1rem;
 
   color: #64748b;
-
 }
-
-
 
 /* Calculator Card */
 
 .calculator-card {
-
   background: white;
 
   border-radius: 8px;
 
   padding: 60px;
 
-  box-shadow: 0 4px 6px -1px rgba(0,0,0,0.01), 0 20px 40px -5px rgba(0,0,0,0.05);
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.01),
+    0 20px 40px -5px rgba(0, 0, 0, 0.05);
 
   border: 1px solid #f1f5f9;
-
 }
 
-
-
 .card-header {
-
   display: flex;
 
   align-items: center;
@@ -493,13 +435,9 @@
   gap: 24px;
 
   margin-bottom: 60px;
-
 }
 
-
-
 .header-icon {
-
   width: 64px;
 
   height: 64px;
@@ -517,79 +455,51 @@
   justify-content: center;
 
   font-size: 1.8rem;
-
 }
 
-
-
 .header-text h2 {
-
   font-size: 1.8rem;
 
   font-weight: 800;
 
   color: #0f172a;
-
 }
 
-
-
 .header-text p {
-
   color: #64748b;
 
   font-size: 1.1rem;
-
 }
 
-
-
 .calc-content {
-
   display: grid;
 
   grid-template-columns: 1fr 380px;
 
   gap: 80px;
-
 }
-
-
 
 .input-group {
-
   margin-bottom: 40px;
-
 }
 
-
-
 .label-row {
-
   display: flex;
 
   justify-content: space-between;
 
   margin-bottom: 20px;
-
 }
 
-
-
 .label-row label {
-
   font-weight: 700;
 
   color: #1e293b;
 
   font-size: 1rem;
-
 }
 
-
-
 .val-display {
-
   color: #4f46e5;
 
   font-weight: 800;
@@ -599,13 +509,9 @@
   padding: 4px 12px;
 
   border-radius: 2px;
-
 }
 
-
-
 input[type="range"] {
-
   width: 100%;
 
   accent-color: #4f46e5;
@@ -613,13 +519,9 @@ input[type="range"] {
   height: 8px;
 
   border-radius: 5px;
-
 }
 
-
-
 .calc-result-v2 {
-
   background: #0f172a;
 
   color: white;
@@ -637,14 +539,10 @@ input[type="range"] {
   position: relative;
 
   overflow: hidden;
-
 }
 
-
-
 .calc-result-v2::before {
-
-  content: '';
+  content: "";
 
   position: absolute;
 
@@ -656,24 +554,20 @@ input[type="range"] {
 
   height: 200%;
 
-  background: radial-gradient(circle, rgba(79, 70, 229, 0.15) 0%, transparent 60%);
-
+  background: radial-gradient(
+    circle,
+    rgba(79, 70, 229, 0.15) 0%,
+    transparent 60%
+  );
 }
 
-
-
 .res-box-inner {
-
   position: relative;
 
   z-index: 1;
-
 }
 
-
-
 .res-label {
-
   color: #94a3b8;
 
   font-size: 0.95rem;
@@ -681,35 +575,23 @@ input[type="range"] {
   font-weight: 600;
 
   margin-bottom: 16px;
-
 }
 
-
-
 .res-value {
-
   font-size: 3.5rem;
 
   font-weight: 800;
 
   margin-bottom: 24px;
-
 }
 
-
-
 .res-value small {
-
   font-size: 1.2rem;
 
   color: #475569;
-
 }
 
-
-
 .res-badge {
-
   display: inline-flex;
 
   align-items: center;
@@ -727,27 +609,19 @@ input[type="range"] {
   font-weight: 700;
 
   font-size: 0.9rem;
-
 }
-
-
 
 /* Model Grid */
 
 .model-cards-grid {
-
   display: grid;
 
   grid-template-columns: repeat(2, 1fr);
 
   gap: 32px;
-
 }
 
-
-
 .model-item-card {
-
   background: white;
 
   border: 1px solid #f1f5f9;
@@ -761,25 +635,17 @@ input[type="range"] {
   gap: 32px;
 
   transition: all 0.3s;
-
 }
-
-
 
 .model-item-card:hover {
-
   transform: translateY(-8px);
 
-  box-shadow: 0 15px 30px rgba(0,0,0,0.05);
+  box-shadow: 0 15px 30px rgba(0, 0, 0, 0.05);
 
   border-color: #4f46e550;
-
 }
 
-
-
 .model-icon-box {
-
   width: 80px;
 
   height: 80px;
@@ -795,13 +661,9 @@ input[type="range"] {
   font-size: 2rem;
 
   flex-shrink: 0;
-
 }
 
-
-
 .model-tag {
-
   font-size: 0.75rem;
 
   font-weight: 800;
@@ -813,13 +675,9 @@ input[type="range"] {
   color: #94a3b8;
 
   margin-bottom: 8px;
-
 }
 
-
-
 .model-item-card h3 {
-
   font-size: 1.5rem;
 
   font-weight: 750;
@@ -827,25 +685,17 @@ input[type="range"] {
   color: #0f172a;
 
   margin-bottom: 12px;
-
 }
 
-
-
 .model-item-card p {
-
   color: #64748b;
 
   line-height: 1.6;
 
   margin-bottom: 24px;
-
 }
 
-
-
 .btn-text-link {
-
   background: none;
 
   border: none;
@@ -863,37 +713,23 @@ input[type="range"] {
   gap: 8px;
 
   transition: gap 0.2s;
-
 }
-
-
 
 .btn-text-link:hover {
-
   gap: 12px;
-
 }
-
-
-
-
 
 /* Security Grid */
 
 .security-grid {
-
   display: grid;
 
   grid-template-columns: repeat(4, 1fr);
 
   gap: 32px;
-
 }
 
-
-
 .sec-card {
-
   background: white;
 
   padding: 32px;
@@ -903,25 +739,17 @@ input[type="range"] {
   border: 1px solid #f1f5f9;
 
   transition: all 0.3s;
-
 }
-
-
 
 .sec-card:hover {
-
   transform: translateY(-5px);
 
-  box-shadow: 0 10px 30px rgba(0,0,0,0.05);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
 
   border-color: #10b981;
-
 }
 
-
-
 .sec-icon {
-
   width: 56px;
 
   height: 56px;
@@ -941,13 +769,9 @@ input[type="range"] {
   font-size: 1.5rem;
 
   margin-bottom: 20px;
-
 }
 
-
-
 .sec-card h3 {
-
   font-size: 1.15rem;
 
   font-weight: 700;
@@ -955,22 +779,15 @@ input[type="range"] {
   margin-bottom: 12px;
 
   color: #0f172a;
-
 }
 
-
-
 .sec-card p {
-
   font-size: 0.9rem;
 
   color: #64748b;
 
   line-height: 1.6;
-
 }
-
-
 
 /* =========================================
 
@@ -979,47 +796,30 @@ input[type="range"] {
    ========================================= */
 
 .smart-infra-v2 {
-
   margin: 80px 0;
-
 }
-
-
 
 .section-title-wrapper {
-
   margin-bottom: 48px;
-
 }
 
-
-
 .section-subtitle {
-
   color: #64748b;
 
   font-size: 1.1rem;
 
   margin-top: 8px;
-
 }
 
-
-
 .infra-grid-v2 {
-
   display: grid;
 
   grid-template-columns: repeat(4, 1fr);
 
   gap: 24px;
-
 }
 
-
-
 .infra-card-v2 {
-
   position: relative;
 
   padding: 40px 32px;
@@ -1033,25 +833,17 @@ input[type="range"] {
   overflow: hidden;
 
   transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-
 }
 
-
-
 .infra-card-v2:hover {
-
   transform: translateY(-10px);
 
   box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
 
   border-color: #3b82f650;
-
 }
 
-
-
 .card-icon-floating {
-
   width: 56px;
 
   height: 56px;
@@ -1073,25 +865,17 @@ input[type="range"] {
   margin-bottom: 24px;
 
   transition: all 0.3s;
-
 }
 
-
-
 .infra-card-v2:hover .card-icon-floating {
-
   background: #3b82f6;
 
   color: white;
 
   transform: rotate(-5deg) scale(1.1);
-
 }
 
-
-
 .infra-card-v2 h3 {
-
   font-size: 1.25rem;
 
   font-weight: 800;
@@ -1099,13 +883,9 @@ input[type="range"] {
   color: #0f172a;
 
   margin-bottom: 16px;
-
 }
 
-
-
 .infra-card-v2 p {
-
   font-size: 0.95rem;
 
   color: #64748b;
@@ -1113,13 +893,9 @@ input[type="range"] {
   line-height: 1.6;
 
   margin-bottom: 24px;
-
 }
 
-
-
 .arrow-link {
-
   color: #3b82f6;
 
   text-decoration: none;
@@ -1133,28 +909,17 @@ input[type="range"] {
   align-items: center;
 
   gap: 8px;
-
 }
 
-
-
 .arrow-link i {
-
   font-size: 0.75rem;
 
   transition: transform 0.2s;
-
 }
-
-
 
 .arrow-link:hover i {
-
   transform: translateX(4px);
-
 }
-
-
 
 /* =========================================
 
@@ -1163,7 +928,6 @@ input[type="range"] {
    ========================================= */
 
 .security-section-v2 {
-
   background: #f0f7ff; /* Very light, crisp blue */
 
   border-radius: 24px;
@@ -1179,55 +943,42 @@ input[type="range"] {
   overflow: hidden;
 
   border: 1px solid #e1effe;
-
 }
 
-
-
 .security-section-v2::before {
-
-  content: '';
+  content: "";
 
   position: absolute;
 
-  top: 0; left: 0; right: 0; bottom: 0;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
 
-  background: radial-gradient(circle at bottom left, rgba(59, 130, 246, 0.05), transparent 70%);
+  background: radial-gradient(
+    circle at bottom left,
+    rgba(59, 130, 246, 0.05),
+    transparent 70%
+  );
 
   pointer-events: none;
-
 }
 
-
-
 .security-inner {
-
   position: relative;
 
   z-index: 2;
-
 }
-
-
 
 .security-section-v2 .section-title-v2 {
-
   color: #0f172a;
-
 }
-
-
 
 .security-section-v2 .section-desc-v2 {
-
   color: #64748b;
-
 }
 
-
-
 .security-grid-v2 {
-
   display: grid;
 
   grid-template-columns: repeat(2, 1fr);
@@ -1235,13 +986,9 @@ input[type="range"] {
   gap: 32px;
 
   margin-top: 60px;
-
 }
 
-
-
 .sec-card-v2 {
-
   display: flex;
 
   gap: 24px;
@@ -1257,13 +1004,9 @@ input[type="range"] {
   transition: all 0.3s;
 
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
-
 }
 
-
-
 .sec-card-v2:hover {
-
   background: white;
 
   border-color: #3b82f6;
@@ -1271,13 +1014,9 @@ input[type="range"] {
   transform: translateY(-5px);
 
   box-shadow: 0 10px 30px rgba(59, 130, 246, 0.08);
-
 }
 
-
-
 .sec-icon-circle {
-
   width: 64px;
 
   height: 64px;
@@ -1297,21 +1036,24 @@ input[type="range"] {
   font-size: 1.4rem;
 
   flex-shrink: 0;
-
 }
 
+.sec-icon-circle.blue {
+  background: #eff6ff;
+  color: #3b82f6;
+}
 
+.sec-icon-circle.green {
+  background: #f0fdf4;
+  color: #22c55e;
+}
 
-.sec-icon-circle.blue { background: #eff6ff; color: #3b82f6; }
-
-.sec-icon-circle.green { background: #f0fdf4; color: #22c55e; }
-
-.sec-icon-circle.purple { background: #faf5ff; color: #a855f7; }
-
-
+.sec-icon-circle.purple {
+  background: #faf5ff;
+  color: #a855f7;
+}
 
 .sec-content-v2 h3 {
-
   font-size: 1.2rem;
 
   font-weight: 800;
@@ -1319,57 +1061,39 @@ input[type="range"] {
   margin-bottom: 12px;
 
   color: #0f172a;
-
 }
 
-
-
 .sec-content-v2 p {
-
   font-size: 0.95rem;
 
   color: #64748b;
 
   line-height: 1.6;
-
 }
 
-
-
 .res-icon-box {
-
   font-size: 1.8rem;
 
   color: #3b82f6;
-
 }
-
-
 
 @media (max-width: 1024px) {
-
-  .security-grid { grid-template-columns: repeat(2, 1fr); }
-
+  .security-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
-
-
 
 /* Resource Grid */
 
 .resource-cards-grid {
-
   display: grid;
 
   grid-template-columns: repeat(3, 1fr);
 
   gap: 32px;
-
 }
 
-
-
 .res-item-card {
-
   background: #f8fafc;
 
   padding: 40px;
@@ -1379,25 +1103,17 @@ input[type="range"] {
   border: 1px solid transparent;
 
   transition: all 0.3s;
-
 }
 
-
-
 .res-item-card:hover {
-
   background: white;
 
   border-color: #e2e8f0;
 
-  box-shadow: 0 10px 20px rgba(0,0,0,0.03);
-
+  box-shadow: 0 10px 20px rgba(0, 0, 0, 0.03);
 }
 
-
-
 .res-top {
-
   display: flex;
 
   align-items: center;
@@ -1405,23 +1121,15 @@ input[type="range"] {
   justify-content: space-between;
 
   margin-bottom: 32px;
-
 }
 
-
-
 .res-top i {
-
   font-size: 1.8rem;
 
   color: #3b82f6;
-
 }
 
-
-
 .res-specs {
-
   background: white;
 
   padding: 4px 12px;
@@ -1434,38 +1142,26 @@ input[type="range"] {
 
   color: #64748b;
 
-  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
-
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
 }
 
-
-
 .res-item-card h3 {
-
   font-size: 1.25rem;
 
   font-weight: 800;
 
   margin-bottom: 12px;
-
 }
 
-
-
 .res-item-card p {
-
   color: #64748b;
 
   font-size: 0.95rem;
 
   margin-bottom: 32px;
-
 }
 
-
-
 .res-status {
-
   display: flex;
 
   align-items: center;
@@ -1477,13 +1173,9 @@ input[type="range"] {
   font-weight: 700;
 
   color: #10b981;
-
 }
 
-
-
 .status-dot {
-
   width: 8px;
 
   height: 8px;
@@ -1493,26 +1185,22 @@ input[type="range"] {
   border-radius: 50%;
 
   box-shadow: 0 0 8px rgba(16, 185, 129, 0.5);
-
 }
-
-
-
-
-
-
 
 @media (max-width: 1200px) {
+  .calc-content {
+    grid-template-columns: 1fr;
+    gap: 40px;
+  }
 
-  .calc-content { grid-template-columns: 1fr; gap: 40px; }
+  .model-cards-grid {
+    grid-template-columns: 1fr;
+  }
 
-  .model-cards-grid { grid-template-columns: 1fr; }
-
-  .resource-cards-grid { grid-template-columns: repeat(2, 1fr); }
-
+  .resource-cards-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
 }
-
-
 
 .new-hero-section {
   padding: 180px 0 120px; /* Matched AppCenterView height */
@@ -1525,12 +1213,20 @@ input[type="range"] {
   align-items: center;
   justify-content: center;
   /* Adjust radial gradient for a more subtle transition */
-  mask-image: radial-gradient(ellipse 100% 120% at 50% 0%, black 60%, transparent 98%);
-  -webkit-mask-image: radial-gradient(ellipse 100% 120% at 50% 0%, black 60%, transparent 98%);
+  mask-image: radial-gradient(
+    ellipse 100% 120% at 50% 0%,
+    black 60%,
+    transparent 98%
+  );
+  -webkit-mask-image: radial-gradient(
+    ellipse 100% 120% at 50% 0%,
+    black 60%,
+    transparent 98%
+  );
 }
 
 .new-hero-section::after {
-  content: '';
+  content: "";
   position: absolute;
   left: 0;
   right: 0;
@@ -1588,7 +1284,7 @@ input[type="range"] {
   box-shadow: 0 10px 40px rgba(59, 130, 246, 0.1);
 }
 
-.hero-links a {
+.hero-links .text {
   padding: 12px 32px;
   color: #334155;
   text-decoration: none;
@@ -1599,7 +1295,7 @@ input[type="range"] {
 }
 
 .hero-links a:hover {
-  background: #FFFFFF;
+  background: #ffffff;
   color: #2563eb;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
@@ -1627,7 +1323,8 @@ input[type="range"] {
 
 .model-card:hover {
   transform: translateY(-8px);
-  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
   border-color: #3b82f6; /* Blue highlight */
 }
 
@@ -1685,7 +1382,7 @@ input[type="range"] {
   color: #64748b;
   line-height: 1.6;
   margin-bottom: 20px;
-  min-height: 48px; 
+  min-height: 48px;
 }
 
 .details-link {
@@ -1699,12 +1396,16 @@ input[type="range"] {
 }
 
 .details-link::after {
-  content: ' \2192';
+  content: " \2192";
   transition: transform 0.2s;
 }
 
-.details-link:hover { text-decoration: underline; }
-.details-link:hover::after { transform: translateX(4px); }
+.details-link:hover {
+  text-decoration: underline;
+}
+.details-link:hover::after {
+  transform: translateX(4px);
+}
 
 /* Smart Infra Grid - Clean & Technical */
 .infra-grid {
@@ -1761,26 +1462,46 @@ input[type="range"] {
   transition: opacity 0.2s;
 }
 
-.infra-item a:hover { opacity: 1; text-decoration: underline; }
+.infra-item a:hover {
+  opacity: 1;
+  text-decoration: underline;
+}
 
 @media (max-width: 1024px) {
-  .models-grid { grid-template-columns: repeat(2, 1fr); }
-  .infra-grid { grid-template-columns: repeat(2, 1fr); }
-  .infra-grid-v2 { grid-template-columns: repeat(2, 1fr); }
-  .security-section-v2 { padding: 40px 30px; }
+  .models-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .infra-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .infra-grid-v2 {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .security-section-v2 {
+    padding: 40px 30px;
+  }
 }
 
 @media (max-width: 768px) {
-  .models-grid { grid-template-columns: 1fr; gap: 16px; }
-  .infra-grid { grid-template-columns: 1fr; gap: 16px; }
-  .infra-grid-v2 { grid-template-columns: 1fr; gap: 16px; }
-  
-  .infra-card-v2 { 
-    padding: 24px; 
+  .models-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .infra-grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .infra-grid-v2 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .infra-card-v2 {
+    padding: 24px;
     display: flex;
     flex-direction: column;
   }
-  
+
   .card-icon-floating {
     width: 48px;
     height: 48px;
@@ -1792,20 +1513,46 @@ input[type="range"] {
     font-size: 1.15rem;
     margin-bottom: 8px;
   }
-  
+
   .infra-card-v2 p {
     font-size: 0.9rem;
     margin-bottom: 0;
   }
 
-  .security-grid-v2 { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
-  .security-section-v2 { padding: 40px 20px; border-radius: 16px; margin: 40px 0; }
-  .sec-card-v2 { padding: 20px; gap: 16px; flex-direction: column; align-items: flex-start; }
-  .sec-icon-circle { width: 48px; height: 48px; font-size: 1.1rem; margin-bottom: 0px; }
-  .smart-infra-v2 { margin: 60px 0; }
-  .hero-links { flex-wrap: wrap; justify-content: center; }
-  .hero-title { font-size: 2rem; }
-  .section-title-v2 { font-size: 1.6rem; }
+  .security-grid-v2 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+    margin-top: 32px;
+  }
+  .security-section-v2 {
+    padding: 40px 20px;
+    border-radius: 16px;
+    margin: 40px 0;
+  }
+  .sec-card-v2 {
+    padding: 20px;
+    gap: 16px;
+    flex-direction: column;
+    align-items: flex-start;
+  }
+  .sec-icon-circle {
+    width: 48px;
+    height: 48px;
+    font-size: 1.1rem;
+    margin-bottom: 0px;
+  }
+  .smart-infra-v2 {
+    margin: 60px 0;
+  }
+  .hero-links {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+  .hero-title {
+    font-size: 2rem;
+  }
+  .section-title-v2 {
+    font-size: 1.6rem;
+  }
 }
-
 </style>
