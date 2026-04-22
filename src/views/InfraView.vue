@@ -55,19 +55,14 @@ const handleSubmit = async () => {
       </video>
 
       <div class="hero-content">
-
         <h1 class="hero-title">普惠算力，灵活调度</h1>
 
         <p class="hero-subtitle">AI算力聚合平台</p>
 
         <div class="hero-links">
-
-          <a href="/login">接入</a>
-
+          <div class="text" @click="Connect()">接入</div>
           <span class="divider">|</span>
-
-          <a href="#">申请算力补贴</a>
-
+          <div class="text" @click="Application()">申请算力补贴</div>
           <span class="divider">|</span>
           <a href="/docs.html" class="text">API文档</a>
         </div>
@@ -1651,7 +1646,7 @@ input[type="range"] {
   box-shadow: 0 10px 40px rgba(59, 130, 246, 0.1);
 }
 
-.hero-links a {
+.hero-links .text {
   padding: 12px 32px;
   color: #334155;
   text-decoration: none;
@@ -1659,15 +1654,13 @@ input[type="range"] {
   transition: all 0.3s;
   border-radius: 30px;
   font-size: 0.95rem;
-  cursor: pointer;
 }
 
-.hero-links .text:hover {
+.hero-links a:hover {
   background: #ffffff;
   color: #2563eb;
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
-
 
 .divider {
   display: none; /* Hide divider in the new button design */
