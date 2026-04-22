@@ -32,7 +32,9 @@ const API = () => {
           <span class="divider">|</span>
           <div class="text" @click="Application()">申请算力补贴</div>
           <span class="divider">|</span>
-          <div class="text" @click="API()">API文档</div>
+
+          <a href="/console.html#/apikeys?tab=docs">API文档</a>
+
         </div>
       </div>
     </header>
