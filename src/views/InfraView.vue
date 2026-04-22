@@ -35,9 +35,7 @@
           <a href="#">申请算力补贴</a>
 
           <span class="divider">|</span>
-
-          <a href="#">API文档</a>
-
+          <a href="/docs.html" class="text">API文档</a>
         </div>
 
       </div>
@@ -332,7 +330,7 @@
 
   top: 0; left: 0; right: 0; bottom: 0;
 
-  background-image: 
+  background-image:
 
     radial-gradient(circle at 2px 2px, rgba(255,255,255,0.03) 1px, transparent 0),
 
@@ -1685,7 +1683,7 @@ input[type="range"] {
   color: #64748b;
   line-height: 1.6;
   margin-bottom: 20px;
-  min-height: 48px; 
+  min-height: 48px;
 }
 
 .details-link {
@@ -1774,13 +1772,13 @@ input[type="range"] {
   .models-grid { grid-template-columns: 1fr; gap: 16px; }
   .infra-grid { grid-template-columns: 1fr; gap: 16px; }
   .infra-grid-v2 { grid-template-columns: 1fr; gap: 16px; }
-  
-  .infra-card-v2 { 
-    padding: 24px; 
+
+  .infra-card-v2 {
+    padding: 24px;
     display: flex;
     flex-direction: column;
   }
-  
+
   .card-icon-floating {
     width: 48px;
     height: 48px;
@@ -1792,7 +1790,7 @@ input[type="range"] {
     font-size: 1.15rem;
     margin-bottom: 8px;
   }
-  
+
   .infra-card-v2 p {
     font-size: 0.9rem;
     margin-bottom: 0;

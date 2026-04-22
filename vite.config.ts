@@ -30,7 +30,8 @@ export default defineConfig({
       input: {
         main: resolve(__dirname, 'index.html'),
         console: resolve(__dirname, 'console.html'),
-        admin: resolve(__dirname, 'admin.html')
+        admin: resolve(__dirname, 'admin.html'),
+        docs: resolve(__dirname, 'docs.html')
       }
     }
   }
