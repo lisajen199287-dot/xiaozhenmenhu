@@ -461,28 +461,26 @@ const navToExternal = (url: string) => {
   window.open(url, "_blank");
 };
 
-const handleHeroAction = async (link: string) => {
-  const res = await newApi.redirectToLumi();
-  window.open(res.redirect_url, "_blank");
-  // if (!link) return;
-  // if (link.startsWith("http")) {
-  //   window.open(link, "_blank");
-  // } else if (link.startsWith("/#")) {
-  //   const id = link.substring(2);
-  //   const el = document.getElementById(id);
-  //   if (el) {
-  //     el.scrollIntoView({ behavior: "smooth" });
-  //   } else {
-  //     router.push("/");
-  //     // If we're already on home but el wasn't found (maybe dynamic), try again
-  //     setTimeout(() => {
-  //       const target = document.getElementById(id);
-  //       if (target) target.scrollIntoView({ behavior: "smooth" });
-  //     }, 300);
-  //   }
-  // } else {
-  //   router.push(link);
-  // }
+const handleHeroAction = (link: string) => {
+  if (!link) return;
+  if (link.startsWith("http")) {
+    window.open(link, "_blank");
+  } else if (link.startsWith("/#")) {
+    const id = link.substring(2);
+    const el = document.getElementById(id);
+    if (el) {
+      el.scrollIntoView({ behavior: "smooth" });
+    } else {
+      router.push("/");
+      // If we're already on home but el wasn't found (maybe dynamic), try again
+      setTimeout(() => {
+        const target = document.getElementById(id);
+        if (target) target.scrollIntoView({ behavior: "smooth" });
+      }, 300);
+    }
+  } else {
+    router.push(link);
+  }
 };
 
 // Seedance Carousel Logic
