@@ -301,7 +301,7 @@ onMounted(() => {
         <div class="logo-white" @click="router.push('/')">
           <!-- Removed Icon as requested -->
 
-          <span>仓山区人工智能公共服务平台</span>
+          <span>福州市仓山区人工智能公共服务平台</span>
         </div>
 
         <div class="hero-quote">

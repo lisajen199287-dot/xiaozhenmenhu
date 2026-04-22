@@ -278,8 +278,8 @@ onUnmounted(() => {
           @click="isMobileMenuOpen = false"
         >
           <div class="logo-text">
-            <span class="main">仓山区人工智能公共服务平台</span>
-            <span class="sub">CANGSHAN AI PUBLIC SERVICE PLATFORM</span>
+            <span class="main">福州市仓山区人工智能公共服务平台</span>
+            <span class="sub">FUZHOUSHI CANGSHAN AI PUBLIC SERVICE PLATFORM</span>
           </div>
         </RouterLink>
 
@@ -608,7 +608,7 @@ onUnmounted(() => {
 }
 
 .logo-text .main {
-  font-size: 1.15rem;
+  font-size: 1.09rem;
   font-weight: 850;
   letter-spacing: -0.01em;
 }

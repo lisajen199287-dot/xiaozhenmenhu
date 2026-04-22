@@ -29,7 +29,7 @@ const fetchEventDetail = async () => {
     const id = route.params.id;
     const res = await newApi.apiAdmEventDetail(Number(id));
     eventData.value = await res;
-    document.title = `${eventData.value?.title} - 仓山区人工智能公共服务平台`;
+    document.title = `${eventData.value?.title} - 福州市仓山区人工智能公共服务平台`;
   } catch (e) {
     console.error("Failed to fetch event detail:", e);
   } finally {
@@ -192,7 +192,7 @@ onMounted(fetchEventDetail);
             <div class="host-info">
               <div class="host-logo">CII</div>
               <div class="host-text">
-                <p class="name">仓山区人工智能公共服务平台</p>
+                <p class="name">福州市仓山区人工智能公共服务平台</p>
                 <p class="desc">由仓山产投集团建设运营</p>
               </div>
             </div>

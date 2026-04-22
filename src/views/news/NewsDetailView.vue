@@ -10,7 +10,7 @@ const article = ref<any>(null);
 const loading = ref(true);
 
 const updateSEO = (title: string, description: string) => {
-  document.title = `${title} - 仓山区人工智能公共服务平台`;
+  document.title = `${title} - 福州市仓山区人工智能公共服务平台`;
   const metaDesc = document.querySelector('meta[name="description"]');
   if (metaDesc) {
     metaDesc.setAttribute("content", description);
