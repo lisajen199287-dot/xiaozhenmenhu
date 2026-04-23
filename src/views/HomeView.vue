@@ -111,7 +111,6 @@ const golink = () => {
     window.open(url, "_blank");
   }
 };
-
 // Trust cards
 
 const trustCards = [
@@ -490,15 +489,34 @@ const handleHeroAction = (link: string) => {
   }
 };
 
-const goPPT = async () => {
-  try {
-    const res = await newApi.apiPortalAiPptAccessCode();
-    const url = `https://industry.aics.cii-group.com/#/pptDocs?accessCode=${res}`;
-    window.open(url, "_blank");
-  } catch (e) {
-    console.error("Failed to get access code:", e);
-  }
+const nextSeedanceSlide = () => {
+  currentSeedanceSlide.value =
+    (currentSeedanceSlide.value + 1) % seedanceImages.value.length;
 };
+
+const prevSeedanceSlide = () => {
+  currentSeedanceSlide.value =
+    (currentSeedanceSlide.value - 1 + seedanceImages.value.length) %
+    seedanceImages.value.length;
+};
+
+const getSeedanceSlideClass = (index: number) => {
+  const length = seedanceImages.value.length;
+  const diff = (index - currentSeedanceSlide.value + length) % length;
+
+  // 计算每个图片的位置
+  if (diff === 0) return "active"; // 中间图片
+  if (diff === 1) return "next1"; // 右侧第一张
+  if (diff === 2) return "next2"; // 右侧第二张
+  if (diff === length - 1) return "prev1"; // 左侧第一张
+  if (diff === length - 2) return "prev2"; // 左侧第二张
+
+  return "";
+};
+
+onMounted(() => {
+  startSeedanceCarousel();
+});
 
 onUnmounted(() => {
   window.removeEventListener("resize", handleResize);
