@@ -112,7 +112,7 @@ onMounted(() => {
       <header class="user-topbar">
         <div class="topbar-left">
           <h2 class="view-title">
-            {{ menuItems.find((m) => m.path === route.path)?.name || "控制台" }}
+            {{ menuItems.find((m) => route.path.startsWith(m.path))?.name || "控制台" }}
           </h2>
         </div>
 

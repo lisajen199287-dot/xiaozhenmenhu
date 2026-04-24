@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted, computed } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { useUser } from "@/utils/userStore";
 import * as LoginApi from "@/api/login/index";
+import { resolveComponent } from "vue";
 
 const isMobileMenuOpen = ref(false);
 const isUserPopupOpen = ref(false);
@@ -312,7 +313,7 @@ onUnmounted(() => {
                 <div class="up-avatar"><i class="fas fa-user-circle"></i></div>
                 <div class="up-details">
                   <span class="up-name">{{
-                    user?.nickname || user?.username || "平台用户"
+                    user?.nickname || user?.username || "用户"
                   }}</span>
                   <span class="up-role">已登录账号</span>
                 </div>

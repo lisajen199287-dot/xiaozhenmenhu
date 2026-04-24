@@ -173,7 +173,7 @@
                 console.log('开始获取OAuth会话信息, sessionId:', oauthSessionId);
 console.log('TEST_TOKEN:', TEST_TOKEN);
 
-                const sessionResponse = await fetch('http://192.168.12.100:48080/app-api/app/oauth2/session/' + oauthSessionId + '?token=' + TEST_TOKEN, {
+                const sessionResponse = await fetch('/app-api/app/oauth2/session/' + oauthSessionId + '?token=' + TEST_TOKEN, {
                     method: 'GET'
                 });
 
@@ -185,7 +185,7 @@ console.log('TEST_TOKEN:', TEST_TOKEN);
                     const oauthParams = sessionData.data;
                     console.log('OAuth参数:', oauthParams);
 
-                    const authUrl = 'http://192.168.12.100:48080/app-api/app/oauth2/authorize?client_id=' + encodeURIComponent(oauthParams.clientId)
+                    const authUrl = '/app-api/app/oauth2/authorize?client_id=' + encodeURIComponent(oauthParams.clientId)
                         + '&redirect_uri=' + encodeURIComponent(oauthParams.redirectUri)
                         + '&response_type=' + encodeURIComponent(oauthParams.responseType)
                         + '&scope=' + encodeURIComponent(oauthParams.scope)
@@ -237,7 +237,7 @@ console.log('TEST_TOKEN:', TEST_TOKEN);
             errorMsg.classList.remove('show');
 
             try {
-                const response = await fetch('http://192.168.12.100:48080/app-api/member/auth/login', {
+                const response = await fetch('/app-api/member/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mobile, password })
@@ -255,7 +255,7 @@ console.log('TEST_TOKEN:', TEST_TOKEN);
                         return;
                     }
 
-                    const sessionResponse = await fetch('http://192.168.12.100:48080/app-api/app/oauth2/session/' + oauthSessionId + '?token=' + encodeURIComponent(token), {
+                    const sessionResponse = await fetch('/app-api/app/oauth2/session/' + oauthSessionId + '?token=' + encodeURIComponent(token), {
                         method: 'GET'
                     });
                     const sessionData = await sessionResponse.json();
@@ -268,7 +268,7 @@ console.log('TEST_TOKEN:', TEST_TOKEN);
                     }
 
                     const oauthParams = sessionData.data;
-                    const authUrl = 'http://192.168.12.100:48080/app-api/app/oauth2/authorize?client_id=' + encodeURIComponent(oauthParams.clientId)
+                    const authUrl = '/app-api/app/oauth2/authorize?client_id=' + encodeURIComponent(oauthParams.clientId)
                         + '&redirect_uri=' + encodeURIComponent(oauthParams.redirectUri)
                         + '&response_type=' + encodeURIComponent(oauthParams.responseType)
                         + '&scope=' + encodeURIComponent(oauthParams.scope)
