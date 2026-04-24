@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, onMounted } from "vue";
+import { ref, onMounted, onUnmounted } from "vue";
 
 import { RouterLink } from "vue-router";
 import * as newApi from "@/api/newApi/index";
@@ -159,54 +159,102 @@ const scrollToForm = () => {
   const el = document.getElementById("consult-form");
   if (el) el.scrollIntoView({ behavior: "smooth" });
 };
+
+const seedanceImages = ref([
+  {
+    id: 1,
+    src: "@/assets/images/cloth-bg.png",
+    alt: "City Skyline",
+  },
+  {
+    id: 2,
+    src: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=elegant%20woman%20in%20evening%20dress%20with%20flowing%20fabric%2C%20white%20background%2C%20fashion%20photography&image_size=landscape_16_9",
+    alt: "Fashion Model",
+  },
+  {
+    id: 3,
+    src: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=luxury%20perfume%20bottle%20on%20rock%20with%20mountain%20background%2C%20soft%20lighting%2C%20product%20photography&image_size=landscape_16_9",
+    alt: "Perfume Bottle",
+  },
+  {
+    id: 4,
+    src: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=man%20in%20suit%20speaking%20with%20microphone%2C%20elegant%20background%2C%20professional%20portrait&image_size=landscape_16_9",
+    alt: "Business Speaker",
+  },
+  {
+    id: 5,
+    src: "https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=abstract%20technology%20background%20with%20blue%20and%20purple%20hues%2C%20digital%20art&image_size=landscape_16_9",
+    alt: "Technology Background",
+  },
+]);
+
+const currentSeedanceSlide = ref(2); // Start with the middle image
+let seedanceTimer: any = null;
+
+const startSeedanceCarousel = () => {
+  stopSeedanceCarousel();
+  seedanceTimer = setInterval(() => {
+    nextSeedanceSlide();
+  }, 3000);
+};
+
+const stopSeedanceCarousel = () => {
+  if (seedanceTimer) {
+    clearInterval(seedanceTimer);
+    seedanceTimer = null;
+  }
+};
+
+const nextSeedanceSlide = () => {
+  currentSeedanceSlide.value =
+    (currentSeedanceSlide.value + 1) % seedanceImages.value.length;
+};
+
+const prevSeedanceSlide = () => {
+  currentSeedanceSlide.value =
+    (currentSeedanceSlide.value - 1 + seedanceImages.value.length) %
+    seedanceImages.value.length;
+};
+
+const getSeedanceSlideClass = (index: number) => {
+  const length = seedanceImages.value.length;
+  const diff = (index - currentSeedanceSlide.value + length) % length;
+
+  // 计算每个图片的位置
+  if (diff === 0) return "active"; // 中间图片
+  if (diff === 1) return "next1"; // 右侧第一张
+  if (diff === 2) return "next2"; // 右侧第二张
+  if (diff === length - 1) return "prev1"; // 左侧第一张
+  if (diff === length - 2) return "prev2"; // 左侧第二张
+
+  return "";
+};
+onMounted(() => {
+  startSeedanceCarousel();
+});
+onUnmounted(() => {
+  stopSeedanceCarousel();
+});
 </script>
 
 
 
 <template>
   <div class="eco-landing">
-    <!-- Navbar -->
-
-    <nav class="eco-nav">
-      <div class="wrapper">
-        <div class="nav-content">
-          <RouterLink to="/" class="eco-logo">
-            <span class="logo-text">CII <span class="highlight">AI</span></span>
-          </RouterLink>
-
-          <div class="nav-links">
-            <a href="#features">Seedance 2.0</a>
-            <a href="#industries">创作场景</a>
-            <a href="#toolbox">核心能力</a>
-            <a href="#pricing">为什么选择 Lumi</a>
-          </div>
-
-          <div class="nav-actions">
-            <RouterLink to="/login" class="btn-login">登录/注册</RouterLink>
-          </div>
-        </div>
-      </div>
-    </nav>
-
     <!-- Hero Section -->
 
     <section class="eco-hero">
       <div class="wrapper hero-layout">
         <div class="hero-text">
-          <h1 class="hero-title">
-            Lumi <br />
-            <span class="gradient-text">AIGC 创作平台</span>
-          </h1>
+          <h1 class="hero-title">SD2.0视频生成，让创意秒变成片</h1>
 
           <p class="hero-subtitle">
-            全新推出 Seedance 2.0 视频生成模型。从文字到图像，从静态到动态，
-            <br />
-            突破想象边界，让创意无缝流转，为您带来影院级视觉震撼。
+            全新推出SD2.0视频生成工具。从文字到图像，从静态到动态，打破创作限制，让创意无缝流转，为您带来流畅高效的视频创作体验
           </p>
 
           <div class="hero-cta">
             <button class="btn-primary-large" @click="goLumi()">
-              立即体验 Lumi
+              立即创作
             </button>
             <button
               class="btn-secondary-large"
@@ -234,43 +282,8 @@ const scrollToForm = () => {
                 src="@/assets/images/swipe_4.png"
                 alt="Seedance 2.0 视频生成演示"
                 class="image-after"
-                style="opacity: 0.8; object-fit: cover"
+                style="opacity: 1; object-fit: cover"
               />
-            </div>
-          </div>
-
-          <div class="visual-labels">
-            <span class="label-before">输入 Prompt</span>
-
-            <span class="label-after">Seedance 2.0 视频</span>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- Industry Section -->
-
-    <section class="eco-industries" id="industries">
-      <div class="wrapper">
-        <div class="section-header">
-          <h2 class="section-title">Seedance 2.0，重塑视频创作方式</h2>
-        </div>
-
-        <div class="industry-grid">
-          <div v-for="cat in categories" :key="cat.id" class="industry-card">
-            <div
-              class="card-image"
-              :style="{ backgroundImage: `url(${cat.image})` }"
-            >
-              <div class="card-overlay"></div>
-            </div>
-
-            <div class="card-content">
-              <div class="card-icon">{{ cat.icon }}</div>
-
-              <h3>{{ cat.title }}</h3>
-
-              <p>{{ cat.desc }}</p>
             </div>
           </div>
         </div>
@@ -281,95 +294,111 @@ const scrollToForm = () => {
 
     <section class="eco-features" id="features">
       <div class="wrapper">
-        <!-- Feature 1 -->
+        <div class="section-header">
+          <h2 class="section-title">SD2.0，重塑视频创作方式</h2>
+        </div>
 
+        <!-- Feature 1 -->
         <div class="feature-block">
           <div class="feature-info">
-            <span class="feature-tag">核心能力 01</span>
-
-            <h2>文字生视频 (Text-to-Video)</h2>
-
+            <h3>多模式自由创作</h3>
             <p class="feature-desc">
-              只需输入一段文字描述，Seedance 2.0
-              即可为您生成高质量、高连贯性的动态视频。
+              支持文生视频、图生视频、视频续写、主体参考、多帧编辑、视频编辑多种模式
             </p>
-
-            <ul class="feature-list">
-              <li>
-                <i class="fas fa-check"></i> 语义精准理解：完美还原您的创意构想
-              </li>
-
-              <li>
-                <i class="fas fa-check"></i> 电影级画质：支持超高分辨率输出
-              </li>
-
-              <li>
-                <i class="fas fa-check"></i>
-                动态流畅：物理规律与运动轨迹自然逼真
-              </li>
-            </ul>
+            <p class="feature-desc">适配不同创作场景，想法怎么来就怎么创作</p>
           </div>
-
           <div class="feature-visual">
-            <div class="model-swap-demo">
-              <img
-                src="https://images.unsplash.com/photo-1485846234645-a62644f84728?auto=format&fit=crop&q=80&w=600"
-                alt="文字生视频演示"
-              />
-
-              <div class="swap-overlay">
-                <div
-                  class="prompt-typing"
-                  style="
-                    position: absolute;
-                    bottom: 20px;
-                    left: 20px;
-                    background: rgba(0, 0, 0, 0.7);
-                    color: white;
-                    padding: 10px 20px;
-                    border-radius: 8px;
-                  "
-                >
-                  "一只穿着宇航服的柯基在火星表面漫步..."
-                </div>
-              </div>
-            </div>
+            <img
+              src="@/assets/images/swipe_4.png"
+              alt="多模式自由创作"
+              style="
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+              "
+            />
           </div>
         </div>
 
         <!-- Feature 2 -->
-
         <div class="feature-block reverse">
           <div class="feature-info">
-            <span class="feature-tag">核心能力 02</span>
-
-            <h2>图生视频 (Image-to-Video)</h2>
-
+            <h3>一键快速成片</h3>
             <p class="feature-desc">
-              让静态图片动起来。上传参考图，控制运动轨迹，赋予图像全新生命力。
+              输入文字/图片/视频，或通过主体参考功能锁定核心元素
             </p>
-
-            <div class="prompt-mock">
-              <div class="prompt-header">运动笔刷控制</div>
-
-              <div class="prompt-content">
-                精确指定图像中各元素的运动方向和速度，实现精细化动态控制。
-              </div>
-            </div>
+            <p class="feature-desc">自动生成运镜流畅、细节丰富的高清视频</p>
+            <p class="feature-desc">告别复杂拍摄，从创意到成片一步到位</p>
           </div>
-
           <div class="feature-visual">
-            <div class="scene-grid">
-              <img
-                src="https://images.unsplash.com/photo-1550745165-9bc0b252726f?auto=format&fit=crop&q=80&w=400"
-                alt="原图"
-              />
+            <img
+              src="@/assets/images/swipe_4.png"
+              alt="一键快速成片"
+              style="
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+              "
+            />
+          </div>
+        </div>
 
-              <img
-                src="https://images.unsplash.com/photo-1534438327276-14e5300c3a48?auto=format&fit=crop&q=80&w=400"
-                alt="生成的动态视频"
-              />
-            </div>
+        <!-- Feature 3 -->
+        <div class="feature-block reverse">
+          <div class="feature-visual">
+            <img
+              src="@/assets/images/swipe_4.png"
+              alt="多帧精准控制"
+              style="
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+              "
+            />
+          </div>
+          <div class="feature-info">
+            <h3>多帧精准控制</h3>
+            <p class="feature-desc">
+              支持首帧/尾帧/关键帧输入，自定义镜头走向与画面衔接
+            </p>
+            <p class="feature-desc">让视频生成可控度拉满，轻松实现创意镜头</p>
+          </div>
+        </div>
+
+        <!-- Feature 4 -->
+        <div class="feature-block">
+          <div class="feature-visual">
+            <img
+              src="@/assets/images/swipe_4.png"
+              alt="视频续写与内容拓展"
+              style="
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+              "
+            />
+          </div>
+          <div class="feature-info">
+            <h3>视频续写与内容拓展</h3>
+            <p class="feature-desc">上传现有视频，自动续写剧情、延伸镜头</p>
+            <p class="feature-desc">让内容创作无缝衔接，降低系列片制作成本</p>
+          </div>
+        </div>
+
+        <!-- Feature 5 -->
+        <div class="feature-block reverse">
+          <div class="feature-visual">
+            <img
+              src="@/assets/images/swipe_4.png"
+              alt="超写实画面"
+              style="
+                border-radius: 12px;
+                box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+              "
+            />
+          </div>
+          <div class="feature-info">
+            <h3>超写实画面</h3>
+            <p class="feature-desc">
+              人物动作、表情、口型高度逼真，场景细节丰富自然
+            </p>
+            <p class="feature-desc">低成本拍出院线级视觉质感</p>
           </div>
         </div>
       </div>
@@ -377,117 +406,86 @@ const scrollToForm = () => {
 
     <!-- Toolbox Section -->
 
-    <section class="eco-toolbox" id="toolbox">
+    <!-- <section class="eco-toolbox" id="toolbox">
       <div class="wrapper">
         <div class="section-header">
-          <span class="header-label">FOR CREATORS</span>
+          <h2 class="section-title text-white">让创作更高效，让梦想变成成片</h2>
+        </div>
 
-          <h2 class="section-title text-white">更多 AIGC 创作工具</h2>
+        <div class="toolbox-buttons">
+          <button class="tool-button primary">立即体验</button>
+          <button class="tool-button secondary">了解更多</button>
+        </div>
+      </div>
+    </section> -->
 
-          <p class="section-desc">
-            不止于视频，Lumi 提供全方位的智能图像处理能力
+    <!-- Final CTA -->
+
+    <div class="scenario-card-v5 hero-card">
+      <!-- Seedance 2.0 Section -->
+      <div class="seedance-content compact">
+        <div class="seedance-header compact">
+          <div class="seedance-logo-container compact">
+            <img
+              src="https://trae-api-cn.mchost.guru/api/ide/v1/text_to_image?prompt=modern%20technology%20logo%20with%20blue%20and%20purple%20gradient%2C%20abstract%20design&image_size=square"
+              alt="Seedance Logo"
+              class="seedance-logo compact"
+            />
+            <h2 class="seedance-title compact">
+              SD 2.0 抢先体验：让灵感，即刻实现
+            </h2>
+          </div>
+          <p class="seedance-subtitle compact">
+            适合各类场景AI视频创作需求，无论是剧情短片、营销短视频、品牌宣传片，还是自媒体爆款内容，均可一键生成，轻松实现内容高效量产。
           </p>
         </div>
 
-        <div class="toolbox-grid">
-          <div class="tool-card">
-            <i class="fas fa-video"></i>
-
-            <h4>视频风格化</h4>
+        <div
+          class="seedance-carousel compact"
+          @mouseenter="stopSeedanceCarousel"
+          @mouseleave="startSeedanceCarousel"
+        >
+          <div class="seedance-carousel-container">
+            <div :class="['seedance-slide', getSeedanceSlideClass(0)]">
+              <img
+                src="@/assets/images/swipe_1.png"
+                class="seedance-slide-img"
+              />
+            </div>
+            <div :class="['seedance-slide', getSeedanceSlideClass(1)]">
+              <img
+                src="@/assets/images/swipe_2.png"
+                class="seedance-slide-img"
+              />
+            </div>
+            <div :class="['seedance-slide', getSeedanceSlideClass(2)]">
+              <img
+                src="@/assets/images/swipe_3.png"
+                class="seedance-slide-img"
+              />
+            </div>
+            <div :class="['seedance-slide', getSeedanceSlideClass(3)]">
+              <img
+                src="@/assets/images/swipe_4.png"
+                class="seedance-slide-img"
+              />
+            </div>
+            <div :class="['seedance-slide', getSeedanceSlideClass(4)]">
+              <img
+                src="@/assets/images/swipe_5.jpg"
+                class="seedance-slide-img"
+              />
+            </div>
           </div>
-
-          <div class="tool-card">
-            <i class="fas fa-image"></i>
-
-            <h4>文生图大模型</h4>
-          </div>
-
-          <div class="tool-card">
-            <i class="fas fa-crop"></i>
-
-            <h4>智能扩图/补全</h4>
-          </div>
-
-          <div class="tool-card">
-            <i class="fas fa-magic"></i>
-
-            <h4>一键智能消除</h4>
-          </div>
-
-          <div class="tool-card">
-            <i class="fas fa-search-plus"></i>
-
-            <h4>画质超清放大</h4>
-          </div>
-
-          <div class="tool-card">
-            <i class="fas fa-users"></i>
-
-            <h4>数字人生成</h4>
-          </div>
+          <button class="seedance-nav-btn prev" @click="prevSeedanceSlide">
+            <i class="fas fa-chevron-left"></i>
+          </button>
+          <button class="seedance-nav-btn next" @click="nextSeedanceSlide">
+            <i class="fas fa-chevron-right"></i>
+          </button>
         </div>
       </div>
-    </section>
-
-    <!-- Pricing / Comparison Section -->
-
-    <section class="eco-pricing" id="pricing">
-      <div class="wrapper">
-        <div class="section-header">
-          <h2 class="section-title">为什么选择 Lumi Seedance 2.0</h2>
-        </div>
-
-        <div class="comparison-table-wrapper">
-          <table class="comparison-table">
-            <thead>
-              <tr>
-                <th>对比维度</th>
-
-                <th>传统视频制作</th>
-
-                <th class="highlight-col">Lumi Seedance 2.0</th>
-              </tr>
-            </thead>
-
-            <tbody>
-              <tr>
-                <td>制作周期</td>
-
-                <td>数天至数周</td>
-
-                <td class="highlight-row">几分钟内即刻生成</td>
-              </tr>
-
-              <tr>
-                <td>制作成本</td>
-
-                <td>高昂的拍摄和后期费用</td>
-
-                <td class="highlight-row">极低的算力消耗成本</td>
-              </tr>
-
-              <tr>
-                <td>创意门槛</td>
-
-                <td>需要专业的拍摄和软件技能</td>
-
-                <td class="highlight-row">自然语言输入，零门槛创作</td>
-              </tr>
-
-              <tr>
-                <td>视觉表现</td>
-
-                <td>受限于物理规律和拍摄条件</td>
-
-                <td class="highlight-row">突破想象，生成影视级奇幻画面</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-      </div>
-    </section>
-
-    <!-- Final CTA -->
+    </div>
 
     <section id="consult-form" class="consult-section-dark">
       <div class="wrapper">
@@ -495,7 +493,7 @@ const scrollToForm = () => {
           <div class="form-header">
             <div class="section-label">GET STARTED</div>
 
-            <h2>现在就体验 Seedance 2.0 的魔法</h2>
+            <h2>立即开启你的SD2.0制片之旅</h2>
 
             <p>提交您的需求，我们将为您提供专属的内测通道和解决方案</p>
           </div>
@@ -548,7 +546,7 @@ const scrollToForm = () => {
               :disabled="submitting"
               @click="handleSubmit"
             >
-              <span v-if="!submitting">立即预约免费演示与额度</span>
+              <span v-if="!submitting">立即预约</span>
 
               <i v-else class="fas fa-spinner fa-spin"></i>
             </button>
@@ -559,7 +557,7 @@ const scrollToForm = () => {
 
             <h3>方案需求已成功提交</h3>
 
-            <p>新用户注册即送 50 个免费生成点数！我们的专家将尽快与您联系。</p>
+            <p>新用户注册即送免费生成点数！我们的专家将尽快与您联系。</p>
 
             <button class="btn-reset" @click="submitted = false">
               再次提交
@@ -568,7 +566,8 @@ const scrollToForm = () => {
         </div>
       </div>
     </section>
-<div v-if="showAgreementModal" class="agreement-modal-overlay">
+
+    <div v-if="showAgreementModal" class="agreement-modal-overlay">
       <div class="agreement-modal">
         <div class="agreement-modal-header">
           <h3>用户协议</h3>
@@ -582,13 +581,6 @@ const scrollToForm = () => {
         </div>
       </div>
     </div>
-    <!-- Footer -->
-
-    <footer class="eco-footer">
-      <div class="wrapper">
-        <p>&copy; 2026 CII Group AI & 字节跳动. All rights reserved.</p>
-      </div>
-    </footer>
   </div>
 </template>
 
@@ -709,40 +701,27 @@ const scrollToForm = () => {
 
 .eco-nav {
   position: fixed;
-
   top: 0;
-
   left: 0;
-
   width: 100%;
-
   z-index: 100;
-
-  background: rgba(255, 255, 255, 0.8);
-
+  background: rgba(255, 255, 255, 0.9);
   backdrop-filter: blur(12px);
-
   border-bottom: 1px solid rgba(0, 0, 0, 0.05);
 }
 
 .nav-content {
-  height: 80px;
-
+  height: 70px;
   display: flex;
-
   align-items: center;
-
   justify-content: space-between;
 }
 
 .eco-logo {
   text-decoration: none;
-
-  font-size: 1.5rem;
-
+  font-size: 1.4rem;
   font-weight: 800;
-
-  color: #111;
+  color: #333;
 }
 
 .eco-logo .highlight {
@@ -751,19 +730,14 @@ const scrollToForm = () => {
 
 .nav-links {
   display: flex;
-
-  gap: 32px;
+  gap: 24px;
 }
 
 .nav-links a {
   text-decoration: none;
-
-  color: #4b5563;
-
-  font-weight: 600;
-
-  font-size: 0.95rem;
-
+  color: #6b7280;
+  font-weight: 500;
+  font-size: 0.9rem;
   transition: color 0.3s;
 }
 
@@ -772,31 +746,26 @@ const scrollToForm = () => {
 }
 
 .btn-login {
-  padding: 10px 24px;
-
-  background: #111;
-
+  padding: 8px 20px;
+  background: #4f46e5;
   color: #fff;
-
-  border-radius: 8px;
-
+  border-radius: 6px;
   text-decoration: none;
-
   font-weight: 600;
+  font-size: 0.9rem;
+  transition: all 0.3s;
+}
 
-  transition: opacity 0.3s;
+.btn-login:hover {
+  background: #4338ca;
+  transform: translateY(-1px);
 }
 
 /* Hero Section */
 
 .eco-hero {
-  padding: 160px 0 100px;
-
-  background: radial-gradient(
-    circle at top right,
-    rgba(79, 70, 229, 0.05),
-    transparent
-  );
+  padding: 140px 0 80px;
+  background: #fff;
 }
 
 .hero-layout {
@@ -813,7 +782,7 @@ const scrollToForm = () => {
 }
 
 .hero-layout .hero-subtitle {
-  margin: 0 0 40px 0;
+  margin: 0 0 32px 0;
 }
 
 .hero-layout .hero-visual {
@@ -832,7 +801,7 @@ const scrollToForm = () => {
     margin-bottom: 40px;
   }
   .hero-layout .hero-subtitle {
-    margin: 0 auto 40px auto;
+    margin: 0 auto 32px auto;
   }
   .hero-layout .hero-visual {
     max-width: 100%;
@@ -841,383 +810,172 @@ const scrollToForm = () => {
 
 .hero-text {
   text-align: center;
-
   margin-bottom: 60px;
 }
 
 .hero-title {
-  font-size: 4rem;
-
+  font-size: 3rem;
   font-weight: 800;
-
-  line-height: 1.1;
-
-  letter-spacing: -0.04em;
-
-  margin-bottom: 24px;
-}
-
-.gradient-text {
-  background: linear-gradient(135deg, #4f46e5 0%, #7c3aed 100%);
-
-  -webkit-background-clip: text;
-
-  background-clip: text;
-
-  -webkit-text-fill-color: transparent;
+  line-height: 1.2;
+  margin-bottom: 16px;
+  color: #333;
 }
 
 .hero-subtitle {
-  font-size: 1.25rem;
+  font-size: 1.1rem;
+  color: #6b7280;
+  line-height: 1.5;
+  max-width: 600px;
+  margin: 0 auto 32px;
+}
 
-  color: #4b5563;
-
-  line-height: 1.6;
-
-  max-width: 800px;
-
-  margin: 0 auto 40px;
+.hero-cta {
+  display: flex;
+  gap: 16px;
 }
 
 .btn-primary-large {
-  padding: 18px 48px;
-
+  padding: 14px 32px;
   background: #4f46e5;
-
   color: #fff;
-
   border: none;
-
-  border-radius: 12px;
-
-  font-size: 1.1rem;
-
-  font-weight: 700;
-
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  box-shadow: 0 10px 25px rgba(79, 70, 229, 0.25);
-
-  display: inline-flex;
-
-  align-items: center;
-
-  gap: 12px;
+  transition: all 0.3s;
 }
 
 .btn-primary-large:hover {
-  transform: translateY(-2px) scale(1.02);
-
-  box-shadow: 0 15px 35px rgba(79, 70, 229, 0.35);
-
   background: #4338ca;
+  transform: translateY(-2px);
 }
 
 .btn-secondary-large {
-  padding: 18px 48px;
+  padding: 14px 32px;
   background: #fff;
   color: #4f46e5;
-  border: 2px solid #4f46e5;
-  border-radius: 12px;
-  font-size: 1.1rem;
-  font-weight: 700;
+  border: 1px solid #4f46e5;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
   cursor: pointer;
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  display: inline-flex;
-  align-items: center;
-  gap: 12px;
+  transition: all 0.3s;
 }
 
 .btn-secondary-large:hover {
   background: #f3f4f6;
-  transform: translateY(-2px) scale(1.02);
+  transform: translateY(-2px);
 }
 
 /* Hero Visual Slider */
 
 .hero-visual {
   max-width: 900px;
-
   margin: 0 auto;
+}
+
+.comparison-slider {
+  transition: transform 0.3s ease;
 }
 
 .comparison-slider:hover {
   transform: translateY(-5px);
-
-  transition: transform 0.3s ease;
 }
 
 .comparison-slider-inner {
   position: relative;
-
   width: 100%;
-
-  height: 500px;
-
-  border-radius: 24px;
-
+  height: 400px;
+  border-radius: 12px;
   overflow: hidden;
-
-  box-shadow: 0 30px 60px rgba(0, 0, 0, 0.1);
-
-  animation: float 6s ease-in-out infinite;
-}
-
-@keyframes float {
-  0% {
-    transform: translateY(0px);
-  }
-
-  50% {
-    transform: translateY(-10px);
-  }
-
-  100% {
-    transform: translateY(0px);
-  }
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
 }
 
 .comparison-slider img {
   position: absolute;
-
   top: 0;
-
   left: 0;
-
   width: 100%;
-
   height: 100%;
-
   object-fit: cover;
-}
-
-.before-container {
-  position: absolute;
-
-  top: 0;
-
-  left: 0;
-
-  height: 100%;
-
-  overflow: hidden;
-
-  border-right: 2px solid #fff;
-
-  z-index: 1;
-}
-
-.slider-input {
-  position: absolute;
-
-  top: 0;
-
-  left: 0;
-
-  width: 100%;
-
-  height: 100%;
-
-  opacity: 0;
-
-  z-index: 10;
-
-  cursor: ew-resize;
-}
-
-.slider-handle {
-  position: absolute;
-
-  top: 0;
-
-  height: 100%;
-
-  pointer-events: none;
-
-  z-index: 5;
-
-  transform: translateX(-50%);
-}
-
-.handle-line {
-  position: absolute;
-
-  top: 0;
-
-  left: 50%;
-
-  width: 2px;
-
-  height: 100%;
-
-  background: #fff;
-}
-
-.handle-circle {
-  position: absolute;
-
-  top: 50%;
-
-  left: 50%;
-
-  transform: translate(-50%, -50%);
-
-  width: 48px;
-
-  height: 48px;
-
-  background: #fff;
-
-  border-radius: 50%;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
-
-  color: #4f46e5;
-}
-
-.visual-labels {
-  display: flex;
-
-  justify-content: space-between;
-
-  margin-top: 16px;
-
-  padding: 0 10px;
-}
-
-.label-before,
-.label-after {
-  font-weight: 700;
-
-  font-size: 0.9rem;
-
-  color: #9ca3af;
-
-  text-transform: uppercase;
-
-  letter-spacing: 0.1em;
 }
 
 /* Industry Section */
 
 .eco-industries {
   padding: 100px 0;
-
   background: #f9fafb;
 }
 
 .section-header {
   text-align: center;
-
   margin-bottom: 60px;
 }
 
 .section-title {
   font-size: 2.5rem;
-
   font-weight: 800;
-
   letter-spacing: -0.02em;
 }
 
 .industry-grid {
   display: grid;
-
-  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-
-  gap: 32px;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 24px;
 }
 
 .industry-card {
   background: #fff;
-
-  border-radius: 20px;
-
-  overflow: hidden;
-
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.03);
-
+  border-radius: 12px;
+  padding: 32px;
+  text-align: center;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.05);
   transition: transform 0.3s;
-
   cursor: pointer;
 }
 
 .industry-card:hover {
-  transform: translateY(-10px);
-}
-
-.card-image {
-  height: 240px;
-
-  background-size: cover;
-
-  background-position: center;
-
-  position: relative;
-}
-
-.card-overlay {
-  position: absolute;
-
-  bottom: 0;
-
-  left: 0;
-
-  width: 100%;
-
-  height: 50%;
-
-  background: linear-gradient(to top, rgba(0, 0, 0, 0.3), transparent);
+  transform: translateY(-5px);
 }
 
 .card-content {
-  padding: 24px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
 }
 
 .card-icon {
-  font-size: 2rem;
-
-  margin-bottom: 12px;
+  font-size: 2.5rem;
+  margin-bottom: 16px;
 }
 
 .industry-card h3 {
-  font-size: 1.25rem;
-
-  font-weight: 800;
-
+  font-size: 1.1rem;
+  font-weight: 700;
   margin-bottom: 8px;
+  color: #333;
 }
 
 .industry-card p {
   color: #6b7280;
-
-  font-size: 0.95rem;
-
+  font-size: 0.9rem;
   line-height: 1.5;
+  margin: 0;
 }
 
 /* Features Block */
 
 .eco-features {
   padding: 100px 0;
+  background: #fff;
 }
 
 .feature-block {
   display: flex;
-
   align-items: center;
-
-  gap: 80px;
-
-  margin-bottom: 120px;
+  gap: 60px;
+  margin-bottom: 80px;
 }
 
 .feature-block.reverse {
@@ -1228,108 +986,34 @@ const scrollToForm = () => {
   flex: 1;
 }
 
-.feature-tag {
-  color: #4f46e5;
-
-  font-weight: 800;
-
-  font-size: 0.9rem;
-
-  text-transform: uppercase;
-
-  letter-spacing: 0.1em;
-
-  margin-bottom: 12px;
-
-  display: block;
-}
-
-.feature-info h2 {
-  font-size: 2.8rem;
-
-  font-weight: 800;
-
-  margin-bottom: 24px;
+.feature-info h3 {
+  font-size: 1.5rem;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: #333;
 }
 
 .feature-desc {
-  font-size: 1.25rem;
-
-  color: #4b5563;
-
-  margin-bottom: 32px;
-}
-
-.feature-list {
-  list-style: none;
-
-  padding: 0;
-}
-
-.feature-list li {
-  display: flex;
-
-  align-items: center;
-
-  gap: 12px;
-
-  margin-bottom: 16px;
-
-  font-weight: 600;
-
-  color: #111;
-}
-
-.feature-list i {
-  color: #10b981;
+  font-size: 1rem;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
 }
 
 .feature-visual {
-  flex: 1.2;
+  flex: 1;
 }
 
-.model-swap-demo {
-  border-radius: 24px;
-
-  overflow: hidden;
-
-  position: relative;
-
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.1);
-}
-
-.model-swap-demo img {
+.feature-visual img {
   width: 100%;
-
   display: block;
-}
-
-.prompt-mock {
-  background: #f3f4f6;
-
-  padding: 24px;
-
   border-radius: 12px;
-
-  border-left: 4px solid #4f46e5;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s;
 }
 
-.prompt-header {
-  font-size: 0.8rem;
-
-  font-weight: 800;
-
-  color: #9ca3af;
-
-  margin-bottom: 8px;
-}
-
-.prompt-content {
-  font-family: monospace;
-
-  font-size: 1.1rem;
-
-  color: #111;
+.feature-visual img:hover {
+  transform: scale(1.02);
 }
 
 /* Toolbox */
@@ -1340,111 +1024,49 @@ const scrollToForm = () => {
   background: #000;
 
   color: #fff;
+  text-align: center;
 }
 
 .text-white {
   color: #fff;
 }
 
-.toolbox-grid {
-  display: grid;
-
-  grid-template-columns: repeat(3, 1fr);
-
+.toolbox-buttons {
+  display: flex;
+  justify-content: center;
   gap: 24px;
+  margin-top: 40px;
 }
 
-.tool-card {
-  background: #111;
-
-  padding: 40px;
-
-  border-radius: 20px;
-
-  text-align: center;
-
-  border: 1px solid rgba(255, 255, 255, 0.05);
-
+.tool-button {
+  padding: 16px 40px;
+  border-radius: 8px;
+  font-size: 1rem;
+  font-weight: 600;
+  cursor: pointer;
   transition: all 0.3s;
 }
 
-.tool-card:hover {
-  background: #1a1a1a;
-
-  border-color: #4f46e5;
+.tool-button.primary {
+  background: #4f46e5;
+  color: white;
+  border: none;
 }
 
-.tool-card i {
-  font-size: 2.5rem;
-
-  margin-bottom: 20px;
-
-  color: #4f46e5;
+.tool-button.primary:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
 }
 
-.tool-card h4 {
-  font-size: 1.2rem;
-
-  font-weight: 700;
+.tool-button.secondary {
+  background: transparent;
+  color: white;
+  border: 1px solid white;
 }
 
-/* Pricing Table */
-
-.eco-pricing {
-  padding: 100px 0;
-}
-
-.comparison-table-wrapper {
-  overflow-x: auto;
-}
-
-.comparison-table {
-  width: 100%;
-
-  border-collapse: separate;
-
-  border-spacing: 0;
-
-  margin-top: 40px;
-
-  border-radius: 16px;
-
-  overflow: hidden;
-
-  border: 1px solid #e5e7eb;
-}
-
-.comparison-table th,
-.comparison-table td {
-  padding: 24px 32px;
-
-  text-align: left;
-
-  border-bottom: 1px solid #e5e7eb;
-}
-
-.comparison-table tr:last-child td {
-  border-bottom: none;
-}
-
-.comparison-table th {
-  font-size: 1.1rem;
-
-  font-weight: 800;
-}
-
-.highlight-col {
-  color: #4f46e5;
-
-  background: rgba(79, 70, 229, 0.05);
-}
-
-.highlight-row {
-  color: #4f46e5;
-
-  font-weight: 700;
-
-  background: rgba(79, 70, 229, 0.05);
+.tool-button.secondary:hover {
+  background: rgba(255, 255, 255, 0.1);
+  transform: translateY(-2px);
 }
 
 /* Final CTA */
@@ -1452,7 +1074,7 @@ const scrollToForm = () => {
 /* Consult Section & Form (Dark Theme) */
 .consult-section-dark {
   padding: 120px 0;
-  background: #111;
+  background: #000;
   color: white;
   position: relative;
 }
@@ -1611,6 +1233,295 @@ const scrollToForm = () => {
 
   .nav-links {
     display: none;
+  }
+}
+
+.scenario-card-v5 {
+  margin: 0 auto 20px;
+  max-width: 1200px;
+  border-radius: 24px;
+  padding: 32px;
+  display: flex;
+  flex-direction: column;
+  position: relative;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.hero-card {
+  grid-column: span 2;
+}
+
+/* Seedance Carousel Styles */
+.seedance-carousel {
+  position: relative;
+  width: 100%;
+  margin: 40px 0;
+  overflow: hidden;
+  height: 400px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.seedance-carousel-container {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1000px;
+}
+
+.seedance-slide {
+  position: absolute;
+  transition: all 0.5s cubic-bezier(0.25, 0.46, 0.45, 0.94);
+  border-radius: 12px;
+  overflow: hidden;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
+  z-index: 1;
+}
+
+.seedance-slide-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  transition: all 0.5s ease;
+}
+
+/* Active slide (center) */
+.seedance-slide.active {
+  width: 36%;
+  height: 80%;
+  z-index: 5;
+  transform: scale(1);
+  opacity: 1;
+}
+
+/* First next slide (right side, closer) */
+.seedance-slide.next1 {
+  width: 32%;
+  height: 70%;
+  z-index: 4;
+  transform: translateX(65%) scale(0.9);
+}
+
+/* Second next slide (right side, farther) */
+.seedance-slide.next2 {
+  width: 28%;
+  height: 60%;
+  z-index: 3;
+  transform: translateX(105%) scale(0.8);
+}
+
+/* First previous slide (left side, closer) */
+.seedance-slide.prev1 {
+  width: 32%;
+  height: 70%;
+  z-index: 4;
+  transform: translateX(-65%) scale(0.9);
+}
+
+/* Second previous slide (left side, farther) */
+.seedance-slide.prev2 {
+  width: 28%;
+  height: 60%;
+  z-index: 3;
+  transform: translateX(-105%) scale(0.8);
+}
+
+/* Compact Seedance Section */
+.seedance-content.compact {
+  /* padding: 32px; */
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+.seedance-header.compact {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.seedance-logo-container.compact {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.seedance-logo.compact {
+  width: 40px;
+  height: 40px;
+  border-radius: 8px;
+}
+
+.seedance-title.compact {
+  font-size: 1.25rem;
+  font-weight: 700;
+  margin: 0;
+  color: #333;
+  line-height: 1.3;
+}
+
+.seedance-subtitle.compact {
+  font-size: 0.95rem;
+  color: #6b7280;
+  line-height: 1.5;
+  margin: 0;
+}
+
+.seedance-features.compact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  margin: 0;
+}
+
+.seedance-feature.compact {
+  font-size: 0.8rem;
+  padding: 6px 14px;
+  border-radius: 16px;
+  background: rgba(79, 70, 229, 0.1);
+  color: #4f46e5;
+  font-weight: 500;
+}
+
+.seedance-carousel.compact {
+  height: 300px;
+  margin: 0;
+}
+
+.seedance-carousel.compact .seedance-slide.active {
+  width: 40%;
+  height: 80%;
+}
+
+.seedance-carousel.compact .seedance-slide.next1,
+.seedance-carousel.compact .seedance-slide.prev1 {
+  width: 35%;
+  height: 70%;
+}
+
+.seedance-carousel.compact .seedance-slide.next2,
+.seedance-carousel.compact .seedance-slide.prev2 {
+  width: 30%;
+  height: 60%;
+}
+
+.seedance-btn.compact {
+  margin-top: 8px;
+  padding: 12px 24px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  background: #4f46e5;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: all 0.3s;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  justify-content: center;
+  align-self: flex-start;
+}
+
+.seedance-btn.compact:hover {
+  background: #4338ca;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.3);
+}
+
+/* Navigation buttons */
+.seedance-nav-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 50px;
+  height: 50px;
+  border-radius: 50%;
+  background: rgba(255, 255, 255, 0.9);
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 10;
+  transition: all 0.3s ease;
+}
+
+.seedance-nav-btn:hover {
+  background: rgba(255, 255, 255, 1);
+  transform: translateY(-50%) scale(1.1);
+}
+
+.seedance-nav-btn.prev {
+  left: 20px;
+}
+
+.seedance-nav-btn.next {
+  right: 20px;
+}
+
+.seedance-nav-btn i {
+  font-size: 20px;
+  color: #333;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+  .seedance-carousel {
+    height: 300px;
+  }
+
+  .seedance-slide.active {
+    width: 70%;
+    height: 70%;
+  }
+
+  .seedance-slide.next,
+  .seedance-slide.prev {
+    width: 50%;
+    height: 50%;
+  }
+
+  .seedance-slide.inactive {
+    width: 30%;
+    height: 30%;
+  }
+
+  .seedance-nav-btn {
+    width: 40px;
+    height: 40px;
+  }
+
+  .seedance-nav-btn i {
+    font-size: 16px;
+  }
+}
+
+@media (max-width: 480px) {
+  .seedance-carousel {
+    height: 250px;
+  }
+
+  .seedance-slide.active {
+    width: 80%;
+    height: 60%;
+  }
+
+  .seedance-slide.next,
+  .seedance-slide.prev {
+    width: 60%;
+    height: 40%;
+  }
+
+  .seedance-nav-btn {
+    width: 35px;
+    height: 35px;
   }
 }
 </style>

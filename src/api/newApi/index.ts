@@ -273,3 +273,49 @@ export const apiPortalAiPptAccessCode = () => {
     url: `/portal/ai-ppt/access-code`,
   })
 }
+
+
+// 用户授权龙虾
+export const apiAuth2AuthorizeCode = (data: any) => {
+  return request.post({
+    url: `/app/oauth2/authorize-code`,
+    data,
+  })
+}
+
+export const apiAuth2Authorize = (data: any) => {
+  return request.get({
+    url: `/app/oauth2/authorize`,
+    params: data,
+  })
+}
+
+// 检查用户是否有龙虾授权
+export const apiCheckAuth2AuthorizeCode = () => {
+  return request.get({
+    url: `/api/claw/has-oauth-approve`,
+  })
+}
+
+// 检查当前用户是否已激活
+export const apiCheckActivation = () => {
+  return request.get({
+    url: `/api/claw/check-activation`,
+  })
+}
+
+
+// 获取默认激活信息（用于实例访问展示）
+export const clawDefault = () => {
+  return request.get({
+    url: `/api/claw/default`,
+  })
+}
+
+// 保存仓龙Claw服务
+export const clawActivate = (data: any) => {
+  return request.post({
+    url: `/api/claw/activate`,
+    data,
+  })
+}

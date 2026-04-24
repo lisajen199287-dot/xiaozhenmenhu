@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>登录 - 授权认证</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .login-container {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+            padding: 40px;
+            width: 100%;
+            max-width: 420px;
+        }
+
+        .login-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .login-header h1 {
+            color: #333;
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .app-info {
+            background: #f8f9fa;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 25px;
+            border-left: 4px solid #667eea;
+        }
+
+        .app-info .label {
+            font-size: 12px;
+            color: #999;
+            margin-bottom: 5px;
+        }
+
+        .app-info .value {
+            font-size: 14px;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            color: #555;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e1e5e9;
+            border-radius: 8px;
+            font-size: 14px;
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 14px;
+            background: #667eea;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+        .login-btn:hover {
+            background: #5a67d8;
+        }
+
+        .error-message {
+            background: #fee;
+            color: #c33;
+            padding: 12px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            display: none;
+        }
+
+        .error-message.show {
+            display: block;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="login-container">
+        <div class="login-header">
+            <h1>🔐 授权登录</h1>
+        </div>
+
+        <div class="app-info">
+            <div class="label">授权应用</div>
+            <!-- 确保 ID 存在 -->
+            <div class="value" id="appName">加载中...</div>
+            <div class="label" style="margin-top: 8px;">请求权限</div>
+            <!-- 确保 ID 存在 -->
+            <div class="value" id="scopeInfo">-</div>
+        </div>
+
+        <div class="error-message" id="errorMsg"></div>
+
+        <form id="loginForm">
+            <div class="form-group">
+                <label>账号</label>
+                <input type="text" id="username" placeholder="请输入手机号或用户名" required>
+            </div>
+            <div class="form-group">
+                <label>密码</label>
+                <input type="password" id="password" placeholder="请输入密码" required>
+            </div>
+            <button type="submit" class="login-btn" id="loginBtn">登录并授权</button>
+        </form>
+    </div>
+
+    <script>
+        const urlParams = new URLSearchParams(window.location.search);
+        const clientName = urlParams.get('client_name');
+        const scope = urlParams.get('scope');
+        const oauthSessionId = urlParams.get('oauth_session_id');
+
+        const appNameEl = document.getElementById('appName');
+        const scopeInfoEl = document.getElementById('scopeInfo');
+        if (appNameEl) appNameEl.textContent = clientName || '未知应用';
+        if (scopeInfoEl) scopeInfoEl.textContent = scope || '基础权限';
+
+        const loginForm = document.getElementById('loginForm');
+        const loginBtn = document.getElementById('loginBtn');
+        const errorMsg = document.getElementById('errorMsg');
+
+        // 写死的测试 token
+        const TEST_TOKEN = localStorage.getItem("token") || '';
+        // 页面加载时自动执行授权流程
+        window.addEventListener('load', async function () {
+            if (!oauthSessionId) {
+                showError('缺少OAuth会话ID');
+                return;
+            }
+
+            try {
+                loginBtn.disabled = true;
+                loginBtn.textContent = '自动授权中...';
+                errorMsg.classList.remove('show');
+
+                console.log('开始获取OAuth会话信息, sessionId:', oauthSessionId);
+console.log('TEST_TOKEN:', TEST_TOKEN);
+
+                const sessionResponse = await fetch('http://192.168.12.100:48080/app-api/app/oauth2/session/' + oauthSessionId + '?token=' + TEST_TOKEN, {
+                    method: 'GET'
+                });
+
+                console.log('会话响应状态:', sessionResponse.status);
+                const sessionData = await sessionResponse.json();
+                console.log('会话响应数据:', sessionData);
+
+                if (sessionData.code === 0 && sessionData.data) {
+                    const oauthParams = sessionData.data;
+                    console.log('OAuth参数:', oauthParams);
+
+                    const authUrl = 'http://192.168.12.100:48080/app-api/app/oauth2/authorize?client_id=' + encodeURIComponent(oauthParams.clientId)
+                        + '&redirect_uri=' + encodeURIComponent(oauthParams.redirectUri)
+                        + '&response_type=' + encodeURIComponent(oauthParams.responseType)
+                        + '&scope=' + encodeURIComponent(oauthParams.scope)
+                        + '&state=' + encodeURIComponent(oauthParams.state);
+
+                    console.log('授权URL:', authUrl);
+
+                    const authResponse = await fetch(authUrl, {
+                        method: 'GET',
+                        headers: { 'Authorization': 'Bearer ' + TEST_TOKEN }
+                    });
+
+                    console.log('授权响应状态:', authResponse.status, '是否重定向:', authResponse.redirected);
+
+                    if (authResponse.redirected) {
+                        console.log('跳转到:', authResponse.url);
+                        window.location.href = authResponse.url;
+                        return;
+                    } else {
+                        const authText = await authResponse.text();
+                        console.error('授权响应内容:', authText);
+                        showError('授权失败,未收到重定向');
+                    }
+                } else {
+                    console.error('获取会话失败:', sessionData);
+                    showError(sessionData.msg || 'OAuth会话已过期或无效');
+                }
+            } catch (err) {
+                console.error('自动授权失败:', err);
+                showError('自动授权失败: ' + err.message);
+            }
+
+            loginBtn.disabled = false;
+            loginBtn.textContent = '登录并授权';
+        });
+
+        loginForm.addEventListener('submit', async function (e) {
+            e.preventDefault();
+            const mobile = document.getElementById('username').value.trim();
+            const password = document.getElementById('password').value;
+
+            if (!mobile || !password) {
+                showError('请输入账号和密码');
+                return;
+            }
+
+            loginBtn.disabled = true;
+            loginBtn.textContent = '登录中...';
+            errorMsg.classList.remove('show');
+
+            try {
+                const response = await fetch('http://192.168.12.100:48080/app-api/member/auth/login', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ mobile, password })
+                });
+                const data = await response.json();
+
+                if (data.code === 0) {
+                    const token = data.data.accessToken;
+                    localStorage.setItem('token', token);
+
+                    if (!oauthSessionId) {
+                        showError('缺少OAuth会话信息');
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = '登录并授权';
+                        return;
+                    }
+
+                    const sessionResponse = await fetch('http://192.168.12.100:48080/app-api/app/oauth2/session/' + oauthSessionId + '?token=' + encodeURIComponent(token), {
+                        method: 'GET'
+                    });
+                    const sessionData = await sessionResponse.json();
+
+                    if (sessionData.code !== 0 || !sessionData.data) {
+                        showError('OAuth会话已过期或无效');
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = '登录并授权';
+                        return;
+                    }
+
+                    const oauthParams = sessionData.data;
+                    const authUrl = 'http://192.168.12.100:48080/app-api/app/oauth2/authorize?client_id=' + encodeURIComponent(oauthParams.clientId)
+                        + '&redirect_uri=' + encodeURIComponent(oauthParams.redirectUri)
+                        + '&response_type=' + encodeURIComponent(oauthParams.responseType)
+                        + '&scope=' + encodeURIComponent(oauthParams.scope)
+                        + '&state=' + encodeURIComponent(oauthParams.state);
+
+                    const authResponse = await fetch(authUrl, {
+                        method: 'GET',
+                        headers: { 'Authorization': 'Bearer ' + token }
+                    });
+
+                    if (authResponse.redirected) {
+                        window.location.href = authResponse.url;
+                    } else {
+                        showError('授权失败,请重试');
+                        loginBtn.disabled = false;
+                        loginBtn.textContent = '登录并授权';
+                    }
+                } else {
+                    showError(data.msg || '登录失败');
+                    loginBtn.disabled = false;
+                    loginBtn.textContent = '登录并授权';
+                }
+            } catch (err) {
+                console.error('登录授权错误:', err);
+                showError('网络错误: ' + err.message);
+                loginBtn.disabled = false;
+                loginBtn.textContent = '登录并授权';
+            }
+        });
+
+        function showError(msg) {
+            errorMsg.textContent = msg;
+            errorMsg.classList.add('show');
+        }
+    </script>
+
+
+</body>
+
+</html>

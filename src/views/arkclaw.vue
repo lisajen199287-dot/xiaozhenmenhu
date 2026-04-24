@@ -4,18 +4,40 @@ import { config } from "@/config/axios/config";
 import { ElMessage } from "element-plus";
 import { useRouter } from "vue-router";
 import { apiAdmSolutionRequests } from "@/api/newApi/index";
-
+import * as newApi from "@/api/newApi/index";
+import { ElMessageBox } from "element-plus";
 const router = useRouter();
 
 onMounted(() => {
   document.title = "仓龙Claw｜让AI成为企业真正可用的生产力";
 });
 
-const handleClick = () => {
-  window.open(
-    "https://userpool-f619a056-74d6-48e1-b778-3c4933e065f2.userpool.auth.id.cn-beijing.volces.com/login/continue?authRequestId=38d22808-dd9f-478b-9463-0501250925eb",
-    "_blank"
-  );
+const handleClick = async () => {
+  //检查当前用户是否已激活
+  const res = await newApi.apiCheckActivation();
+  const isFirstUse = res.activated;
+  //是否第一次使用仓龙Claw服务
+  if (!isFirstUse) {
+    //调用接口，保存仓龙Claw服务
+    const activateRes = await newApi.clawActivate({
+      version: "V2",
+      message: "您已激活了仓龙Claw服务",
+    });
+    //获取默认激活信息
+    const defaultRes = await newApi.clawDefault();
+    ElMessageBox.confirm(defaultRes.message, "提示", {
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+    }).then(() => {
+      const url =
+        "https://sd7g8p2f70099ijhlupg0.apigateway-cn-shanghai.volceapi.com";
+      window.open(url, "_blank");
+    });
+  } else {
+    const url =
+      "https://sd7g8p2f70099ijhlupg0.apigateway-cn-shanghai.volceapi.com";
+    window.open(url, "_blank");
+  }
 };
 
 const coreValues = [
@@ -151,7 +173,8 @@ const decreaseQuantity = (plan: string) => {
 
 const toggleBindOption = (plan: string) => {
   if (bindOptions.value[plan as keyof typeof bindOptions.value] !== undefined) {
-    bindOptions.value[plan as keyof typeof bindOptions.value] = !bindOptions.value[plan as keyof typeof bindOptions.value];
+    bindOptions.value[plan as keyof typeof bindOptions.value] =
+      !bindOptions.value[plan as keyof typeof bindOptions.value];
   }
 };
 
@@ -160,19 +183,21 @@ const getTotalPrice = (plan: string) => {
     starter: 210,
     standard: 430,
     premium: 860,
-    ultimate: 1720
+    ultimate: 1720,
   };
   const bindPrices = {
     starter: 120,
     standard: 120,
     premium: 600,
-    ultimate: 600
+    ultimate: 600,
   };
-  
+
   const basePrice = basePrices[plan as keyof typeof basePrices] || 0;
-  const bindPrice = bindOptions.value[plan as keyof typeof bindOptions.value] ? (bindPrices[plan as keyof typeof bindPrices] || 0) : 0;
-  
-  return basePrice ;
+  const bindPrice = bindOptions.value[plan as keyof typeof bindOptions.value]
+    ? bindPrices[plan as keyof typeof bindPrices] || 0
+    : 0;
+
+  return basePrice;
 };
 
 const subscribe = (plan: string) => {
@@ -186,12 +211,43 @@ const subscribe = (plan: string) => {
   scrollToForm();
 };
 
+const BuyNow = () => {
+  if (localStorage.getItem("token") || "") {
+    //已登录，未开通了仓龙Claw服务
+    scrollToForm();
+  } else {
+    //未登录，跳转到登录页
+    router.push({ path: "/arkclaw/detail", query: { redirect: "/arkclaw" } });
+  }
+};
+
+const wechatDialogVisible = ref(false);
+
+const goWechat = () => {
+  wechatDialogVisible.value = true;
+};
+
 const scrollToForm = () => {
   const formElement = document.getElementById("contact-form");
   if (formElement) {
     formElement.scrollIntoView({ behavior: "smooth" });
   }
 };
+const isPermission = ref(true);
+const init = async () => {
+  //判断是否登录，是否开通了仓龙Claw服务
+  const isLogin = localStorage.getItem("token") || "";
+  if (isLogin) {
+    //已登录，判断是否开通了仓龙Claw服务
+    const res = await newApi.apiCheckAuth2AuthorizeCode();
+    isPermission.value = res;
+  } else {
+    isPermission.value = false;
+  }
+};
+onMounted(() => {
+  init();
+});
 </script>
 
 <template>
@@ -208,11 +264,27 @@ const scrollToForm = () => {
             企业级智能工作平台-通过专家、技能与自动化，帮助企业提升效率与产出能力
           </p>
           <div class="cta-group justify-center">
-            <button class="primary-btn pulse-glow" @click="handleClick">
-              开始体验
+            <button
+              class="primary-btn pulse-glow"
+              v-if="isPermission"
+              @click="handleClick"
+            >
+              立即使用
             </button>
-            <button class="primary-btn pulse-glow" @click="subscribe('starter')">
+            <button class="primary-btn pulse-glow" v-else @click="BuyNow()">
+              立即购买
+            </button>
+            <button
+              class="primary-btn pulse-glow"
+              @click="subscribe('starter')"
+            >
               咨询我们
+            </button>
+            <button
+              class="primary-btn pulse-glow"
+              @click="goWechat()"
+            >
+              客服微信
             </button>
           </div>
         </div>
@@ -272,7 +344,6 @@ const scrollToForm = () => {
                 </div>
               </div>
               <div v-else-if="index === 1" class="shrimp-content">
-
                 <div class="shrimp-details">
                   <p><strong>主虾：</strong>短剧内容创作主虾</p>
                   <p>
@@ -282,7 +353,6 @@ const scrollToForm = () => {
                 </div>
               </div>
               <div v-else-if="index === 2" class="shrimp-content">
-
                 <div class="shrimp-details">
                   <p><strong>主虾：</strong>行业研究主虾</p>
                   <p>
@@ -368,22 +438,25 @@ const scrollToForm = () => {
             <div class="pricing-header">
               <h3>轻量版 Starter</h3>
               <div class="price-tag">
-                <span class="price">{{ getTotalPrice('starter') }}</span>
+                <span class="price">{{ getTotalPrice("starter") }}</span>
                 <span class="unit">元/月</span>
-                <div v-if="bindOptions.starter" class="bind-price">+ 120 元/月</div>
+                <div v-if="bindOptions.starter" class="bind-price">
+                  + 120 元/月
+                </div>
               </div>
               <div class="plan-tag">基础体验</div>
             </div>
             <div class="pricing-body">
               <div class="plan-info">
-                <div class="info-item">
-                  <strong>标签：</strong>简单测试场景
-                </div>
+                <div class="info-item"><strong>标签：</strong>简单测试场景</div>
                 <div class="info-item bind-option">
                   <label class="bind-checkbox">
-                    <input type="checkbox" v-model="bindOptions.starter">
+                    <input type="checkbox" v-model="bindOptions.starter" />
                     <span class="checkmark"></span>
-                    <span class="bind-text">绑定 CodingPlan Team Lite ¥120 / 月（后续无法取消或重新绑定）</span>
+                    <span class="bind-text"
+                      >绑定 CodingPlan Team Lite ¥120 /
+                      月（后续无法取消或重新绑定）</span
+                    >
                   </label>
                 </div>
                 <!-- <div class="info-item">
@@ -420,9 +493,11 @@ const scrollToForm = () => {
               <div class="popular-badge">最受欢迎</div>
               <h3>标准版 Standard</h3>
               <div class="price-tag">
-                <span class="price">{{ getTotalPrice('standard') }}</span>
+                <span class="price">{{ getTotalPrice("standard") }}</span>
                 <span class="unit">元/月</span>
-                <div v-if="bindOptions.standard" class="bind-price">+ 120 元/月</div>
+                <div v-if="bindOptions.standard" class="bind-price">
+                  + 120 元/月
+                </div>
               </div>
               <div class="plan-tag">更高性能</div>
             </div>
@@ -434,9 +509,12 @@ const scrollToForm = () => {
                 </div>
                 <div class="info-item bind-option">
                   <label class="bind-checkbox">
-                    <input type="checkbox" v-model="bindOptions.standard">
+                    <input type="checkbox" v-model="bindOptions.standard" />
                     <span class="checkmark"></span>
-                    <span class="bind-text">绑定 CodingPlan Team Lite ¥120 / 月（后续无法取消或重新绑定）</span>
+                    <span class="bind-text"
+                      >绑定 CodingPlan Team Lite ¥120 /
+                      月（后续无法取消或重新绑定）</span
+                    >
                   </label>
                 </div>
                 <!-- <div class="info-item">
@@ -476,9 +554,11 @@ const scrollToForm = () => {
             <div class="pricing-header">
               <h3>高级版 Premium</h3>
               <div class="price-tag">
-                <span class="price">{{ getTotalPrice('premium') }}</span>
+                <span class="price">{{ getTotalPrice("premium") }}</span>
                 <span class="unit">元/月</span>
-                <div v-if="bindOptions.premium" class="bind-price">+ 600 元/月</div>
+                <div v-if="bindOptions.premium" class="bind-price">
+                  + 600 元/月
+                </div>
               </div>
               <div class="plan-tag">全面进阶</div>
             </div>
@@ -489,9 +569,12 @@ const scrollToForm = () => {
                 </div>
                 <div class="info-item bind-option">
                   <label class="bind-checkbox">
-                    <input type="checkbox" v-model="bindOptions.premium">
+                    <input type="checkbox" v-model="bindOptions.premium" />
                     <span class="checkmark"></span>
-                    <span class="bind-text">绑定 CodingPlan Team Pro ¥600 / 月（后续无法取消或重新绑定）</span>
+                    <span class="bind-text"
+                      >绑定 CodingPlan Team Pro ¥600 /
+                      月（后续无法取消或重新绑定）</span
+                    >
                   </label>
                 </div>
                 <!-- <div class="info-item">
@@ -529,9 +612,11 @@ const scrollToForm = () => {
             <div class="pricing-header">
               <h3>旗舰版 Ultimate</h3>
               <div class="price-tag">
-                <span class="price">{{ getTotalPrice('ultimate') }}</span>
+                <span class="price">{{ getTotalPrice("ultimate") }}</span>
                 <span class="unit">元/月</span>
-                <div v-if="bindOptions.ultimate" class="bind-price">+ 600 元/月</div>
+                <div v-if="bindOptions.ultimate" class="bind-price">
+                  + 600 元/月
+                </div>
               </div>
               <div class="plan-tag">顶级配置</div>
             </div>
@@ -542,9 +627,12 @@ const scrollToForm = () => {
                 </div>
                 <div class="info-item bind-option">
                   <label class="bind-checkbox">
-                    <input type="checkbox" v-model="bindOptions.ultimate">
+                    <input type="checkbox" v-model="bindOptions.ultimate" />
                     <span class="checkmark"></span>
-                    <span class="bind-text">绑定 CodingPlan Team Pro ¥600 / 月（后续无法取消或重新绑定）</span>
+                    <span class="bind-text"
+                      >绑定 CodingPlan Team Pro ¥600 /
+                      月（后续无法取消或重新绑定）</span
+                    >
                   </label>
                 </div>
                 <!-- <div class="info-item">
@@ -706,11 +794,6 @@ const scrollToForm = () => {
     <section class="section-padding cta-section">
       <div class="container text-center">
         <h2 class="cta-title">让AI真正为企业工作，而不是增加使用负担</h2>
-        <div class="mt-8">
-          <button class="primary-btn pulse-glow large-btn" @click="handleClick">
-            立即体验仓龙Claw
-          </button>
-        </div>
       </div>
     </section>
 
@@ -733,6 +816,23 @@ const scrollToForm = () => {
           <i class="fas fa-image"></i>
           <p>暂无流程演示图片</p>
         </div>
+      </div>
+    </el-dialog>
+
+    <!-- Wechat Dialog -->
+    <el-dialog
+      v-model="wechatDialogVisible"
+      title="客服微信"
+      width="400px"
+      center
+      align-center
+    >
+      <div class="wechat-qrcode-wrapper">
+        <img
+          src="@/assets/images/claw/WeChat_bgc.png"
+          alt="客服微信"
+          class="wechat-qrcode"
+        />
       </div>
     </el-dialog>
   </div>
@@ -1024,10 +1124,10 @@ const scrollToForm = () => {
   position: relative;
   overflow: hidden;
   box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
-  .scene-header{
+  .scene-header {
     flex: 1;
   }
-  .shrimp-info{
+  .shrimp-info {
     flex: 1;
   }
 }
@@ -1186,6 +1286,26 @@ const scrollToForm = () => {
 .preview-placeholder i {
   font-size: 3rem;
   margin-bottom: 16px;
+}
+
+/* Wechat Dialog Styles */
+.wechat-qrcode-wrapper {
+  text-align: center;
+  padding: 20px;
+}
+
+.wechat-qrcode {
+  width: 300px;
+  object-fit: contain;
+  margin-bottom: 20px;
+  border-radius: 8px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+.wechat-tip {
+  font-size: 1rem;
+  color: #334155;
+  margin: 0;
 }
 
 .step-dot {

@@ -36,6 +36,10 @@ const handleSubmit = async () => {
     submitting.value = false;
   }
 };
+
+const handleNewsClick = (id) => {
+  router.push("/news/" + id);
+};
 </script>
 
 
@@ -222,6 +226,114 @@ const handleSubmit = async () => {
         </div>
       </section>
 
+      <!-- Case Studies Section -->
+
+      <section class="content-section case-studies">
+        <div class="section-title-wrapper">
+          <h2 class="section-title-v2">客户案例</h2>
+          <p class="section-subtitle">全栈能力，支撑海量垂直行业需求</p>
+        </div>
+
+        <div class="case-grid">
+          <div class="case-card" @click="handleNewsClick(12)">
+            <div class="case-img">
+              <img
+                class="img_icon"
+                src="@/assets/images/token/icon4.png"
+                alt=""
+              />
+            </div>
+            <div class="case-content">
+              仓山区人工智能公共服务平台×中科玥游｜福州短剧企业，如何通过Seedance2.0
+              API实现规模化高效创作？
+            </div>
+            <div class="tag_Division">
+              <div class="case-tag">短剧行业</div>
+            </div>
+            <div class="company_box">
+              <div class="case-company">福州中科玥游信息科技有限公司</div>
+              <img
+                class="logo_icon"
+                src="@/assets/images/token/logo1.png"
+                alt=""
+              />
+            </div>
+          </div>
+
+          <div class="case-card" @click="handleNewsClick(14)">
+            <div class="case-img">
+              <img
+                class="img_icon"
+                src="@/assets/images/token/icon2.png"
+                alt=""
+              />
+            </div>
+            <div class="case-content">
+              仓山区人工智能公共服务平台×福建广电网络｜AIAPI赋能，筑牢智慧广电政企服务新标杆
+            </div>
+            <div class="tag_Division">
+              <div class="case-tag">广播电视行业</div>
+            </div>
+            <div class="company_box">
+              <div class="case-company">福建广电网络政企</div>
+              <img
+                class="logo_icon"
+                src="@/assets/images/token/logo2.png"
+                alt=""
+              />
+            </div>
+          </div>
+
+          <div class="case-card" @click="handleNewsClick(13)">
+            <div class="case-img">
+              <img
+                class="img_icon"
+                src="@/assets/images/token/icon3.png"
+                alt=""
+              />
+            </div>
+            <div class="case-content">
+              仓山区人工智能公共服务平台×福州市大吕网络科技｜AI能力精细化运营，让游戏研发多场景提效100%
+            </div>
+            <div class="tag_Division">
+              <div class="case-tag">游戏行业</div>
+            </div>
+            <div class="company_box">
+              <div class="case-company">福州市大吕网络科技有限公司</div>
+              <img
+                class="logo_icon"
+                src="@/assets/images/token/logo3.png"
+                alt=""
+              />
+            </div>
+          </div>
+
+          <div class="case-card" @click="handleNewsClick(15)">
+            <div class="case-img">
+              <img
+                class="img_icon"
+                src="@/assets/images/token/icon1.png"
+                alt=""
+              />
+            </div>
+            <div class="case-content">
+              仓山区人工智能公共服务平台×武汉宜鼎众城｜武汉TK电商机构，如何通过AIAPI实现墨镜品类高效增长？
+            </div>
+            <div class="tag_Division">
+              <div class="case-tag">电商行业</div>
+            </div>
+            <div class="company_box">
+              <div class="case-company">武汉宜鼎众城传媒有限公司</div>
+              <img
+                class="logo_icon"
+                src="@/assets/images/token/logo4.png"
+                alt=""
+              />
+            </div>
+          </div>
+        </div>
+      </section>
+
       <!-- Security Architecture (Replaces Model Square) -->
 
       <section id="security" class="content-section security-section-v2">
@@ -297,7 +409,13 @@ const handleSubmit = async () => {
     </div>
 
     <!-- 接入咨询弹窗 -->
-    <el-dialog v-model="formVisible" width="480px" :close-on-click-modal="false" :show-close="true" class="consult-dialog">
+    <el-dialog
+      v-model="formVisible"
+      width="480px"
+      :close-on-click-modal="false"
+      :show-close="true"
+      class="consult-dialog"
+    >
       <form class="consult-form" @submit.prevent="handleSubmit">
         <div class="form-header-minimal">
           <h3>接入咨询</h3>
@@ -305,26 +423,46 @@ const handleSubmit = async () => {
         </div>
         <div class="form-group">
           <label>企业/品牌名称</label>
-          <input v-model="form.company" type="text" placeholder="输入企业主体名称" />
+          <input
+            v-model="form.company"
+            type="text"
+            placeholder="输入企业主体名称"
+          />
         </div>
         <div class="form-row">
           <div class="form-group">
             <label>您的姓名 <span class="required">*</span></label>
-            <input v-model="form.contact" type="text" placeholder="怎么称呼" required />
+            <input
+              v-model="form.contact"
+              type="text"
+              placeholder="怎么称呼"
+              required
+            />
           </div>
           <div class="form-group">
             <label>联系电话 <span class="required">*</span></label>
-            <input v-model="form.phone" type="text" placeholder="用于接收方案" required />
+            <input
+              v-model="form.phone"
+              type="text"
+              placeholder="用于接收方案"
+              required
+            />
           </div>
         </div>
         <div class="form-group">
           <label>核心诉求描述</label>
-          <textarea v-model="form.demand" rows="3" placeholder="请描述您的需求..."></textarea>
+          <textarea
+            v-model="form.demand"
+            rows="3"
+            placeholder="请描述您的需求..."
+          ></textarea>
         </div>
         <button type="submit" class="btn-submit" :disabled="submitting">
-          {{ submitting ? '信息加密上传..' : '提交需求' }}
+          {{ submitting ? "信息加密上传.." : "提交需求" }}
         </button>
-        <p class="privacy-note"><i class="fas fa-lock"></i> 信息已采用端到端加密保护</p>
+        <p class="privacy-note">
+          <i class="fas fa-lock"></i> 信息已采用端到端加密保护
+        </p>
       </form>
     </el-dialog>
   </div>
@@ -332,7 +470,7 @@ const handleSubmit = async () => {
 
 
 
-<style scoped>
+<style scoped lang="scss">
 .infra-page {
   background: #fdfdfe;
 
@@ -1360,7 +1498,6 @@ input[type="range"] {
   box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
 }
 
-
 .divider {
   display: none; /* Hide divider in the new button design */
 }
@@ -1543,6 +1680,128 @@ input[type="range"] {
   }
 }
 
+/* Case Studies Section */
+
+.case-studies {
+  margin: 80px 0;
+}
+
+.case-grid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 24px;
+  padding: 0;
+}
+
+.case-card {
+  background: white;
+  border-radius: 16px;
+  overflow: hidden;
+  border: 1px solid #f1f5f9;
+  transition: all 0.3s ease;
+  display: flex;
+  flex-direction: column;
+}
+
+.case-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  border-color: #3b82f6;
+}
+
+.case-img {
+  width: 100%;
+  height: 174px;
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.case-img img {
+  width: 100%;
+  height: 174px;
+  object-fit: cover;
+  transition: transform 0.5s ease;
+}
+.case-content {
+  font-size: 1rem;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 16px;
+  line-height: 1.4;
+  flex-grow: 1;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-line-clamp: 2; /* 控制显示几行 */
+  -webkit-box-orient: vertical;
+  word-break: break-all;
+}
+.case-card:hover .case-img img {
+  transform: scale(1.05);
+}
+
+.case-tag {
+  width: fit-content;
+  font-size: 0.8rem;
+  color: #9ac059;
+  background: #f1fadf;
+  padding: 2px 10px;
+  border-radius: 4px;
+  margin: 0 0 8px;
+}
+.tag_Division {
+  border-bottom: 1px dashed #9ac059;
+  margin: 0 16px 8px;
+}
+.company_box {
+  display: flex;
+  align-items: center;
+  margin: 0 16px 8px;
+  justify-content: space-between;
+  .case-company {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: #666;
+  }
+  .logo_icon{
+    height: 24px;
+  }
+}
+.Industry {
+  font-size: 0.85rem;
+  background-color: #f1fadf;
+  padding: 4px 10px;
+  border-radius: 4px;
+  margin: 0 16px 8px;
+  color: #9acc3b;
+}
+
+.view-btn {
+  background: #3b82f6;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  padding: 10px 16px;
+  font-size: 0.9rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin: 0 16px 16px;
+}
+
+.view-btn:hover {
+  background: #2563eb;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+@media (max-width: 1024px) {
+  .case-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
 @media (max-width: 768px) {
   .models-grid {
     grid-template-columns: 1fr;
@@ -1553,6 +1812,10 @@ input[type="range"] {
     gap: 16px;
   }
   .infra-grid-v2 {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .case-grid {
     grid-template-columns: 1fr;
     gap: 16px;
   }
