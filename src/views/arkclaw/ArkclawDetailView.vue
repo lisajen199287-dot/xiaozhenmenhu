@@ -679,7 +679,7 @@ const handlePreview = (image: string) => {
 }
 
 .effect-image {
-  width: 1000px;
+  width: 100%;
   height: auto;
   border-radius: 8px;
 }

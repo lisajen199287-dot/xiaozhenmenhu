@@ -142,6 +142,11 @@
     </div>
 
     <script>
+        // 配置对象 - 与项目保持一致
+        const config = {
+            base_url: 'https://www.cii-group.com' // 与项目配置保持一致
+        };
+        
         const urlParams = new URLSearchParams(window.location.search);
         const clientName = urlParams.get('client_name');
         const scope = urlParams.get('scope');
@@ -171,9 +176,9 @@
                 errorMsg.classList.remove('show');
 
                 console.log('开始获取OAuth会话信息, sessionId:', oauthSessionId);
-console.log('TEST_TOKEN:', TEST_TOKEN);
+                console.log('TEST_TOKEN:', TEST_TOKEN);
 
-                const sessionResponse = await fetch('/app-api/app/oauth2/session/' + oauthSessionId + '?token=' + TEST_TOKEN, {
+                const sessionResponse = await fetch(config.base_url + '/app-api/app/oauth2/session/' + oauthSessionId + '?token=' + TEST_TOKEN, {
                     method: 'GET'
                 });
 
@@ -185,7 +190,7 @@ console.log('TEST_TOKEN:', TEST_TOKEN);
                     const oauthParams = sessionData.data;
                     console.log('OAuth参数:', oauthParams);
 
-                    const authUrl = '/app-api/app/oauth2/authorize?client_id=' + encodeURIComponent(oauthParams.clientId)
+                    const authUrl = config.base_url + '/app-api/app/oauth2/authorize?client_id=' + encodeURIComponent(oauthParams.clientId)
                         + '&redirect_uri=' + encodeURIComponent(oauthParams.redirectUri)
                         + '&response_type=' + encodeURIComponent(oauthParams.responseType)
                         + '&scope=' + encodeURIComponent(oauthParams.scope)
@@ -237,7 +242,7 @@ console.log('TEST_TOKEN:', TEST_TOKEN);
             errorMsg.classList.remove('show');
 
             try {
-                const response = await fetch('/app-api/member/auth/login', {
+                const response = await fetch(config.base_url + '/app-api/member/auth/login', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ mobile, password })
@@ -255,7 +260,7 @@ console.log('TEST_TOKEN:', TEST_TOKEN);
                         return;
                     }
 
-                    const sessionResponse = await fetch('/app-api/app/oauth2/session/' + oauthSessionId + '?token=' + encodeURIComponent(token), {
+                    const sessionResponse = await fetch(config.base_url + '/app-api/app/oauth2/session/' + oauthSessionId + '?token=' + encodeURIComponent(token), {
                         method: 'GET'
                     });
                     const sessionData = await sessionResponse.json();
@@ -268,7 +273,7 @@ console.log('TEST_TOKEN:', TEST_TOKEN);
                     }
 
                     const oauthParams = sessionData.data;
-                    const authUrl = '/app-api/app/oauth2/authorize?client_id=' + encodeURIComponent(oauthParams.clientId)
+                    const authUrl = config.base_url + '/app-api/app/oauth2/authorize?client_id=' + encodeURIComponent(oauthParams.clientId)
                         + '&redirect_uri=' + encodeURIComponent(oauthParams.redirectUri)
                         + '&response_type=' + encodeURIComponent(oauthParams.responseType)
                         + '&scope=' + encodeURIComponent(oauthParams.scope)

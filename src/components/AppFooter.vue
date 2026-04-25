@@ -290,7 +290,10 @@ const toggle = (index: number) => {
   font-size: 0.85rem;
   color: #94a3b8;
 }
-
+.cp-box{
+  display: flex;
+  align-items: center;
+}
 .cp-link {
   color: #94a3b8;
   text-decoration: none;
@@ -299,6 +302,11 @@ const toggle = (index: number) => {
 
 .cp-link:hover {
   color: #64748b;
+}
+.cp-icon{
+  width: 15px;
+  height: 16px;
+  margin: 0 8px;
 }
 
 @media (max-width: 768px) {

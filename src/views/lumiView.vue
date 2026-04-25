@@ -279,7 +279,7 @@ onUnmounted(() => {
             >
               <!-- 占位视频封面或实际视频 -->
               <img
-                src="@/assets/images/swipe_4.png"
+                src="@/assets/images/SD/banner.png"
                 alt="Seedance 2.0 视频生成演示"
                 class="image-after"
                 style="opacity: 1; object-fit: cover"
@@ -309,7 +309,7 @@ onUnmounted(() => {
           </div>
           <div class="feature-visual">
             <img
-              src="@/assets/images/swipe_4.png"
+              src="@/assets/images/SD/img1.png"
               alt="多模式自由创作"
               style="
                 border-radius: 12px;
@@ -331,7 +331,7 @@ onUnmounted(() => {
           </div>
           <div class="feature-visual">
             <img
-              src="@/assets/images/swipe_4.png"
+              src="@/assets/images/SD/img2.png"
               alt="一键快速成片"
               style="
                 border-radius: 12px;
@@ -345,7 +345,7 @@ onUnmounted(() => {
         <div class="feature-block reverse">
           <div class="feature-visual">
             <img
-              src="@/assets/images/swipe_4.png"
+              src="@/assets/images/SD/img3.png"
               alt="多帧精准控制"
               style="
                 border-radius: 12px;
@@ -366,7 +366,7 @@ onUnmounted(() => {
         <div class="feature-block">
           <div class="feature-visual">
             <img
-              src="@/assets/images/swipe_4.png"
+              src="@/assets/images/SD/img4.png"
               alt="视频续写与内容拓展"
               style="
                 border-radius: 12px;
@@ -385,7 +385,7 @@ onUnmounted(() => {
         <div class="feature-block reverse">
           <div class="feature-visual">
             <img
-              src="@/assets/images/swipe_4.png"
+              src="@/assets/images/SD/img5.png"
               alt="超写实画面"
               style="
                 border-radius: 12px;

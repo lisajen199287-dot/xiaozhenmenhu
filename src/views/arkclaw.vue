@@ -12,6 +12,8 @@ onMounted(() => {
   document.title = "仓龙Claw｜让AI成为企业真正可用的生产力";
 });
 
+const isLoggedIn = localStorage.getItem("token") || "";
+
 const handleClick = async () => {
   //检查当前用户是否已激活
   const res = await newApi.apiCheckActivation();
@@ -42,24 +44,24 @@ const handleClick = async () => {
 
 const coreValues = [
   {
-    title: "人与AI协同",
-    desc: "平台内置多类型专家，包括营销、运营、数据分析、设计等角色，用户无需学习复杂工具，可以直接调用专家完成任务",
+    title: "生态赋能",
+    desc: "基于火山发动机ArkClaw基础，提供企业级可靠支撑。",
     icon: "fas fa-users-cog",
+  },
+  {
+    title: "敏捷落地",
+    desc: "预制数字员工开箱即用，实现业务即刻响应。",
+    icon: "fas fa-layer-group",
+  },
+  {
+    title: "私域安全",
+    desc: "核心数据本地留存，确保企业资产绝对掌控。",
+    icon: "fas fa-robot",
   },
   {
     title: "技能驱动",
     desc: "将具体工作能力沉淀为“技能”，技能可复用、可组合，帮助企业形成长期能力资产",
     icon: "fas fa-layer-group",
-  },
-  {
-    title: "自动化执行",
-    desc: "支持任务流程自动执行，减少重复操作，实现持续运行",
-    icon: "fas fa-robot",
-  },
-  {
-    title: "企业级协同",
-    desc: "团队共享专家与技能，统一工作方式，提高协作效率",
-    icon: "fas fa-network-wired",
   },
 ];
 
@@ -199,16 +201,23 @@ const getTotalPrice = (plan: string) => {
 
   return basePrice;
 };
-
+const Consultation = () => {
+  if (localStorage.getItem("token") || "") {
+    //已登录，未开通了仓龙Claw服务
+    scrollToForm();
+  } else {
+    //未登录，跳转到登录页
+    router.push({ path: "/login", query: { redirect: "/arkclaw" } });
+  }
+};
 const subscribe = (plan: string) => {
-  // const quantity = quantities.value[plan as keyof typeof quantities.value];
-  // if (quantity === 0) {
-  //   alert("请选择订阅数量");
-  //   return;
-  // }
-  // ElMessage.success(`已成功订阅 ${quantity} 个 ${plan} 版本`);
-  // 跳转到表单区域
-  scrollToForm();
+  if (localStorage.getItem("token") || "") {
+    //已登录，未开通了仓龙Claw服务
+    scrollToForm();
+  } else {
+    //未登录，跳转到登录页
+    router.push({ path: "/login", query: { redirect: "/arkclaw" } });
+  }
 };
 
 const BuyNow = () => {
@@ -217,7 +226,7 @@ const BuyNow = () => {
     scrollToForm();
   } else {
     //未登录，跳转到登录页
-    router.push({ path: "/arkclaw/detail", query: { redirect: "/arkclaw" } });
+    router.push({ path: "/login", query: { redirect: "/arkclaw" } });
   }
 };
 
@@ -274,16 +283,10 @@ onMounted(() => {
             <button class="primary-btn pulse-glow" v-else @click="BuyNow()">
               立即购买
             </button>
-            <button
-              class="primary-btn pulse-glow"
-              @click="subscribe('starter')"
-            >
+            <button class="primary-btn pulse-glow" @click="Consultation()">
               咨询我们
             </button>
-            <button
-              class="primary-btn pulse-glow"
-              @click="goWechat()"
-            >
+            <button class="primary-btn pulse-glow" @click="goWechat()">
               客服微信
             </button>
           </div>
@@ -292,7 +295,7 @@ onMounted(() => {
     </header>
 
     <!-- Core Values Section -->
-    <section class="section-padding bg-white" style="padding: 30px 0">
+    <section class="section-padding bg-white" style="padding: 10px 0">
       <div class="container">
         <div class="section-title">
           <h2>核心价值</h2>
@@ -669,7 +672,11 @@ onMounted(() => {
       </div>
     </section>
     <!-- Consultation Form Section -->
-    <section id="contact-form" class="section-padding bg-white">
+    <section
+      id="contact-form"
+      class="section-padding bg-white"
+      v-if="isLoggedIn"
+    >
       <div class="container">
         <div class="form-container">
           <div class="form-container-left">
@@ -887,7 +894,7 @@ onMounted(() => {
 
 .section-title {
   text-align: center;
-  margin-bottom: 60px;
+  margin-bottom: 10px;
 }
 
 .section-title h2 {
@@ -1035,7 +1042,7 @@ onMounted(() => {
 
 .value-card {
   background: #f8fafc;
-  padding: 32px 24px;
+  padding: 15px 24px;
   border-radius: 16px;
   text-align: center;
   border: 1px solid #e2e8f0;

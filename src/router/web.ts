@@ -123,6 +123,11 @@ const routes: RouteRecordRaw[] = [
         name: 'Arkclaw',
         component: () => import('@/views/arkclaw.vue')
     },
+    // {
+    //     path: '/ai-comics',
+    //     name: 'AIComics',
+    //     component: () => import('@/views/AIComics.vue')
+    // },
     {
         path: '/arkclaw/detail',
         name: 'ArkclawDetail',

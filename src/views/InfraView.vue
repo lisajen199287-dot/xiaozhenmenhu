@@ -72,33 +72,33 @@ const handleNewsClick = (id) => {
 
     <div class="wrapper">
       <section class="content-section recommended-models">
-        <h2 class="section-title-v2">推荐模型</h2>
+        <h2 class="section-title-v2">大模型与词元</h2>
 
         <div class="models-grid">
           <!-- Model Card 1 -->
 
           <div class="model-card">
-            <div class="model-tag">[视频生成]</div>
+            <div class="model-tag">[3D生成]</div>
 
             <a
-              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&modelId=doubao-seedance-2-0-260128&tab=GenVideo"
+              href="https://exp.volcengine.com/ark/vision?csid=excs-202604231618-%5BHcl73P5crc1RiMZPKySDj%5D&mode=vision&modelId=doubao-seed3d-2-0-260328&tab=Gen3D"
               target="_blank"
               class="model-img video-gen"
               style="display: block"
             >
               <img
-                src="@/assets/images/doubao-seedance.png"
+                src="@/assets/images/img1.png"
                 alt="Doubao-Seedance-2.0"
                 class="model-inner-img"
               />
             </a>
 
-            <h3>Doubao-Seedance-2.0</h3>
+            <h3>Doubao-Seed3D-2.0</h3>
 
-            <p>豆包多模态创作视频模型，音视图文均可生成</p>
+            <p>可生成无噪点、结构精准的干净白模，易于适配 3D 打印</p>
 
             <a
-              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&modelId=doubao-seedance-2-0-260128&tab=GenVideo"
+              href="https://exp.volcengine.com/ark/vision?csid=excs-202604231618-%5BHcl73P5crc1RiMZPKySDj%5D&mode=vision&modelId=doubao-seed3d-2-0-260328&tab=Gen3D"
               target="_blank"
               class="details-link"
               >[详情]</a
@@ -108,27 +108,30 @@ const handleNewsClick = (id) => {
           <!-- Model Card 2 -->
 
           <div class="model-card">
-            <div class="model-tag">[图片生成]</div>
+            <div class="model-tag">[3D生成]</div>
 
             <a
-              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&tab=GenImage"
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=hyper3d-gen2"
               target="_blank"
               class="model-img image-gen"
               style="display: block"
             >
               <img
-                src="@/assets/images/doubao-seedream.png"
-                alt="Doubao-Seedream-5.0"
+                src="@/assets/images/img2.png"
+                alt="Hyper3D-Gen2"
                 class="model-inner-img"
               />
             </a>
 
-            <h3>Doubao-Seedream-5.0</h3>
+            <h3>Hyper3D-Gen2</h3>
 
-            <p>豆包图像创作模型，联网检索，海量世界知识</p>
+            <p>
+              可在分钟内输出最高百万面级精度的 3D 资产，自带完整 PBR 材质与 4K
+              纹理
+            </p>
 
             <a
-              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&tab=GenImage"
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=hyper3d-gen2"
               target="_blank"
               class="details-link"
               >[详情]</a
@@ -138,27 +141,116 @@ const handleNewsClick = (id) => {
           <!-- Model Card 3 -->
 
           <div class="model-card">
-            <div class="model-tag">[多模态]</div>
-
+            <div class="model-tag">[文本生成]</div>
             <a
-              href="https://exp.volcengine.com/ark?_vtm_=0.0.c70961.d701978.0"
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=deepseek-v3-2"
               target="_blank"
               class="model-img multimodal"
               style="display: block"
             >
               <img
-                src="@/assets/images/doubao-seed-pro.png"
-                alt="Doubao-Seed-2.0-pro"
+                src="@/assets/images/img3.png"
+                alt="DeepSeek-V4"
                 class="model-inner-img"
               />
             </a>
 
-            <h3>Doubao-Seed-2.0-pro</h3>
+            <h3>DeepSeek-V4</h3>
 
-            <p>豆包 Agent 通用模型，复杂任务规划与执行能力全方位跃迁</p>
+            <p>
+              平衡推理能力与输出长度，适合日常使用，例如问答场景和通用 Agent
+              任务场景
+            </p>
 
             <a
-              href="https://exp.volcengine.com/ark?_vtm_=0.0.c70961.d701978.0"
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=deepseek-v3-2"
+              target="_blank"
+              class="details-link"
+              >[详情]</a
+            >
+          </div>
+
+          <div class="model-card">
+            <div class="model-tag">[语音模型]</div>
+            <a
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=doubao-seed-podcast"
+              target="_blank"
+              class="model-img multimodal"
+              style="display: block"
+            >
+              <img
+                src="@/assets/images/img4.png"
+                alt="Doubao-语音播客"
+                class="model-inner-img"
+              />
+            </a>
+
+            <h3>Doubao-语音播客</h3>
+
+            <p>
+              将送入模型的文本进行总结提炼，形成双人对话的口语化文本，然后生成超自然播客风格的音频
+            </p>
+
+            <a
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=doubao-seed-podcast"
+              target="_blank"
+              class="details-link"
+              >[详情]</a
+            >
+          </div>
+
+          <div class="model-card">
+            <div class="model-tag">[语音模型]</div>
+            <a
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=doubao-seed-voice-design"
+              target="_blank"
+              class="model-img multimodal"
+              style="display: block"
+            >
+              <img
+                src="@/assets/images/img5.png"
+                alt="Doubao-音色设计"
+                class="model-inner-img"
+              />
+            </a>
+
+            <h3>Doubao-音色设计</h3>
+
+            <p>
+              支持通过文本或图片快速生成定制化音色，可对多种特征进行细致控制，适用于多类场景。
+            </p>
+
+            <a
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=doubao-seed-voice-design"
+              target="_blank"
+              class="details-link"
+              >[详情]</a
+            >
+          </div>
+
+          <div class="model-card">
+            <div class="model-tag">[语音模型]</div>
+            <a
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=doubao-seed-tts-2-0"
+              target="_blank"
+              class="model-img multimodal"
+              style="display: block"
+            >
+              <img
+                src="@/assets/images/img6.png"
+                alt="Doubao-语音合成-2.0"
+                class="model-inner-img"
+              />
+            </a>
+
+            <h3>Doubao-语音合成-2.0</h3>
+
+            <p>
+              新一代语音合成模型，升级了自然度、情感表达和场景适配能力，适用于 AI 交互、听书、内容生产和企业客服等场景。
+            </p>
+
+            <a
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=doubao-seed-tts-2-0"
               target="_blank"
               class="details-link"
               >[详情]</a
@@ -1764,7 +1856,7 @@ input[type="range"] {
     font-weight: 700;
     color: #666;
   }
-  .logo_icon{
+  .logo_icon {
     height: 24px;
   }
 }
