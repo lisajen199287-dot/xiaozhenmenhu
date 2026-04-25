@@ -319,3 +319,10 @@ export const clawActivate = (data: any) => {
     data,
   })
 }
+
+export const getDictDataByType = (data: any) => {
+  return request.get({
+    url: `/system/dict-data/type`,
+    params: data,
+  })
+}

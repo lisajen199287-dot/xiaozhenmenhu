@@ -123,19 +123,35 @@ const scenarios = [
 
 import { config } from "@/config/axios/config";
 import { ElMessage } from "element-plus";
-const handleClick = () => {
+const handleClick = async () => {
   if (!localStorage.getItem("token")) {
     ElMessage.warning("请先登录");
   } else {
-    const url =
-      config.trueLoginUrl +
-      "?token=" +
-      localStorage.getItem("token") +
-      "&refreshToken=" +
-      localStorage.getItem("refreshToken");
-    window.open(url, "_blank");
+    const res = await newApi.apiAgUserGet();
+    if (res.point >= PointsNumber.value) {
+      const url =
+        config.trueLoginUrl +
+        "?token=" +
+        localStorage.getItem("token") +
+        "&refreshToken=" +
+        localStorage.getItem("refreshToken");
+      window.open(url, "_blank");
+    } else {
+      ElMessage.warning("您的积分不足，无法免费体验");
+    }
   }
 };
+import * as newApi from "@/api/newApi/index";
+const PointsNumber = ref(0);
+const GetDictType = async () => {
+  let res = await newApi.getDictDataByType({
+    type: "Points",
+  });
+  PointsNumber.value = Number(res[0].value);
+};
+onMounted(() => {
+  GetDictType();
+});
 </script>
 
 

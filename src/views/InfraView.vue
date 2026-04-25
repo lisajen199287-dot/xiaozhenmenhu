@@ -54,7 +54,7 @@ const handleNewsClick = (id) => {
       </video>
 
       <div class="hero-content">
-        <h1 class="hero-title">普惠算力，灵活调度</h1>
+        <h1 class="hero-title">大模型聚合平台</h1>
 
         <p class="hero-subtitle">AI算力聚合平台</p>
 
@@ -75,6 +75,94 @@ const handleNewsClick = (id) => {
         <h2 class="section-title-v2">大模型与词元</h2>
 
         <div class="models-grid">
+          <div class="model-card">
+            <div class="model-tag">[视频生成]</div>
+
+            <a
+              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&modelId=doubao-seedance-2-0-260128&tab=GenVideo"
+              target="_blank"
+              class="model-img video-gen"
+              style="display: block"
+            >
+              <img
+                src="@/assets/images/doubao-seedance.png"
+                alt="Doubao-Seedance-2.0"
+                class="model-inner-img"
+              />
+            </a>
+
+            <h3>Doubao-Seedance-2.0</h3>
+
+            <p>豆包多模态创作视频模型，音视图文均可生成</p>
+
+            <a
+              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&modelId=doubao-seedance-2-0-260128&tab=GenVideo"
+              target="_blank"
+              class="details-link"
+              >[详情]</a
+            >
+          </div>
+
+          <!-- Model Card 2 -->
+
+          <div class="model-card">
+            <div class="model-tag">[图片生成]</div>
+
+            <a
+              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&tab=GenImage"
+              target="_blank"
+              class="model-img image-gen"
+              style="display: block"
+            >
+              <img
+                src="@/assets/images/doubao-seedream.png"
+                alt="Doubao-Seedream-5.0"
+                class="model-inner-img"
+              />
+            </a>
+
+            <h3>Doubao-Seedream-5.0</h3>
+
+            <p>豆包图像创作模型，联网检索，海量世界知识</p>
+
+            <a
+              href="https://exp.volcengine.com/ark/vision?mode=vision&model=doubao-seedream-4-5-251128&tab=GenImage"
+              target="_blank"
+              class="details-link"
+              >[详情]</a
+            >
+          </div>
+
+          <!-- Model Card 3 -->
+
+          <div class="model-card">
+            <div class="model-tag">[多模态]</div>
+
+            <a
+              href="https://exp.volcengine.com/ark?_vtm_=0.0.c70961.d701978.0"
+              target="_blank"
+              class="model-img multimodal"
+              style="display: block"
+            >
+              <img
+                src="@/assets/images/doubao-seed-pro.png"
+                alt="Doubao-Seed-2.0-pro"
+                class="model-inner-img"
+              />
+            </a>
+
+            <h3>Doubao-Seed-2.0-pro</h3>
+
+            <p>豆包 Agent 通用模型，复杂任务规划与执行能力全方位跃迁</p>
+
+            <a
+              href="https://exp.volcengine.com/ark?_vtm_=0.0.c70961.d701978.0"
+              target="_blank"
+              class="details-link"
+              >[详情]</a
+            >
+          </div>
+
           <!-- Model Card 1 -->
 
           <div class="model-card">
@@ -246,7 +334,8 @@ const handleNewsClick = (id) => {
             <h3>Doubao-语音合成-2.0</h3>
 
             <p>
-              新一代语音合成模型，升级了自然度、情感表达和场景适配能力，适用于 AI 交互、听书、内容生产和企业客服等场景。
+              新一代语音合成模型，升级了自然度、情感表达和场景适配能力，适用于
+              AI 交互、听书、内容生产和企业客服等场景。
             </p>
 
             <a

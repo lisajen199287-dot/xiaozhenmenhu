@@ -489,6 +489,16 @@ const handleHeroAction = (link: string) => {
   }
 };
 
+const goPPT = async () => {
+  try {
+    const res = await newApi.apiPortalAiPptAccessCode();
+    const url = `https://industry.aics.cii-group.com/#/pptDocs?accessCode=${res}`;
+    window.open(url, "_blank");
+  } catch (e) {
+    console.error("Failed to get access code:", e);
+  }
+};
+
 onUnmounted(() => {
   window.removeEventListener("resize", handleResize);
   if (timer) clearInterval(timer);
