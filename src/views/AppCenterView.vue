@@ -102,7 +102,6 @@ const handleEnter = (app: Application) => {
               <i :class="category.icon" class="category-icon"></i>
               <h2 class="category-title">{{ category.title }}</h2>
             </div>
-            <!-- <p class="category-desc" v-if="category.description">{{ category.description }}</p> -->
           </div>
 
           <!-- 应用网格 -->
@@ -146,7 +145,6 @@ const handleEnter = (app: Application) => {
   overflow-x: hidden;
 }
 
-/* 简单的点阵背景纹理，替代动态光斑 */
 .bg-pattern {
   position: fixed;
   top: 0;
@@ -160,7 +158,8 @@ const handleEnter = (app: Application) => {
 }
 
 .app-main {
-  padding: 80px 0 60px; /* 顶部留出 NavBar 空间 */
+  /* 顶部留出 NavBar 空间，底部留少许呼吸感 */
+  padding: 80px 0 40px; 
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -170,78 +169,74 @@ const handleEnter = (app: Application) => {
   z-index: 1;
 }
 
-/* --- 独立模块外框 (核心修改) --- */
+/* --- 独立模块外框 (针对 13 寸屏优化) --- */
 .category-module {
-  /* 白色背景框 */
   background: #ffffff;
-  /* 圆润边角 */
-  border-radius: 24px;
-  /* 细腻的边框 */
+  border-radius: 20px;
   border: 1px solid #e2e8f0;
-  /* 柔和的投影 */
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
   
-  margin-bottom: 40px;
-  padding: 40px; /* 内部留白 */
+  margin-bottom: 30px;
+  /* 关键：减小上下 padding，从 40px 减到 24px */
+  padding: 24px 32px; 
   
-  /* 桌面端尝试保持一屏感，但不强制 */
-  min-height: auto; 
+  /* 关键：强制最小高度为视口高度减去导航栏和 margins */
+  /* 100vh - 80px(top padding) - 40px(bottom padding) - 30px(margin) ≈ 85vh */
+  min-height: calc(100vh - 150px);
+  
   display: flex;
   flex-direction: column;
+  justify-content: center; /* 垂直居中，让内容看起来充满屏幕 */
 }
 
 .module-content {
   width: 100%;
+  /* 限制最大宽度，防止在大屏上拉得太长导致视觉空旷 */
+  max-width: 1100px; 
+  margin: 0 auto;
 }
 
-/* --- 分类头部 (静态版) --- */
+/* --- 分类头部 (紧凑版) --- */
 .category-header {
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
   text-align: center;
-  margin-bottom: 32px;
+  /* 减小底部间距 */
+  margin-bottom: 24px;
 }
 
 .category-title-wrap {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 12px;
-  margin-bottom: 8px;
-  /* 去除玻璃拟态，改为简洁的浅色背景 */
+  gap: 10px;
+  margin-bottom: 0;
   background: #f8fafc;
-  padding: 8px 20px;
+  /* 减小 padding */
+  padding: 6px 18px;
   border-radius: 50px;
   border: 1px solid #f1f5f9;
 }
 
 .category-icon {
-  font-size: 1.4rem;
-  color: #4f46e5; /* 固定品牌色，无渐变动画 */
+  font-size: 1.25rem;
+  color: #4f46e5;
 }
 
 .category-title {
-  font-size: 1.5rem;
+  font-size: 1.35rem;
   font-weight: 800;
   color: #0f172a;
   margin: 0;
-}
-
-.category-desc {
-  font-size: 0.9rem;
-  color: #64748b;
-  margin: 0;
-  max-width: 600px;
-  line-height: 1.5;
 }
 
 /* --- 网格布局 --- */
 .app-grid {
   display: grid;
   grid-template-columns: repeat(3, 1fr);
-  gap: 24px;
+  gap: 20px; /* 减小间距 */
   width: 100%;
 }
 
@@ -249,30 +244,25 @@ const handleEnter = (app: Application) => {
   grid-column: span 2;
 }
 
-/* --- 静态卡片样式 (去特效) --- */
+/* --- 卡片样式 (紧凑版) --- */
 .app-card {
   background: #ffffff;
-  border-radius: 16px;
+  border-radius: 12px;
   overflow: hidden;
-  /* 静态边框和阴影 */
   border: 1px solid #f1f5f9;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
-  
   display: flex;
   flex-direction: column;
   height: 100%;
-  /* 移除 transition */
 }
 
-/* 移除所有 hover 效果，保持静止 */
 .app-card:hover {
-  /* 可选：如果完全不需要任何反馈，可以留空 */
-  /* 这里保留极轻微的边框加深，提示可点击，但无位移 */
   border-color: #cbd5e1;
 }
 
 .app-card-image {
-  height: 160px; 
+  /* 关键：大幅减小图片高度，从 160px 降到 120px */
+  height: 120px; 
   position: relative;
   overflow: hidden;
   background: #f8fafc;
@@ -283,11 +273,11 @@ const handleEnter = (app: Application) => {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  /* 移除缩放动画 */
 }
 
 .app-card-content {
-  padding: 20px;
+  /* 减小内边距 */
+  padding: 14px;
   display: flex;
   flex-direction: column;
   flex: 1;
@@ -296,24 +286,23 @@ const handleEnter = (app: Application) => {
 .app-card-header {
   display: flex;
   align-items: center;
-  gap: 12px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 8px; /* 减小间距 */
 }
 
 .app-icon-box {
-  width: 40px;
-  height: 40px;
+  width: 32px; /* 减小图标盒 */
+  height: 32px;
   background: #f8fafc;
-  border-radius: 10px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
   border: 1px solid #e2e8f0;
-  /* 移除阴影和过渡 */
 }
 
 .app-icon {
-  font-size: 1.1rem;
+  font-size: 0.9rem;
   color: #4f46e5;
 }
 
@@ -324,7 +313,7 @@ const handleEnter = (app: Application) => {
 }
 
 .app-name {
-  font-size: 1rem;
+  font-size: 0.95rem;
   font-weight: 700;
   color: #0f172a;
   margin: 0;
@@ -335,20 +324,21 @@ const handleEnter = (app: Application) => {
 }
 
 .app-name-en {
-  font-size: 0.65rem;
+  font-size: 0.6rem;
   color: #94a3b8;
   font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-top: 2px;
+  margin-top: 1px;
 }
 
 .app-desc {
   color: #475569;
-  font-size: 0.85rem;
-  line-height: 1.5;
-  margin-bottom: 20px;
-  height: 2.6em; /* 固定两行 */
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin-bottom: 12px; /* 减小间距 */
+  /* 严格限制为 2 行，高度约 2.2em */
+  height: 2.2em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
@@ -356,26 +346,24 @@ const handleEnter = (app: Application) => {
   flex: 1;
 }
 
-/* 静态按钮 */
+/* 按钮 */
 .btn-enter {
   margin-top: auto;
   width: 100%;
-  padding: 10px;
-  border-radius: 8px;
+  padding: 8px; /* 减小按钮高度 */
+  border-radius: 6px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   color: #0f172a;
   font-weight: 600;
-  font-size: 0.85rem;
+  font-size: 0.8rem;
   cursor: pointer;
-  /* 移除过渡动画 */
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: 4px;
 }
 
-/* 按钮悬停仅改变背景色，无光影特效 */
 .btn-enter:hover {
   background: #eef2ff;
   border-color: #c7d2fe;
@@ -388,80 +376,82 @@ const handleEnter = (app: Application) => {
     grid-template-columns: repeat(3, 1fr);
   }
   .app-grid .app-card.span-two {
-    grid-column: span 1; /* 平板上第一个不再占两列，保持整齐 */
+    grid-column: span 1;
   }
 }
 
 @media (max-width: 768px) {
   .app-main {
-    padding: 70px 16px 40px; /* 两侧增加间距 */
+    padding: 70px 12px 30px;
   }
 
   .category-module {
-    padding: 24px 16px; /* 减小模块内边距 */
-    margin-bottom: 24px;
+    /* 移动端取消强制一屏高度，改为自然内容高度 */
+    min-height: auto;
+    padding: 20px 12px;
+    margin-bottom: 20px;
     border-radius: 16px;
   }
 
   .category-header {
-    margin-bottom: 24px;
+    margin-bottom: 20px;
   }
 
   .category-title-wrap {
-    padding: 6px 16px;
+    padding: 5px 14px;
   }
 
   .category-icon {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
   }
 
   .category-title {
-    font-size: 1.25rem;
+    font-size: 1.15rem;
   }
 
   .app-grid {
-    grid-template-columns: repeat(2, 1fr); /* 手机端双列 */
-    gap: 12px;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
   }
   
   .app-grid .app-card.span-two {
-    grid-column: span 2; /* 第一个占满一行 */
+    grid-column: span 2;
   }
 
   .app-card-image {
-    height: 110px;
+    height: 100px;
   }
 
   .app-card-content {
-    padding: 12px;
+    padding: 10px;
   }
 
   .app-icon-box {
-    width: 32px;
-    height: 32px;
+    width: 28px;
+    height: 28px;
   }
 
   .app-icon {
-    font-size: 0.9rem;
+    font-size: 0.8rem;
   }
 
   .app-name {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
   
   .app-desc {
-    display: none; /* 双列模式下隐藏描述以节省空间 */
+    display: none;
   }
   
   .btn-enter {
-    padding: 8px;
-    font-size: 0.8rem;
+    padding: 6px;
+    font-size: 0.75rem;
   }
 }
 
 @media (max-width: 480px) {
   .app-grid {
-    grid-template-columns: 1fr; /* 极小屏幕单列 */
+    grid-template-columns: 1fr;
   }
 
   .app-grid .app-card.span-two {
@@ -469,12 +459,12 @@ const handleEnter = (app: Application) => {
   }
 
   .app-card-image {
-    height: 140px;
+    height: 130px;
   }
   
   .app-desc {
-    display: -webkit-box; /* 单列重新显示描述 */
-    height: 2.6em;
+    display: -webkit-box;
+    height: 2.2em;
   }
 }
 </style>
