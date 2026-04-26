@@ -137,7 +137,7 @@ const handleClick = async () => {
         localStorage.getItem("refreshToken");
       window.open(url, "_blank");
     } else {
-      ElMessage.warning("您的积分不足，无法免费体验");
+      ElMessage.warning("您的积分不足，无法体验");
     }
   }
 };

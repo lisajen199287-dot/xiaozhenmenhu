@@ -93,7 +93,8 @@ const handleEnter = (app: Application) => {
   if (app.url.startsWith("http") || app.url.startsWith("https")) {
     window.open(app.url, "_blank");
   } else {
-    router.push(app.url);
+    // router.push(app.url);
+    window.open(app.url, '_blank');
   }
 };
 </script>

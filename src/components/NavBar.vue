@@ -172,7 +172,7 @@ const defaultNav: NavigationMenu[] = [
   {
     id: 5,
     parentId: null,
-    title: "模型与算力",
+    title: "大模型与词元",
     titleEn: "Infrastructure",
     url: "/infra",
     icon: "",

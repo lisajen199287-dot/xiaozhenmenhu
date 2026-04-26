@@ -9,7 +9,7 @@ import { ElMessageBox } from "element-plus";
 const router = useRouter();
 
 onMounted(() => {
-  document.title = "仓龙Claw｜让AI成为企业真正可用的生产力";
+  document.title = "福龙Claw｜让AI成为企业真正可用的生产力";
 });
 
 const isLoggedIn = localStorage.getItem("token") || "";
@@ -18,12 +18,12 @@ const handleClick = async () => {
   //检查当前用户是否已激活
   const res = await newApi.apiCheckActivation();
   const isFirstUse = res.activated;
-  //是否第一次使用仓龙Claw服务
+  //是否第一次使用福龙Claw服务
   if (!isFirstUse) {
-    //调用接口，保存仓龙Claw服务
+    //调用接口，保存福龙Claw服务
     const activateRes = await newApi.clawActivate({
       version: "V2",
-      message: "您已激活了仓龙Claw服务",
+      message: "您已激活了福龙Claw服务",
     });
     //获取默认激活信息
     const defaultRes = await newApi.clawDefault();
@@ -68,7 +68,7 @@ const coreValues = [
 const advantages = [
   {
     title: "可以直接产出结果",
-    desc: "区别于传统 AI 对话工具，仓龙 Claw预制行业主虾 + 子虾，直接完成任务并输出成品",
+    desc: "区别于传统 AI 对话工具，福龙 Claw预制行业主虾 + 子虾，直接完成任务并输出成品",
   },
   {
     title: "能力可沉淀",
@@ -124,7 +124,7 @@ const handleSubmit = async () => {
 
   submitting.value = true;
   try {
-    const solutionName = "仓龙Claw";
+    const solutionName = "福龙Claw";
     apiAdmSolutionRequests(JSON.stringify({ ...form.value, solutionName }));
     submitted.value = true;
     form.value = {
@@ -203,7 +203,7 @@ const getTotalPrice = (plan: string) => {
 };
 const Consultation = () => {
   if (localStorage.getItem("token") || "") {
-    //已登录，未开通了仓龙Claw服务
+    //已登录，未开通了福龙Claw服务
     scrollToForm();
   } else {
     //未登录，跳转到登录页
@@ -212,7 +212,7 @@ const Consultation = () => {
 };
 const subscribe = (plan: string) => {
   if (localStorage.getItem("token") || "") {
-    //已登录，未开通了仓龙Claw服务
+    //已登录，未开通了福龙Claw服务
     scrollToForm();
   } else {
     //未登录，跳转到登录页
@@ -222,7 +222,7 @@ const subscribe = (plan: string) => {
 
 const BuyNow = () => {
   if (localStorage.getItem("token") || "") {
-    //已登录，未开通了仓龙Claw服务
+    //已登录，未开通了福龙Claw服务
     scrollToForm();
   } else {
     //未登录，跳转到登录页
@@ -244,10 +244,10 @@ const scrollToForm = () => {
 };
 const isPermission = ref(true);
 const init = async () => {
-  //判断是否登录，是否开通了仓龙Claw服务
+  //判断是否登录，是否开通了福龙Claw服务
   const isLogin = localStorage.getItem("token") || "";
   if (isLogin) {
-    //已登录，判断是否开通了仓龙Claw服务
+    //已登录，判断是否开通了福龙Claw服务
     const res = await newApi.apiCheckAuth2AuthorizeCode();
     isPermission.value = res;
   } else {
@@ -268,7 +268,7 @@ onMounted(() => {
       </div>
       <div class="container hero-content">
         <div class="text-area text-center">
-          <h1>仓龙Claw, 企业级AI生产力</h1>
+          <h1>福龙Claw, 企业级AI生产力</h1>
           <p class="subtitle mx-auto">
             企业级智能工作平台-通过专家、技能与自动化，帮助企业提升效率与产出能力
           </p>
@@ -283,12 +283,10 @@ onMounted(() => {
             <button class="primary-btn pulse-glow" v-else @click="BuyNow()">
               立即购买
             </button>
-            <button class="primary-btn pulse-glow" @click="Consultation()">
+            <!-- <button class="primary-btn pulse-glow" @click="Consultation()">
               咨询我们
-            </button>
-            <button class="primary-btn pulse-glow" @click="goWechat()">
-              客服微信
-            </button>
+            </button> -->
+
           </div>
         </div>
       </div>
@@ -299,7 +297,7 @@ onMounted(() => {
       <div class="container">
         <div class="section-title">
           <h2>核心价值</h2>
-          <p>仓龙Claw不只是一个AI工具，而是一个可以替企业完成工作的系统</p>
+          <p>福龙Claw不只是一个AI工具，而是一个可以替企业完成工作的系统</p>
         </div>
         <div class="value-grid">
           <div
@@ -382,7 +380,7 @@ onMounted(() => {
     <section class="section-padding bg-light">
       <div class="container">
         <div class="section-title">
-          <h2>仓龙Claw核心优势</h2>
+          <h2>福龙Claw核心优势</h2>
         </div>
         <div class="advantage-grid">
           <div
@@ -433,7 +431,7 @@ onMounted(() => {
       <div class="container">
         <div class="section-title">
           <h2>产品报价</h2>
-          <p>选择适合您企业的仓龙Claw版本</p>
+          <p>选择适合您企业的福龙Claw版本</p>
         </div>
         <div class="pricing-grid">
           <!-- Starter Plan -->
@@ -680,7 +678,7 @@ onMounted(() => {
       <div class="container">
         <div class="form-container">
           <div class="form-container-left">
-            <h2>申请开通仓龙 Claw 企业席位，解锁：</h2>
+            <h2>申请开通福龙 Claw 企业席位，解锁：</h2>
             <p class="form-description">
               填写信息提交申请，专人对接开通流程，助力企业高效落地 AI 生产力。
             </p>
@@ -842,6 +840,13 @@ onMounted(() => {
         />
       </div>
     </el-dialog>
+    
+    <!-- Fixed Wechat Button -->
+    <div class="fixed-wechat-btn">
+      <button class="primary-btn pulse-glow" @click="goWechat()">
+        客服微信
+      </button>
+    </div>
   </div>
 </template>
 
@@ -1457,6 +1462,23 @@ onMounted(() => {
   .form-container-right {
     width: 100%;
   }
+  .fixed-wechat-btn {
+    bottom: 20px;
+    right: 20px;
+  }
+  .fixed-wechat-btn .primary-btn {
+    padding: 12px 24px;
+    font-size: 0.9rem;
+  }
+}
+
+/* Fixed Wechat Button */
+.fixed-wechat-btn {
+  position: fixed;
+  bottom: 30px;
+  right: 30px;
+  z-index: 1000;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
 
 /* Form Section */

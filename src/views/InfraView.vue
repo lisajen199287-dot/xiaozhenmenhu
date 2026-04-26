@@ -72,7 +72,7 @@ const handleNewsClick = (id) => {
 
     <div class="wrapper">
       <section class="content-section recommended-models">
-        <h2 class="section-title-v2">大模型与词元</h2>
+        <h2 class="section-title-v2">模型推荐</h2>
 
         <div class="models-grid">
           <div class="model-card">

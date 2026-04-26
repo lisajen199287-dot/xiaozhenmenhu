@@ -762,7 +762,8 @@ onUnmounted(() => {
           </div>
 
           <!-- Card 5: Industry Analysis (Business Strategy) -->
-          <div class="scenario-card-v5" @click="goPPT()">
+           <!-- @click="goPPT()" -->
+          <div class="scenario-card-v5">
             <div class="card-meta">
               <span class="model-tag">Industry-PPT-Gen</span>
               <i class="fas fa-file-powerpoint"></i>
