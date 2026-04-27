@@ -1,0 +1,458 @@
+<!DOCTYPE html>
+
+<html class="light" lang="zh-CN"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>营销服务助手 | 让每一次对话，都成为业务增长的抓手</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&amp;family=Manrope:wght@600;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+      tailwind.config = {
+        darkMode: "class",
+        theme: {
+          extend: {
+            "colors": {
+                    "surface-variant": "#dfe2ed",
+                    "on-tertiary-container": "#eff0f8",
+                    "primary-fixed-dim": "#b6c4ff",
+                    "tertiary-fixed-dim": "#c5c6ce",
+                    "on-background": "#181c23",
+                    "on-surface-variant": "#434656",
+                    "on-tertiary": "#ffffff",
+                    "primary": "#0047cf",
+                    "background": "#f9f9ff",
+                    "surface-container-low": "#f1f3ff",
+                    "on-surface": "#181c23",
+                    "tertiary-fixed": "#e1e2ea",
+                    "on-primary-fixed-variant": "#003bb0",
+                    "on-secondary-fixed-variant": "#5e08bd",
+                    "secondary-fixed": "#ecdcff",
+                    "surface-dim": "#d7dae5",
+                    "on-tertiary-fixed": "#191c21",
+                    "on-error-container": "#93000a",
+                    "on-tertiary-fixed-variant": "#44474d",
+                    "surface-container-lowest": "#ffffff",
+                    "error-container": "#ffdad6",
+                    "primary-container": "#165dff",
+                    "on-secondary": "#ffffff",
+                    "on-secondary-fixed": "#270057",
+                    "surface-container-highest": "#dfe2ed",
+                    "surface": "#f9f9ff",
+                    "on-primary": "#ffffff",
+                    "inverse-on-surface": "#eef0fc",
+                    "secondary-container": "#8e4fee",
+                    "surface-container-high": "#e5e8f3",
+                    "on-primary-fixed": "#00164f",
+                    "outline": "#737688",
+                    "on-secondary-container": "#fffbff",
+                    "primary-fixed": "#dce1ff",
+                    "surface-container": "#ebedf9",
+                    "inverse-primary": "#b6c4ff",
+                    "surface-tint": "#004fe5",
+                    "surface-bright": "#f9f9ff",
+                    "tertiary-container": "#6b6d74",
+                    "outline-variant": "#c3c5d9",
+                    "inverse-surface": "#2c3039",
+                    "on-primary-container": "#eeefff",
+                    "error": "#ba1a1a",
+                    "secondary": "#7431d3",
+                    "on-error": "#ffffff",
+                    "tertiary": "#52555b",
+                    "secondary-fixed-dim": "#d5baff"
+            },
+            "borderRadius": {
+                    "DEFAULT": "0.25rem",
+                    "lg": "0.5rem",
+                    "xl": "0.75rem",
+                    "full": "9999px"
+            },
+            "spacing": {
+                    "stack-lg": "32px",
+                    "gutter": "24px",
+                    "margin-mobile": "16px",
+                    "stack-sm": "8px",
+                    "margin-desktop": "64px",
+                    "section-gap": "120px",
+                    "unit": "4px",
+                    "stack-md": "16px",
+                    "container-max": "1280px"
+            },
+            "fontFamily": {
+                    "headline-md": ["Manrope"],
+                    "body-sm": ["Inter"],
+                    "body-md": ["Inter"],
+                    "body-lg": ["Inter"],
+                    "label-md": ["Inter"],
+                    "headline-xl": ["Manrope"],
+                    "headline-lg": ["Manrope"],
+                    "button-text": ["Inter"]
+            },
+            "fontSize": {
+                    "headline-md": ["24px", {"lineHeight": "1.3", "fontWeight": "600"}],
+                    "body-sm": ["14px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-md": ["16px", {"lineHeight": "1.5", "fontWeight": "400"}],
+                    "body-lg": ["18px", {"lineHeight": "1.6", "fontWeight": "400"}],
+                    "label-md": ["12px", {"lineHeight": "1", "letterSpacing": "0.05em", "fontWeight": "600"}],
+                    "headline-xl": ["48px", {"lineHeight": "1.1", "letterSpacing": "-0.02em", "fontWeight": "800"}],
+                    "headline-lg": ["32px", {"lineHeight": "1.2", "letterSpacing": "-0.01em", "fontWeight": "700"}],
+                    "button-text": ["16px", {"lineHeight": "1", "fontWeight": "600"}]
+            }
+          }
+        }
+      }
+    </script>
+<style>
+        .glass-panel {
+            background: rgba(255, 255, 255, 0.7);
+            backdrop-filter: blur(16px);
+            -webkit-backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.3);
+        }
+        .ai-gradient {
+            background: linear-gradient(135deg, #165dff 0%, #7431d3 100%);
+        }
+        .ambient-shadow {
+            box-shadow: 0 32px 64px -12px rgba(22, 93, 255, 0.06), 0 0 0 1px rgba(22, 93, 255, 0.05);
+        }
+    </style>
+</head>
+<body class="bg-background text-on-background font-body-md antialiased pt-20">
+<!-- TopNavBar -->
+<nav class="fixed top-0 left-0 w-full z-50 bg-white/90 backdrop-blur-md dark:bg-slate-950/90 border-b border-slate-200/50 dark:border-slate-800/50 shadow-[0_8px_30px_rgb(22,93,255,0.04)] font-manrope antialiased tracking-tight">
+<div class="max-w-7xl mx-auto px-8 h-20 flex items-center justify-between">
+<div class="flex items-center gap-12">
+<a class="text-xl font-extrabold text-blue-600 dark:text-blue-400 tracking-tighter" href="#">MarketAI</a>
+<div class="hidden md:flex gap-8">
+<a class="text-blue-600 dark:text-blue-400 border-b-2 border-blue-600 font-semibold active:scale-95 cursor-pointer hover:opacity-80 transition-all duration-200" href="#">Solutions</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 active:scale-95 cursor-pointer hover:opacity-80 transition-all duration-200" href="#">Capabilities</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 active:scale-95 cursor-pointer hover:opacity-80 transition-all duration-200" href="#">Security</a>
+<a class="text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 active:scale-95 cursor-pointer hover:opacity-80 transition-all duration-200" href="#">Resources</a>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<button class="hidden md:block px-4 py-2 text-slate-600 dark:text-slate-400 font-medium hover:text-blue-600 active:scale-95 cursor-pointer hover:opacity-80 transition-all duration-200">Login</button>
+<button class="px-6 py-2 bg-blue-600 text-white rounded-lg font-medium active:scale-95 cursor-pointer hover:opacity-80 transition-all duration-200">Get Started</button>
+</div>
+</div>
+</nav>
+<!-- Hero Section -->
+<header class="relative pt-margin-desktop pb-section-gap overflow-hidden">
+<div class="absolute inset-0 z-0">
+<div class="absolute top-0 right-0 w-[800px] h-[800px] bg-primary-container/5 rounded-full blur-3xl -translate-y-1/4 translate-x-1/4"></div>
+<div class="absolute bottom-0 left-0 w-[600px] h-[600px] bg-secondary/5 rounded-full blur-3xl translate-y-1/4 -translate-x-1/4"></div>
+</div>
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop relative z-10">
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-gutter items-center">
+<div class="lg:col-span-7 flex flex-col gap-stack-lg">
+<div class="inline-flex items-center gap-2 px-4 py-2 bg-primary-container/10 rounded-full w-fit">
+<span class="material-symbols-outlined text-primary-container text-sm" data-icon="auto_awesome">auto_awesome</span>
+<span class="font-label-md text-primary-container text-label-md">基于豆包大模型</span>
+</div>
+<h1 class="font-headline-xl text-headline-xl text-on-surface">
+                        营销服务助手 <br/>
+<span class="text-transparent bg-clip-text ai-gradient">让每一次对话，都成为业务增长的抓手</span>
+</h1>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl">
+                        专为销售、客服、企业信息服务场景而生，用更懂业务的 AI，帮你搞定客户沟通、团队提效、数据沉淀，让对话不止于响应，更能驱动增长。
+                    </p>
+<div class="flex flex-wrap gap-4 pt-stack-sm">
+<button class="ai-gradient text-white px-8 py-4 rounded-lg font-button-text text-button-text shadow-[0_8px_16px_rgba(22,93,255,0.2)] hover:-translate-y-0.5 transition-transform duration-200 flex items-center gap-2">
+                            立即接入体验
+                            <span class="material-symbols-outlined" data-icon="arrow_forward">arrow_forward</span>
+</button>
+<button class="bg-surface-container-highest text-primary-container px-8 py-4 rounded-lg font-button-text text-button-text hover:bg-surface-variant transition-colors duration-200 border border-primary-container/10">
+                            了解行业方案
+                        </button>
+</div>
+</div>
+<div class="lg:col-span-5 relative mt-12 lg:mt-0">
+<div class="bg-surface-container-lowest rounded-xl ambient-shadow relative z-10 border border-surface-variant/50 overflow-hidden"><img alt="AI Marketing Analytics Dashboard" class="w-full h-auto rounded-lg shadow-sm object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXx_eRO9hP3i3GxVDv0UfcZrxEgpC6fw09FubgYSMOtBGSDW_T0biiCMD2o-y2AIcp0NW0ERzNLV7mySuDk65GjxYE9uaTeIyWIC2xTQVEZFLlooK2tW_g0gccNUlXPQzKRJKyYGJjEEt1TuliRZjtfswv7h3qwP2JAbMxm-TRb-lNipqFw4nxy-xXUBWJH6nbE_ddNJqlxIU3PhpKcwMYcql0zhzcxy5FvQYbwB1t74Z9O-3ZZEs_zRvuA4CEcSR4kqhCR2Et4k4"/></div>
+<!-- Decorative floating elements -->
+<div class="absolute -top-6 -right-6 bg-surface-container-lowest p-4 rounded-lg ambient-shadow border border-surface-variant/50 flex items-center gap-3 z-20 overflow-hidden"><img alt="AI Marketing Analytics Dashboard" class="w-full h-auto rounded-lg shadow-sm object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCXx_eRO9hP3i3GxVDv0UfcZrxEgpC6fw09FubgYSMOtBGSDW_T0biiCMD2o-y2AIcp0NW0ERzNLV7mySuDk65GjxYE9uaTeIyWIC2xTQVEZFLlooK2tW_g0gccNUlXPQzKRJKyYGJjEEt1TuliRZjtfswv7h3qwP2JAbMxm-TRb-lNipqFw4nxy-xXUBWJH6nbE_ddNJqlxIU3PhpKcwMYcql0zhzcxy5FvQYbwB1t74Z9O-3ZZEs_zRvuA4CEcSR4kqhCR2Et4k4"/></div>
+</div>
+</div>
+</div>
+</header>
+<!-- Scenarios Section -->
+<section class="py-section-gap bg-white border-t border-surface-variant/30">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">场景化AI赋能</h2>
+<p class="font-body-lg text-body-lg text-on-surface-variant max-w-2xl mx-auto">
+                深度结合各类业务场景，提供全链路智能辅助，让AI真正成为业务增长的引擎。
+            </p>
+</div>
+<div class="flex flex-col gap-16">
+<!-- Scenario 1: Auto Sales -->
+<div class="flex flex-col md:flex-row gap-12 items-center bg-surface-container-low rounded-3xl p-8 lg:p-12 border border-surface-variant/50 hover:shadow-lg transition-shadow duration-300">
+<div class="w-full md:w-1/2">
+<div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md relative group">
+<div class="absolute inset-0 bg-primary-container/10 group-hover:bg-transparent transition-colors duration-300 z-10 pointer-events-none"></div>
+<img alt="汽车销售AI辅助场景" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD-9YeuAZcBYky8zygUnrmpoH1bFnShkMM-rVMlvFIt-vdco9V2WTUaXa0yTv6sLC92-AsAXx-LK_j53fNknAZ2qH8I90RpA6nSK0MJKj3x6Xcdli3u-KfxGoYfzcwvFu-0sZ1kQZxRKC8BA62APxpJemG6IPylyjdUeGrSf8wiEu6UUgqd3iaoBDvHFcK-Cpxm3T0Zoq07YGWBbHoGX9l2NMDqyl_4J27f4HIpMh_Wq5K_onNbWHUIMdGsTzeIWLVADyDwc-OmXSQ"/>
+</div>
+</div>
+<div class="w-full md:w-1/2 flex flex-col gap-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-3xl" data-icon="directions_car">directions_car</span>
+</div>
+<h3 class="font-headline-lg text-headline-md text-on-surface">汽车销售场景</h3>
+</div>
+<ul class="flex flex-col gap-5 mt-2">
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-green-500 text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<div class="text-body-md">
+<strong class="font-semibold text-on-surface">电话邀约：</strong>
+<span class="text-on-surface-variant">辅助生成专业话术，自动记录通话关键信息。</span>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-green-500 text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<div class="text-body-md">
+<strong class="font-semibold text-on-surface">到店接待：</strong>
+<span class="text-on-surface-variant">提供AI模拟陪练，提升顾问实战接待能力。</span>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-green-500 text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<div class="text-body-md">
+<strong class="font-semibold text-on-surface">客户画像：</strong>
+<span class="text-on-surface-variant">在沟通中自动抽取客户偏好，实时完善客户档案。</span>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<!-- Scenario 2: Insurance Sales -->
+<div class="flex flex-col md:flex-row-reverse gap-12 items-center bg-surface-container-low rounded-3xl p-8 lg:p-12 border border-surface-variant/50 hover:shadow-lg transition-shadow duration-300">
+<div class="w-full md:w-1/2">
+<div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md relative group">
+<div class="absolute inset-0 bg-secondary/10 group-hover:bg-transparent transition-colors duration-300 z-10 pointer-events-none"></div>
+<img alt="保险销售AI辅助场景" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuACcFNlyCN4CezAENnSvZOx975eprWUTEMxUdEi6zO93__heqUIrgAAWPLdkwF4IrQYmDqe0Zo4rXaHudO316pdNMFtf1FswqIJa4hrLYuJUL8-3KCc5EmhsDH0Svm8iGu5mSKrh1PKzCXtJuWcb0JwQQsMCYNWA16wB_BBl7MwxXXpUz87woohstP-X1rEprk1yfnI9Uhtn_t2gLm9_LlQc0U0joavm0G6VBK0Z8nhvCmrvE8astUfq9fkRErSwv9NbUaiemkLX10"/>
+</div>
+</div>
+<div class="w-full md:w-1/2 flex flex-col gap-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-3xl" data-icon="health_and_safety">health_and_safety</span>
+</div>
+<h3 class="font-headline-lg text-headline-md text-on-surface">保险销售场景</h3>
+</div>
+<ul class="flex flex-col gap-5 mt-2">
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-green-500 text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<div class="text-body-md">
+<strong class="font-semibold text-on-surface">客户画像：</strong>
+<span class="text-on-surface-variant">精准提取客户核心需求与预算范围，提供针对性险种推荐。</span>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-green-500 text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<div class="text-body-md">
+<strong class="font-semibold text-on-surface">通话复盘：</strong>
+<span class="text-on-surface-variant">智能总结每次沟通要点，并给出下一步跟进建议及策略。</span>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<!-- Scenario 3: Education CS -->
+<div class="flex flex-col md:flex-row gap-12 items-center bg-surface-container-low rounded-3xl p-8 lg:p-12 border border-surface-variant/50 hover:shadow-lg transition-shadow duration-300">
+<div class="w-full md:w-1/2">
+<div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md relative group">
+<div class="absolute inset-0 bg-primary-container/10 group-hover:bg-transparent transition-colors duration-300 z-10 pointer-events-none"></div>
+<img alt="在线教育客服AI辅助场景" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtnBBxE2ozCAF5k263D0LeKR8fyQTUnJ_Uw5NLxvHuyVVURT4RuWwSvPxkXdJbz3D0DEM1vpICIP64V2NP0KcUFc1cDnvfHFbeKurZ3XZ8Q6YpFykwp7XyAHiO8AGAt1Kn5QdaEpiMxxwGHnn3Y1B9Wv8YVxM0uu8T2UoByVbocRXOUV7Q8CghK5WDiv0FWiz_jLMt_QmtRFm6aW-rRwZllI-fHrLlWnlruCo_3x7v_B0F-OWP-TdYwxyoVL2AK2IP3vyi6llHjTA"/>
+</div>
+</div>
+<div class="w-full md:w-1/2 flex flex-col gap-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-3xl" data-icon="school">school</span>
+</div>
+<h3 class="font-headline-lg text-headline-md text-on-surface">在线教育客服场景</h3>
+</div>
+<ul class="flex flex-col gap-5 mt-2">
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-green-500 text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<div class="text-body-md">
+<strong class="font-semibold text-on-surface">在线咨询：</strong>
+<span class="text-on-surface-variant">支持7x24小时不间断全天候接待，实现问题秒级精准回复。</span>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-green-500 text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<div class="text-body-md">
+<strong class="font-semibold text-on-surface">售后管理：</strong>
+<span class="text-on-surface-variant">对海量客诉进行自动分类打标，协助优化整体服务流程。</span>
+</div>
+</li>
+</ul>
+</div>
+</div>
+<!-- Scenario 4: General Service -->
+<div class="flex flex-col md:flex-row-reverse gap-12 items-center bg-surface-container-low rounded-3xl p-8 lg:p-12 border border-surface-variant/50 hover:shadow-lg transition-shadow duration-300">
+<div class="w-full md:w-1/2">
+<div class="aspect-[4/3] rounded-2xl overflow-hidden shadow-md relative group">
+<div class="absolute inset-0 bg-secondary/10 group-hover:bg-transparent transition-colors duration-300 z-10 pointer-events-none"></div>
+<img alt="通用服务AI辅助场景" class="w-full h-full object-cover transform group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC9YEj4SnTQISbPzA-_5xiRByb4u5ih5AHN61kTIVM-HTxs1Aqp-6o4GBXb_CZBNgV2W3mhCAChR3UDBNBeu8_rUWUUgDJa4Ris16hz-oN3wfzKmxKTF-32TMD62K2hSx-1oETqx2377Rh_skxhwP6bp6v3P3W5s-0mkHvZK-YLHU4dVXofV1zxdguTUPovdwe-i3XcfujGdSd7YuzYuME_smIpHZJlstEec_vMtprYKiVJgCTiwE7PGQrBbsTjDznBOLvvC2bbGm8"/>
+</div>
+</div>
+<div class="w-full md:w-1/2 flex flex-col gap-6">
+<div class="flex items-center gap-4">
+<div class="w-14 h-14 rounded-xl bg-primary-container/10 flex items-center justify-center">
+<span class="material-symbols-outlined text-primary-container text-3xl" data-icon="support_agent">support_agent</span>
+</div>
+<h3 class="font-headline-lg text-headline-md text-on-surface">通用服务场景</h3>
+</div>
+<ul class="flex flex-col gap-5 mt-2">
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-green-500 text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<div class="text-body-md">
+<strong class="font-semibold text-on-surface">服务质检：</strong>
+<span class="text-on-surface-variant">自动识别坐席话术是否违规，确保服务质量符合规范标准。</span>
+</div>
+</li>
+<li class="flex items-start gap-4">
+<span class="material-symbols-outlined text-green-500 text-xl mt-0.5" data-icon="check_circle">check_circle</span>
+<div class="text-body-md">
+<strong class="font-semibold text-on-surface">录音处理：</strong>
+<span class="text-on-surface-variant">支持一键语音转文字，并自动提取对话中的关键有效信息。</span>
+</div>
+</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Core Capabilities Section -->
+<section class="py-section-gap bg-surface border-t border-surface-variant/30">
+<div class="max-w-container-max mx-auto px-margin-mobile md:px-margin-desktop">
+<div class="text-center mb-16">
+<h2 class="font-headline-lg text-headline-lg text-on-surface mb-4">四大核心能力，全流程帮你省心省力</h2>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-12 gap-8">
+<!-- Card 1 -->
+<div class="lg:col-span-7 bg-surface-container-low rounded-3xl overflow-hidden border border-surface-variant/50 flex flex-col md:flex-row group hover:shadow-lg transition-shadow duration-300">
+<div class="p-8 md:w-1/2 flex flex-col gap-6 justify-center z-10 bg-surface-container-low">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-primary" data-icon="forum">forum</span> 对话全流程提效</h3>
+<ul class="flex flex-col gap-4">
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">知识问答：</strong><span class="text-on-surface-variant">产品、政策、FAQ秒级响应，回复专业无偏差</span></div>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">通话总结：</strong><span class="text-on-surface-variant">销售对话一键提炼要点，生成跟进策略</span></div>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-primary mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">虚拟陪练：</strong><span class="text-on-surface-variant">AI模拟真实场景陪练，快速提升一线人员沟通能力</span></div>
+</li>
+</ul>
+</div>
+<div class="md:w-1/2 relative h-64 md:h-auto overflow-hidden">
+<div class="absolute inset-0 bg-primary/20 mix-blend-overlay z-10"></div>
+<img alt="对话全流程提效" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBF8VtQC9pOaHdtU3LSc7ELSZbHCAxNLsVrZb58nH-q7NpZq3uF2SuL3jt2HGUtsSMuVCxld3xtMpWEhXgQLhJ6owQmQaxuaudUxX61c4vIyqZhkXibXWQmBPOj-c_zj61rYUkN11kgxQltC1MNkti6sRzVfXVa3xylTjPtwzQJdSpFQDZbvwDEQH9sb7pEkCuFhTYyxMj3mxFbbebMgYgDVgGP_hu0Q_OOObwRGiXvfN3qB8yzQF7LPVt_T6w8I4MIH1IOMaIdWf8"/>
+</div>
+</div>
+<!-- Card 2 -->
+<div class="lg:col-span-5 bg-surface-container-low rounded-3xl overflow-hidden border border-surface-variant/50 flex flex-col group hover:shadow-lg transition-shadow duration-300">
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-secondary/20 mix-blend-overlay z-10"></div>
+<img alt="数据智能沉淀" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZK1W6oFI_qSqDgGllVRjpMQFFCgz4b2scJOZNU2a4e5ZIrXBHcrQCCtzlt9SpIKkU_U28jNGIndhTQAKxs9TLjjUT5Qo1qoC0OjPFXCnSgKIuf5b_Jf4mdddIUVPKhhKoI4lzu6Dv49HDW6DEaNMIJhzchoOgU_Q2UvlEn37FUsMCtKn3bzsKBtyRUyGwtG7ynnre-38PNNc_uks96oBvIaGtqt4mMaTEZr5J6JTSDufV4GcNYflXmsV-4iK03DHA5uxJL9IjcHU"/>
+</div>
+<div class="p-8 flex flex-col gap-6 justify-center flex-1 z-10 bg-surface-container-low">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-secondary" data-icon="database">database</span> 数据智能沉淀</h3>
+<ul class="flex flex-col gap-4">
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">信息抽取：</strong><span class="text-on-surface-variant">从对话中自动提取客户画像、需求等关键信息</span></div>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">分类打标：</strong><span class="text-on-surface-variant">客户意向、售后反馈快速分类，沉淀业务数据</span></div>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-secondary mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">服务质检：</strong><span class="text-on-surface-variant">智能质检接待流程，规范销售话术执行</span></div>
+</li>
+</ul>
+</div>
+</div>
+<!-- Card 3 -->
+<div class="lg:col-span-5 bg-surface-container-low rounded-3xl overflow-hidden border border-surface-variant/50 flex flex-col group hover:shadow-lg transition-shadow duration-300">
+<div class="p-8 flex flex-col gap-6 justify-center flex-1 z-10 bg-surface-container-low">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-green-600" data-icon="hub">hub</span> 多渠道智能响应</h3>
+<ul class="flex flex-col gap-4">
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600 mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">智能客服/外呼：</strong><span class="text-on-surface-variant">多渠道接待咨询、批量外呼跟进线索</span></div>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-green-600 mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">情绪检测：</strong><span class="text-on-surface-variant">识别客户对话情绪，辅助调整沟通策略</span></div>
+</li>
+</ul>
+</div>
+<div class="relative h-48 overflow-hidden">
+<div class="absolute inset-0 bg-green-600/20 mix-blend-overlay z-10"></div>
+<img alt="多渠道智能响应" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuC2tuqqABZ4UHieZNSGKZI2mj5O7LUqtpP4tZ2IUDQHDHnfSKRDYRsmXgid9Mo6SNfxFmMlHj41cYy18DEWLid-dnaRrfldGd7kUiNHGsFk1tvbCQPCnmMyOt3r-EpxO91bZ1clFhsRMZAeaZHDPyCGhVkykQ1D4Qx4h5RFw4LymnCWkmVpr1QWT78P9-I0TLQW_8Hjs3IhDvDPcpAKLs8xTeUM5VvbDhIILOJX1kqvTMJiInVmDNDosNVSIHG--GFcqJAwKKlg27w"/>
+</div>
+</div>
+<!-- Card 4 -->
+<div class="lg:col-span-7 bg-surface-container-low rounded-3xl overflow-hidden border border-surface-variant/50 flex flex-col md:flex-row-reverse group hover:shadow-lg transition-shadow duration-300">
+<div class="p-8 md:w-[55%] flex flex-col gap-6 justify-center z-10 bg-surface-container-low">
+<h3 class="font-headline-md text-headline-md text-on-surface flex items-center gap-2"><span class="material-symbols-outlined text-blue-500" data-icon="verified_user">verified_user</span> 企业级保障，快速落地无负担</h3>
+<ul class="flex flex-col gap-4">
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">懂业务的AI能力：</strong><span class="text-on-surface-variant">依托豆包大模型，理解精准，回应自然</span></div>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">数据安全可控：</strong><span class="text-on-surface-variant">支持私有化部署，数据全流程加密</span></div>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">低门槛快速上线：</strong><span class="text-on-surface-variant">低代码配置，无需复杂开发，适配业务场景</span></div>
+</li>
+<li class="flex items-start gap-3">
+<span class="w-1.5 h-1.5 rounded-full bg-blue-500 mt-2 shrink-0"></span>
+<div class="text-body-sm"><strong class="text-on-surface">专属技术支持：</strong><span class="text-on-surface-variant">全流程服务，助力快速落地AI对话场景</span></div>
+</li>
+</ul>
+</div>
+<div class="md:w-[45%] relative h-64 md:h-auto overflow-hidden">
+<div class="absolute inset-0 bg-blue-500/20 mix-blend-overlay z-10"></div>
+<img alt="企业级保障" class="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" src="https://lh3.googleusercontent.com/aida-public/AB6AXuABx7gA7Rtb4eVzCKvvbaCRNo_LHtjQSa5NAcH5X-ynYZGkaaEmkGdjlSzrjlW3Rar2p9tKQBYX4Edg0qyTQ1ujQs-z0VE1KquyX86D0URywEWKPXZ8Qya4cWPu_jw06nrlWoYJG1azdyfwWXSf4nEDVQB2J3N95p5_kzzxOCNHty14co_Xg_SMoXVei-_wu9If-JS00BhDt-8v2hRvT8AKqTLgIXe3MPpyP9GDGJkZwX0simEc_InqVklXr4lQv9Hvxslt6t0DV_o"/>
+</div>
+</div>
+</div>
+</div>
+</section>
+<!-- Footer -->
+<footer class="w-full py-16 bg-slate-50 dark:bg-slate-900 border-t border-slate-200 dark:border-slate-800 font-manrope text-sm">
+<div class="max-w-7xl mx-auto px-8 grid grid-cols-2 md:grid-cols-4 gap-12">
+<div class="col-span-2 md:col-span-1">
+<a class="text-lg font-bold text-slate-900 dark:text-white tracking-tighter block mb-4" href="#">MarketAI</a>
+<p class="text-slate-500 dark:text-slate-400 mt-4">© 2024 MarketAI Enterprise. Precision Intelligent Growth.</p>
+</div>
+<div class="col-span-2 md:col-span-3 grid grid-cols-2 md:grid-cols-3 gap-8">
+<div class="flex flex-col gap-4">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors underline-offset-4 hover:underline" href="#">Product</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors underline-offset-4 hover:underline" href="#">Solutions</a>
+</div>
+<div class="flex flex-col gap-4">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors underline-offset-4 hover:underline" href="#">Privacy</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors underline-offset-4 hover:underline" href="#">Terms</a>
+</div>
+<div class="flex flex-col gap-4">
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors underline-offset-4 hover:underline" href="#">Security</a>
+<a class="text-slate-500 dark:text-slate-400 hover:text-blue-600 dark:hover:text-blue-400 transition-colors underline-offset-4 hover:underline" href="#">LinkedIn</a>
+</div>
+</div>
+</div>
+</footer>
+</body></html>

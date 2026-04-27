@@ -58,7 +58,7 @@ const categories = computed(() => {
 
   let result = Object.values(groups);
 
-  const aiToolIndex = result.findIndex(item => item.title === "AI 工具");
+  const aiToolIndex = result.findIndex((item) => item.title === "AI 工具");
   if (aiToolIndex > 0) {
     const aiToolItem = result.splice(aiToolIndex, 1)[0];
     result.unshift(aiToolItem);
@@ -72,6 +72,12 @@ onMounted(() => {
 });
 
 const handleEnter = (app: Application) => {
+  if ((app.name = "AI合同审核")) {
+    if (!localStorage.getItem("token")) {
+      router.push({ path: "/login", query: { redirect: "/apps" } });
+      return;
+    }
+  }
   if (app.url === "#") {
     console.log("Component not ready yet");
     return;
@@ -79,7 +85,7 @@ const handleEnter = (app: Application) => {
   if (app.url.startsWith("http") || app.url.startsWith("https")) {
     window.open(app.url, "_blank");
   } else {
-    window.open(app.url, '_blank');
+    window.open(app.url, "_blank");
   }
 };
 </script>
@@ -93,8 +99,11 @@ const handleEnter = (app: Application) => {
 
     <main class="app-main wrapper">
       <!-- 每个分类作为一个独立的带框模块 -->
-      <div v-for="(category, idx) in categories" :key="idx" class="category-module">
-        
+      <div
+        v-for="(category, idx) in categories"
+        :key="idx"
+        class="category-module"
+      >
         <div class="module-content">
           <!-- 分类头部 -->
           <div class="category-header">
@@ -106,12 +115,16 @@ const handleEnter = (app: Application) => {
 
           <!-- 应用网格 -->
           <div class="app-grid">
-            <div v-for="(app, index) in category.apps" :key="app.name" class="app-card" :class="{ 'span-two': index === 0 }">
-              
+            <div
+              v-for="(app, index) in category.apps"
+              :key="app.name"
+              class="app-card"
+              :class="{ 'span-two': index === 0 }"
+            >
               <div class="app-card-image" @click="handleEnter(app)">
                 <img :src="app.coverImage" :alt="app.name" />
               </div>
-              
+
               <div class="app-card-content">
                 <div class="app-card-header">
                   <div class="app-icon-box">
@@ -159,7 +172,7 @@ const handleEnter = (app: Application) => {
 
 .app-main {
   /* 顶部留出 NavBar 空间，底部留少许呼吸感 */
-  padding: 80px 0 40px; 
+  padding: 80px 0 40px;
   max-width: 1200px;
   margin-left: auto;
   margin-right: auto;
@@ -175,15 +188,15 @@ const handleEnter = (app: Application) => {
   border-radius: 20px;
   border: 1px solid #e2e8f0;
   box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  
+
   margin-bottom: 30px;
   /* 关键：减小上下 padding，从 40px 减到 24px */
-  padding: 24px 32px; 
-  
+  padding: 24px 32px;
+
   /* 关键：强制最小高度为视口高度减去导航栏和 margins */
   /* 100vh - 80px(top padding) - 40px(bottom padding) - 30px(margin) ≈ 85vh */
   min-height: calc(100vh - 150px);
-  
+
   display: flex;
   flex-direction: column;
   justify-content: center; /* 垂直居中，让内容看起来充满屏幕 */
@@ -192,7 +205,7 @@ const handleEnter = (app: Application) => {
 .module-content {
   width: 100%;
   /* 限制最大宽度，防止在大屏上拉得太长导致视觉空旷 */
-  max-width: 1100px; 
+  max-width: 1100px;
   margin: 0 auto;
 }
 
@@ -262,7 +275,7 @@ const handleEnter = (app: Application) => {
 
 .app-card-image {
   /* 关键：大幅减小图片高度，从 160px 降到 120px */
-  height: 120px; 
+  height: 120px;
   position: relative;
   overflow: hidden;
   background: #f8fafc;
@@ -413,7 +426,7 @@ const handleEnter = (app: Application) => {
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
   }
-  
+
   .app-grid .app-card.span-two {
     grid-column: span 2;
   }
@@ -438,11 +451,11 @@ const handleEnter = (app: Application) => {
   .app-name {
     font-size: 0.85rem;
   }
-  
+
   .app-desc {
     display: none;
   }
-  
+
   .btn-enter {
     padding: 6px;
     font-size: 0.75rem;
@@ -461,7 +474,7 @@ const handleEnter = (app: Application) => {
   .app-card-image {
     height: 130px;
   }
-  
+
   .app-desc {
     display: -webkit-box;
     height: 2.2em;

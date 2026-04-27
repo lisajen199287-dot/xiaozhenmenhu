@@ -4,6 +4,8 @@ import { ref, onMounted, onUnmounted } from "vue";
 import { RouterLink } from "vue-router";
 import * as newApi from "@/api/newApi/index";
 import { ElMessage } from "element-plus";
+import { useRouter } from "vue-router";
+const router = useRouter();
 const categories = [
   {
     id: "short-video",
@@ -123,17 +125,28 @@ const handleSubmit = async () => {
 const agreementContent = ref("");
 const showAgreementModal = ref(false);
 const goLumi = async () => {
-  const res = await newApi.apiAgAgreementHasAgreed();
-  if (res) {
-    //已签协议
-    const res1 = await newApi.apiGoLumi();
-    window.open(res1.redirect_url, "_blank");
+  if (localStorage.getItem("token") || "") {
+    try {
+      const res1 = await newApi.apiGoLumi();
+      const res = await newApi.apiAgAgreementHasAgreed();
+      if (res) {
+        //已签协议
+        window.open(res1.redirect_url, "_blank");
+      } else {
+        //获取协议接口
+        const res1 = await newApi.apiAgAgreement();
+        agreementContent.value = res1;
+        //展示弹窗
+        showAgreementModal.value = true;
+      }
+    } catch (e) {
+      console.error("Error going to Lumi:", e);
+      scrollToForm();
+      return;
+    }
   } else {
-    //获取协议接口
-    const res1 = await newApi.apiAgAgreement();
-    agreementContent.value = res1;
-    //展示弹窗
-    showAgreementModal.value = true;
+    //未登录，跳转到登录页
+    router.push({ path: "/login", query: { redirect: "/lumi" } });
   }
 };
 

@@ -480,18 +480,55 @@
 
     <!-- 全局底部悬浮窗 -->
     <div class="global-bottom-floating-window">
-      <div class="floating-content">
-        <!-- <input
-          type="text"
-          v-model="phone"
-          placeholder="请输入手机号"
-          class="phone-input"
-        /> -->
-        <div class="apply-btn1" @click="applyUse">申请使用</div>
-        <div class="apply-btn2" @click="goWechat()">
-          客服微信
+      <img
+        data-v-f54f3e5e=""
+        class="cta-bg"
+        src="@/assets/images/claw/cta-bar.png"
+        alt=""
+        aria-hidden="true"
+      />
+      <div data-v-f54f3e5e="" class="cta-clean-fill" aria-hidden="true"></div>
+      <div data-v-f54f3e5e="" class="cta-slogan" aria-hidden="true">
+        <strong data-v-f54f3e5e="">立即体验</strong>
+        <span data-v-f54f3e5e="">高效新方式！</span>
+      </div>
+      <div data-v-f54f3e5e="" class="lead-form">
+        <button
+          data-v-f54f3e5e=""
+          v-if="isPermission"
+          type="submit"
+          @click="handleClick"
+        >
+          立即使用
+        </button>
+        <button data-v-f54f3e5e="" type="submit" v-else @click="applyUse">
+          马上申请 →
+        </button>
+        <button
+          data-v-f54f3e5e=""
+          class="secondary"
+          type="button"
+          @click="goWechat()"
+        >
+          客服
+        </button>
+      </div>
+      <div data-v-f54f3e5e="" class="cta-benefits" aria-hidden="true">
+        <div data-v-f54f3e5e="" class="cta-benefit">
+          <span data-v-f54f3e5e="">↓</span
+          ><strong data-v-f54f3e5e="">无需安装</strong
+          ><em data-v-f54f3e5e="">云端运行</em>
+        </div>
+        <div data-v-f54f3e5e="" class="cta-benefit">
+          <span data-v-f54f3e5e="">◆</span
+          ><strong data-v-f54f3e5e="">安全可靠</strong
+          ><em data-v-f54f3e5e="">数据加密保护</em>
         </div>
       </div>
+      <!-- <div class="floating-content">
+        <div class="apply-btn1" @click="applyUse">申请使用</div>
+        <div class="apply-btn2" @click="goWechat()">客服微信</div>
+      </div> -->
     </div>
   </div>
 </template>
@@ -568,9 +605,14 @@ const applyUse = async () => {
     // if (!phone.value) return ElMessage.error("请输入联系人手机号");
     // scrollToForm();
     const res = apiAdmSolutionRequests({
+      solutionName: "福龙Claw",
       phone: phone.value,
+      company: phone.value,
+      contact: phone.value,
+      demand: phone.value,
+      wxAccount: phone.value,
+      email: phone.value,
     });
-    phone.value = "";
     ElMessageBox.confirm(
       "您已经成功申请福龙Claw, 稍后会为您开通权限！联系客服人员可咨询办理详情。",
       "提示",
@@ -598,8 +640,50 @@ const init = async () => {
     phone.value = res?.mobile || "";
   }
 };
+
+const isPermission = ref(false);
+const isPermissionCheck = async () => {
+  //判断是否登录，是否开通了福龙Claw服务
+  const isLogin = localStorage.getItem("token") || "";
+  if (isLogin) {
+    //已登录，判断是否开通了福龙Claw服务
+    const res = await newApi.apiCheckAuth2AuthorizeCode();
+    isPermission.value = res;
+  } else {
+    isPermission.value = false;
+  }
+};
+
+const handleClick = async () => {
+  //检查当前用户是否已激活
+  const res = await newApi.apiCheckActivation();
+  const isFirstUse = res.activated;
+  //是否第一次使用福龙Claw服务
+  if (!isFirstUse) {
+    //调用接口，保存福龙Claw服务
+    const activateRes = await newApi.clawActivate({
+      version: "V2",
+      message: "您已激活了福龙Claw服务",
+    });
+    //获取默认激活信息
+    const defaultRes = await newApi.clawDefault();
+    ElMessageBox.confirm(defaultRes.message, "提示", {
+      confirmButtonText: "确认",
+      cancelButtonText: "取消",
+    }).then(() => {
+      const url =
+        "https://sd7g8p2f70099ijhlupg0.apigateway-cn-shanghai.volceapi.com";
+      window.open(url, "_blank");
+    });
+  } else {
+    const url =
+      "https://sd7g8p2f70099ijhlupg0.apigateway-cn-shanghai.volceapi.com";
+    window.open(url, "_blank");
+  }
+};
 onMounted(() => {
   init();
+  isPermissionCheck();
 });
 </script>
 
@@ -648,20 +732,191 @@ onMounted(() => {
 
 /* 全局底部悬浮窗 */
 .global-bottom-floating-window {
+  position: relative;
   position: fixed;
-  bottom: 10px;
-  left: 50%;
-  transform: translateX(-50%);
-  border-radius: 12px;
-  z-index: 1000;
-  max-width: 600px;
-  height: 103px;
-  width: 90%;
-  background: url("@/assets/images/claw/input_bgc.png") no-repeat;
-  background-size: 100% 100%;
-  display: flex;
-  align-items: center;
-  justify-content: right;
+  left: 19%;
+  right: 19%;
+  bottom: 2%;
+  height: 8.9%;
+  border-radius: 999px;
+  filter: drop-shadow(0 16px 36px rgba(255, 85, 25, 0.28));
+  // background: url("@/assets/images/claw/cta-bar.png") no-repeat;
+  // background-size: 100% 100%;
+  // display: flex;
+  // align-items: center;
+  // justify-content: right;
+  .cta-clean-fill {
+    position: absolute;
+    z-index: 1;
+    inset: 0 26% 0 26.4%;
+    background: linear-gradient(90deg, #ff5719, #ff6818 46%, #ff7d18);
+  }
+  .cta-bg {
+    position: absolute;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: fill;
+    border-radius: inherit;
+    pointer-events: none;
+  }
+  .cta-slogan {
+    position: absolute;
+    z-index: 2;
+    left: 16.4%;
+    top: 0;
+    bottom: 0;
+    width: 14.2%;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: 5px;
+    padding-left: 2.2%;
+    background: linear-gradient(90deg, #ff5019, #ff5719 48%, #ff6119);
+    color: #fff;
+    text-shadow: 0 1px 0 rgba(255, 255, 255, 0.12);
+    height: 100%;
+    strong {
+      display: block;
+      font-weight: 950;
+      line-height: 1.08;
+      white-space: nowrap;
+    }
+    span {
+      display: block;
+      font-weight: 950;
+      line-height: 1.08;
+      white-space: nowrap;
+    }
+  }
+  .lead-form {
+    position: absolute;
+    z-index: 3;
+    left: 36.8%;
+    top: 19%;
+    width: 24%;
+    height: 58%;
+    min-width: 0;
+    display: grid;
+    grid-template-columns: 1fr 0.56fr;
+    gap: 8px;
+    border-radius: 999px;
+    background-color: #ff7418;
+    button {
+      border: 0;
+      background: linear-gradient(180deg, #ffe879, #ffc82e);
+      color: #241807;
+      font: 950 clamp(12px, 1.22vw, 20px) / 1 "PingFang SC", "Microsoft YaHei",
+        sans-serif;
+      cursor: pointer;
+      white-space: nowrap;
+      border-radius: 999px;
+      font-weight: 600;
+      box-shadow: inset 0 2px #ffffff59, 0 8px 18px #703c001f;
+    }
+    .secondary {
+      background: #fffffff5;
+      color: #ff5a17;
+      border: 2px solid rgba(255, 208, 108, 0.9);
+      box-shadow: 0 8px 18px #703c0014;
+      cursor: pointer;
+      white-space: nowrap;
+      border-radius: 999px;
+      font: 950 clamp(12px, 1.22vw, 20px) / 1 "PingFang SC", "Microsoft YaHei",
+        sans-serif;
+      font-weight: 600;
+    }
+  }
+  .cta-benefits {
+    position: absolute;
+    z-index: 2;
+    inset: 0 0 0 68%;
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: center;
+    gap: 2%;
+    padding: 0 5.2% 0 3.6%;
+    border-radius: 0 999px 999px 0;
+    background: linear-gradient(90deg, #ff7f18, #ff8118 42%, #ff7415);
+    .cta-benefit {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      column-gap: 10px;
+      align-items: center;
+      min-width: 0;
+      color: #fff;
+      span {
+        grid-row: 1 / 3;
+        width: clamp(28px, 2.7vw, 44px);
+        height: clamp(28px, 2.7vw, 44px);
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: #ff6815;
+        font-size: clamp(15px, 1.5vw, 24px);
+        font-weight: 950;
+        font-family: PingFang SC, Microsoft YaHei, Helvetica Neue, Arial,
+          sans-serif;
+      }
+      strong {
+        color: #fff;
+        font-size: clamp(12px, 1.08vw, 18px);
+        font-weight: 950;
+        line-height: 1.1;
+        white-space: nowrap;
+      }
+      em {
+        margin-top: 4px;
+        color: #ffffffeb;
+        font-size: clamp(9px, 0.78vw, 13px);
+        font-style: normal;
+        font-weight: 850;
+        line-height: 1.1;
+        white-space: nowrap;
+      }
+    }
+    .cta-benefit {
+      display: grid;
+      grid-template-columns: auto minmax(0, 1fr);
+      grid-template-rows: auto auto;
+      column-gap: 10px;
+      align-items: center;
+      min-width: 0;
+      color: #fff;
+      span {
+        grid-row: 1 / 3;
+        width: clamp(28px, 2.7vw, 44px);
+        height: clamp(28px, 2.7vw, 44px);
+        display: grid;
+        place-items: center;
+        border-radius: 999px;
+        background: #fff;
+        color: #ff6815;
+        font-size: clamp(15px, 1.5vw, 24px);
+        font-weight: 950;
+        font-family: PingFang SC, Microsoft YaHei, Helvetica Neue, Arial,
+          sans-serif;
+      }
+      .strong {
+        color: #fff;
+        font-size: clamp(12px, 1.08vw, 18px);
+        font-weight: 950;
+        line-height: 1.1;
+        white-space: nowrap;
+      }
+      em {
+        margin-top: 4px;
+        color: #ffffffeb;
+        font-size: clamp(9px, 0.78vw, 13px);
+        font-style: normal;
+        font-weight: 850;
+        line-height: 1.1;
+        white-space: nowrap;
+      }
+    }
+  }
 }
 
 .floating-content {
@@ -673,12 +928,12 @@ onMounted(() => {
   height: 36px;
   width: 100px;
   height: 50px;
-  background: #ff5a00;
-  color: white;
+  background: #fee066;
+  color: #000;
   border: none;
   font-size: 16px;
   font-weight: 600;
-  border-radius: 10px;
+  border-radius: 25px;
 
   line-height: 50px;
   text-align: center;
@@ -688,12 +943,12 @@ onMounted(() => {
   height: 36px;
   width: 100px;
   height: 50px;
-  background: #e0804c;
-  color: rgba(255, 255, 255, 0.9);
+  background: #fef9f5;
+  color: #e97041;
   border: none;
   font-size: 15px;
   font-weight: 500;
-  border-radius: 10px;
+  border-radius: 25px;
 
   line-height: 50px;
   text-align: center;
@@ -1022,30 +1277,26 @@ onMounted(() => {
 
   /* 全局底部悬浮窗响应式调整 */
   .global-bottom-floating-window {
-    width: 95%;
+    left: 5%;
+    right: 5%;
     height: auto;
-    min-height: 80px;
+    min-height: 100px;
+    border-radius: 20px;
   }
 
-  .phone-input {
-    width: 120px;
-    padding: 12px 16px;
-    font-size: 14px;
+  .cta-slogan {
+    left: 10%;
+    width: 20%;
   }
 
-  .apply-btn1 {
-    height: 36px;
-    width: 70px;
-    height: 34px;
-    background: #ff5a00;
-    color: white;
-    border: none;
-    font-size: 14px;
-    font-weight: 600;
-    border-radius: 0 10px 10px 0;
-    line-height: 34px;
-    text-align: center;
-    margin-right: 20px;
+  .lead-form {
+    left: 35%;
+    width: 30%;
+    display: flex;
+  }
+
+  .cta-benefits {
+    inset: 0 0 0 70%;
   }
 }
 
@@ -1062,21 +1313,55 @@ onMounted(() => {
 
   /* 超小屏幕底部悬浮窗调整 */
   .global-bottom-floating-window {
-    width: 98%;
-    bottom: 10px;
+    left: 5%;
+    right: 5%;
+    bottom: 20px;
+    height: auto;
+    min-height: 80px;
+    border-radius: 20px;
+    background: linear-gradient(90deg, #ff5719, #ff6818 46%, #ff7d18);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 15px 20px;
   }
 
-  .phone-input {
-    width: 100px;
-    padding: 10px 12px;
-    font-size: 12px;
+  /* 隐藏复杂元素，只显示核心内容 */
+  .global-bottom-floating-window .cta-bg,
+  .global-bottom-floating-window .cta-clean-fill,
+  .global-bottom-floating-window .cta-benefits {
+    display: none;
   }
 
-  .apply-btn {
-    width: 70px;
-    height: 36px;
+  /* 调整移动端布局 */
+  .global-bottom-floating-window .cta-slogan {
+    position: static;
+    width: auto;
+    background: none;
+    padding: 0;
+    flex: 0.8;
+  }
+
+  .global-bottom-floating-window .lead-form {
+    position: static;
+    width: auto;
+    grid-template-columns: 1fr;
+    gap: 10px;
+    background: none;
+    flex: 1;
+    min-width: 150px;
+    display: flex;
+  }
+
+  .global-bottom-floating-window .lead-form button {
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 20px;
+  }
+
+  .global-bottom-floating-window .lead-form .secondary {
     font-size: 12px;
-    line-height: 36px;
+    padding: 6px 12px;
   }
 }
 

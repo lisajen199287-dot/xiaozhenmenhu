@@ -769,7 +769,7 @@ onUnmounted(() => {
 
           <!-- Card 5: Industry Analysis (Business Strategy) -->
           <!-- @click="goPPT()" -->
-          <div class="scenario-card-v5">
+          <div class="scenario-card-v5" @click="goPPT()">
             <div class="card-meta">
               <span class="model-tag">Industry-PPT-Gen</span>
               <i class="fas fa-file-powerpoint"></i>
@@ -1796,7 +1796,7 @@ onUnmounted(() => {
   background: #f8faff;
   overflow: hidden;
 }
-.wechat-qrcode{
+.wechat-qrcode {
   width: 100%;
 }
 /* Video Flow UI - Fixed & Refined */
