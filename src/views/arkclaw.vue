@@ -614,7 +614,7 @@ const applyUse = async () => {
       email: phone.value,
     });
     ElMessageBox.confirm(
-      "您已经成功申请福龙Claw, 稍后会为您开通权限！联系客服人员可咨询办理详情。",
+      "您已成功申请福龙 Claw，稍后将有客服人员与您联系，协助办理购买事宜。如需咨询详情，可直接联系客服。",
       "提示",
       {
         confirmButtonText: "确定",
