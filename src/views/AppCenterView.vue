@@ -480,4 +480,17 @@ const handleEnter = (app: Application) => {
     height: 2.2em;
   }
 }
+/* 大屏下取消强制视口高度，让内容自然展示，减少无谓空白 */
+@media (min-width: 1440px) {
+  .category-module {
+
+    min-height: auto; 
+    justify-content: flex-start; 
+    padding: 40px 40px; 
+  }
+  
+  .app-main {
+    padding: 100px 0 60px; 
+  }
+}
 </style>
