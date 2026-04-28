@@ -486,7 +486,7 @@ export const useAdminStore = () => {
             id: 1,
             industry: '游戏互娱',
             category: '游戏',
-            client: '某头部游戏公司',
+            client: '大吕网游',
             logo: 'fas fa-gamepad',
             bigTitle: 'AI 客服知识库 × 混合云 CDN',
             painPoint: '打造智能客服与全球内容分发体系，让游戏服务与运营效率全面升级',
@@ -531,7 +531,7 @@ export const useAdminStore = () => {
             id: 2,
             industry: '食品工业',
             category: '助手',
-            client: '某冷冻食品工厂',
+            client: '素天下食品',
             logo: 'fas fa-utensils',
             bigTitle: 'AI 销售陪练系统',
             painPoint: 'AI 赋能，打造“金牌销冠”数字化导师',
@@ -576,7 +576,7 @@ export const useAdminStore = () => {
             id: 3,
             industry: '跨境贸易',
             category: '电商',
-            client: '某跨境大卖',
+            client: '云帆跨境',
             logo: 'fas fa-shopping-bag',
             bigTitle: 'AI 电商视频生成',
             painPoint: '构建 AI 商品视频生产体系，让商品内容规模化出海',
@@ -621,7 +621,7 @@ export const useAdminStore = () => {
             id: 4,
             industry: '连锁新茶饮',
             category: '品牌',
-            client: '某连锁茶饮品牌',
+            client: '水水葡京饮品',
             logo: 'fas fa-coffee',
             bigTitle: '客户扫码定制包装',
             painPoint: '打造用户共创包装与互动营销新体验',
@@ -666,7 +666,7 @@ export const useAdminStore = () => {
             id: 5,
             industry: '服装制造',
             category: '时尚',
-            client: '某国际运动品牌',
+            client: 'TITANEO 泰坦欧运动',
             logo: 'fas fa-tshirt',
             bigTitle: '电商内容流水线',
             painPoint: '构建 AI 电商内容生产中台，让素材生产规模化工业化',
@@ -681,7 +681,7 @@ export const useAdminStore = () => {
             tag: '工业质检',
             content: `
                 <h2>项目背景</h2>
-                <p>该客户为某国际一线运动装备品牌，其电商部门每月需上线数百款新品。传统电商素材产出依赖极其庞大的摄影团队和后期团队，这种“手工作坊式”的模式已无法支撑全渠道、全球化的营销需求。</p>
+                <p>该客户为TITANEO 泰坦欧运动一线运动装备品牌，其电商部门每月需上线数百款新品。传统电商素材产出依赖极其庞大的摄影团队和后期团队，这种“手工作坊式”的模式已无法支撑全渠道、全球化的营销需求。</p>
                 
                 <h2>核心挑战</h2>
                 <ul>
@@ -711,7 +711,7 @@ export const useAdminStore = () => {
             id: 6,
             industry: '汽车科技',
             category: '汽车',
-            client: '某大型新能源汽车品牌',
+            client: '乐道汽车',
             logo: 'fas fa-car',
             bigTitle: 'AI 销售训练 × 数字人视频',
             painPoint: '打造 AI 汽车销售与视频内容体系，让营销与培训全面数字化',
@@ -756,7 +756,7 @@ export const useAdminStore = () => {
             id: 7,
             industry: '园区服务',
             category: '政务',
-            client: '某产业园管委会',
+            client: '福州互联网小镇',
             logo: 'fas fa-city',
             bigTitle: '园区企业经营分析与政策匹配',
             painPoint: '构建 AI 园区运营大脑，让企业服务精准高效',
@@ -771,7 +771,7 @@ export const useAdminStore = () => {
             tag: '政务办公',
             content: `
                 <h2>项目背景</h2>
-                <p>某高新区产业园管委会负责管理区内 6000 余家科技型企业。随着国家及地方政策的出台频率加快，如何将纷繁复杂的政策精准、及时地送达到每一家符合条件的企业手中，成为提升营商环境的关键挑战。</p>
+                <p>福州互联网小镇产业园管委会负责管理区内 6000 余家科技型企业。随着国家及地方政策的出台频率加快，如何将纷繁复杂的政策精准、及时地送达到每一家符合条件的企业手中，成为提升营商环境的关键挑战。</p>
                 
                 <h2>核心挑战</h2>
                 <ul>
@@ -801,7 +801,7 @@ export const useAdminStore = () => {
             id: 8,
             industry: '金融投资',
             category: '金融',
-            client: '某投资集团',
+            client: '嘉鼎投资集团',
             logo: 'fas fa-file-invoice-dollar',
             bigTitle: '企业投研报告智能体',
             painPoint: '构建 AI 投研分析与报告生成体系，让投资决策更高效',
@@ -846,7 +846,7 @@ export const useAdminStore = () => {
             id: 9,
             industry: '数据服务',
             category: '技术',
-            client: '数据服务公司',
+            client: '果集',
             logo: 'fas fa-chart-line',
             bigTitle: '营销趋势洞察',
             painPoint: '打造 AI 营销洞察与趋势分析系统，让数据价值可直接决策',
@@ -861,7 +861,7 @@ export const useAdminStore = () => {
             tag: '趋势洞察',
             content: `
                 <h2>项目背景</h2>
-                <p>该数据服务公司长期面向消费品牌提供市场监测数据。在海量消费数据面前，传统的 BI 报表只能告诉客户“发生了什么”，而难以回答“为什么发生”以及“未来会怎样”。</p>
+                <p>果集长期面向消费品牌提供市场监测数据。在海量消费数据面前，传统的 BI 报表只能告诉客户“发生了什么”，而难以回答“为什么发生”以及“未来会怎样”。</p>
                 
                 <h2>核心挑战</h2>
                 <ul>
