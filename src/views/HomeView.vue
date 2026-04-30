@@ -725,8 +725,7 @@ onUnmounted(() => {
           </div>
 
           <!-- Card 4: QA Bot (Data Intelligence) -->
-          <!-- @click="router.push('/agent')" -->
-          <div class="scenario-card-v5">
+          <div class="scenario-card-v5" @click="router.push('/ai-conversation')">
             <div class="card-meta">
               <span class="model-tag">AI CS Agent</span>
               <i class="fas fa-chart-pie"></i>
