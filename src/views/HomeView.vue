@@ -725,17 +725,22 @@ onUnmounted(() => {
           </div>
 
           <!-- Card 4: QA Bot (Data Intelligence) -->
-          <div class="scenario-card-v5" @click="router.push('/agent')">
+          <div class="scenario-card-v5" @click="router.push('/ai-conversation')">
             <div class="card-meta">
-              <span class="model-tag">Enterprise-LLM</span>
+              <span class="model-tag">AI CS Agent</span>
               <i class="fas fa-chart-pie"></i>
             </div>
-            <h3 class="card-title-v5">企业知识智能问答</h3>
+            <h3 class="card-title-v5">企业AI客服</h3>
             <p class="card-subtitle-v5">
-              搜索即所得，秒级拉取经营数据并生成可视化报表
+              7×24无休解答产品及服务咨询，融合私有知识库，提升整体满意度。
             </p>
             <div class="v5-visual qa-data-ui">
-              <div class="search-entry">
+              <img
+                src="@/assets/images/app-ai-cs.png"
+                alt="企业AI客服"
+                class="wechat-qrcode"
+              />
+              <!-- <div class="search-entry">
                 <i class="fas fa-search"></i>
                 <span>拉取本季度各区利润排名</span>
               </div>
@@ -752,16 +757,17 @@ onUnmounted(() => {
                 <div class="stat-bar" style="height: 90%">
                   <span class="val">90%</span>
                 </div>
-              </div>
+              </div> -->
             </div>
             <div class="card-footer-v5">
               <span class="action-btn"
-                >分析数据 <i class="fas fa-arrow-right"></i
+                >立即进入 <i class="fas fa-arrow-right"></i
               ></span>
             </div>
           </div>
 
           <!-- Card 5: Industry Analysis (Business Strategy) -->
+          <!-- @click="goPPT()" -->
           <div class="scenario-card-v5" @click="goPPT()">
             <div class="card-meta">
               <span class="model-tag">Industry-PPT-Gen</span>
@@ -1789,7 +1795,9 @@ onUnmounted(() => {
   background: #f8faff;
   overflow: hidden;
 }
-
+.wechat-qrcode {
+  width: 100%;
+}
 /* Video Flow UI - Fixed & Refined */
 .card-content-split {
   display: flex;

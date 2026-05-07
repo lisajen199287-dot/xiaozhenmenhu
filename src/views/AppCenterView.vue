@@ -41,7 +41,6 @@ const fetchApps = async () => {
   }
 };
 
-// 动态对应用进行分类分组
 const categories = computed(() => {
   const groups: Record<string, AppCategory> = {};
   apps.value.forEach((app) => {
@@ -57,17 +56,13 @@ const categories = computed(() => {
     groups[cat].apps.push(app);
   });
 
-  // 转成数组
   let result = Object.values(groups);
 
-  // ====================== 核心代码 ======================
-  // 把 AI 工具 提到最前面
-  const aiToolIndex = result.findIndex(item => item.title === "AI 工具");
+  const aiToolIndex = result.findIndex((item) => item.title === "AI 工具");
   if (aiToolIndex > 0) {
     const aiToolItem = result.splice(aiToolIndex, 1)[0];
     result.unshift(aiToolItem);
   }
-  // ======================================================
 
   return result;
 });
@@ -76,16 +71,13 @@ onMounted(() => {
   fetchApps();
 });
 
-const getGridClass = (n: number) => {
-  // 根据用户需求：
-  // 3, 5, 6, 9... 采用 3 列基准
-  // 4, 7, 8, 12... 采用 4 列基准
-  if (n === 4 || n === 7 || n === 8) return "grid-base-4";
-  if (n >= 12 && n % 4 === 0) return "grid-base-4";
-  return "grid-base-3";
-};
-
 const handleEnter = (app: Application) => {
+  if ((app.name = "AI合同审核")) {
+    if (!localStorage.getItem("token")) {
+      router.push({ path: "/login", query: { redirect: "/apps" } });
+      return;
+    }
+  }
   if (app.url === "#") {
     console.log("Component not ready yet");
     return;
@@ -93,59 +85,62 @@ const handleEnter = (app: Application) => {
   if (app.url.startsWith("http") || app.url.startsWith("https")) {
     window.open(app.url, "_blank");
   } else {
-    router.push(app.url);
+    window.open(app.url, "_blank");
   }
 };
 </script>
 
 <template>
   <div class="app-center-page">
+    <!-- 静态背景 -->
+    <div class="bg-pattern"></div>
+
     <NavBar />
 
-    <header class="app-hero">
-      <div class="wrapper">
-        <h1 class="hero-title">应用中心</h1>
-        <p class="hero-sub">全场景 AI 赋能，深度覆盖企业经营四大命脉</p>
-      </div>
-    </header>
-
     <main class="app-main wrapper">
+      <!-- 每个分类作为一个独立的带框模块 -->
       <div
         v-for="(category, idx) in categories"
         :key="idx"
-        class="category-block"
+        class="category-module"
       >
-        <div class="category-header">
-          <div class="category-title-wrap">
-            <i :class="category.icon" class="category-icon"></i>
-            <h2 class="category-title">{{ category.title }}</h2>
-          </div>
-          <p class="category-desc">{{ category.description }}</p>
-        </div>
-
-        <div class="app-grid" :class="getGridClass(category.apps.length)">
-          <div v-for="app in category.apps" :key="app.name" class="app-card">
-            <div
-              class="app-card-image"
-              @click="handleEnter(app)"
-              style="cursor: pointer"
-            >
-              <img :src="app.coverImage" :alt="app.name" />
+        <div class="module-content">
+          <!-- 分类头部 -->
+          <div class="category-header">
+            <div class="category-title-wrap">
+              <i :class="category.icon" class="category-icon"></i>
+              <h2 class="category-title">{{ category.title }}</h2>
             </div>
-            <div class="app-card-content">
-              <div class="app-card-header">
-                <div class="app-icon" :title="app.nameEn">
-                  <i :class="app.icon"></i>
-                </div>
-                <div class="app-titles">
-                  <h3 class="app-name">{{ app.name }}</h3>
-                  <span class="app-name-en">{{ app.nameEn }}</span>
-                </div>
+          </div>
+
+          <!-- 应用网格 -->
+          <div class="app-grid">
+            <div
+              v-for="(app, index) in category.apps"
+              :key="app.name"
+              class="app-card"
+              :class="{ 'span-two': index === 0 }"
+            >
+              <div class="app-card-image" @click="handleEnter(app)">
+                <img :src="app.coverImage" :alt="app.name" />
               </div>
-              <p class="app-desc">{{ app.description }}</p>
-              <button class="btn-enter" @click="handleEnter(app)">
-                立即进入 <i class="fas fa-arrow-right"></i>
-              </button>
+
+              <div class="app-card-content">
+                <div class="app-card-header">
+                  <div class="app-icon-box">
+                    <i :class="app.icon" class="app-icon"></i>
+                  </div>
+                  <div class="app-titles">
+                    <h3 class="app-name">{{ app.name }}</h3>
+                    <span class="app-name-en">{{ app.nameEn }}</span>
+                  </div>
+                </div>
+                <p class="app-desc">{{ app.description }}</p>
+                <button class="btn-enter" @click="handleEnter(app)">
+                  <span class="btn-text">立即进入</span>
+                  <i class="fas fa-arrow-right btn-icon"></i>
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -155,404 +150,347 @@ const handleEnter = (app: Application) => {
 </template>
 
 <style scoped>
+/* --- 全局背景 --- */
 .app-center-page {
   background: #f8fafc;
   min-height: 100vh;
+  position: relative;
+  overflow-x: hidden;
 }
 
-.app-hero {
-  background: linear-gradient(rgba(15, 23, 42, 0.7), rgba(15, 23, 42, 0.7)),
-    url("@/assets/images/people-app-bg.png");
-  background-size: cover;
-  background-position: center;
-  padding: 160px 0 100px;
-  color: white;
-  text-align: center;
-}
-
-@media (max-width: 768px) {
-  .app-hero {
-    padding: 100px 0 50px;
-  }
-}
-
-.hero-title {
-  font-size: 3.5rem;
-  font-weight: 850;
-  margin-bottom: 20px;
-  color: white;
-  text-shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
-}
-
-@media (max-width: 768px) {
-  .hero-title {
-    font-size: 2.2rem;
-    margin-bottom: 12px;
-  }
-}
-
-.hero-sub {
-  font-size: 1.25rem;
-  color: rgba(255, 255, 255, 0.9);
-  font-weight: 500;
-  letter-spacing: 0.05em;
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
-}
-
-@media (max-width: 768px) {
-  .hero-sub {
-    font-size: 1rem;
-    padding: 0 20px;
-  }
+.bg-pattern {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -1;
+  background-image: radial-gradient(#e2e8f0 1px, transparent 1px);
+  background-size: 24px 24px;
+  pointer-events: none;
 }
 
 .app-main {
-  padding: 80px 0 100px;
+  /* 顶部留出 NavBar 空间，底部留少许呼吸感 */
+  padding: 80px 0 40px;
+  max-width: 1200px;
+  margin-left: auto;
+  margin-right: auto;
+  width: 100%;
+  box-sizing: border-box;
+  position: relative;
+  z-index: 1;
 }
 
-@media (max-width: 768px) {
-  .app-main {
-    padding: 40px 0 60px;
-  }
+/* --- 独立模块外框 (针对 13 寸屏优化) --- */
+.category-module {
+  background: #ffffff;
+  border-radius: 20px;
+  border: 1px solid #e2e8f0;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
+
+  margin-bottom: 30px;
+  /* 关键：减小上下 padding，从 40px 减到 24px */
+  padding: 24px 32px;
+
+  /* 关键：强制最小高度为视口高度减去导航栏和 margins */
+  /* 100vh - 80px(top padding) - 40px(bottom padding) - 30px(margin) ≈ 85vh */
+  min-height: calc(100vh - 150px);
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center; /* 垂直居中，让内容看起来充满屏幕 */
 }
 
-.category-block {
-  margin-bottom: 80px;
+.module-content {
+  width: 100%;
+  /* 限制最大宽度，防止在大屏上拉得太长导致视觉空旷 */
+  max-width: 1100px;
+  margin: 0 auto;
 }
 
-@media (max-width: 768px) {
-  .category-block {
-    margin-bottom: 40px;
-  }
-}
-
+/* --- 分类头部 (紧凑版) --- */
 .category-header {
-  margin-bottom: 40px;
-  padding-bottom: 24px;
-  border-bottom: 2px solid #e2e8f0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
   text-align: center;
-}
-
-@media (max-width: 768px) {
-  .category-header {
-    margin-bottom: 24px;
-    padding-bottom: 16px;
-  }
+  /* 减小底部间距 */
+  margin-bottom: 24px;
 }
 
 .category-title-wrap {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   justify-content: center;
-  gap: 16px;
-  margin-bottom: 12px;
+  gap: 10px;
+  margin-bottom: 0;
+  background: #f8fafc;
+  /* 减小 padding */
+  padding: 6px 18px;
+  border-radius: 50px;
+  border: 1px solid #f1f5f9;
 }
 
 .category-icon {
-  font-size: 2rem;
+  font-size: 1.25rem;
   color: #4f46e5;
-  background: #eef2ff;
-  width: 56px;
-  height: 56px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  border-radius: 14px;
-  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.15);
 }
 
 .category-title {
-  font-size: 2.2rem;
+  font-size: 1.35rem;
   font-weight: 800;
   color: #0f172a;
   margin: 0;
-  letter-spacing: -0.02em;
 }
 
-.category-desc {
-  font-size: 1.1rem;
-  color: #64748b;
-  margin: 0 auto;
-  max-width: 800px;
-  line-height: 1.6;
-}
-
-@media (max-width: 768px) {
-  .category-icon {
-    width: 44px;
-    height: 44px;
-    font-size: 1.5rem;
-    border-radius: 10px;
-  }
-  .category-title {
-    font-size: 1.5rem;
-  }
-  .category-desc {
-    font-size: 0.9rem;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-    overflow: hidden;
-  }
-}
-
-/* 方案九：动态比例均衡网格 */
+/* --- 网格布局 --- */
 .app-grid {
-  display: flex;
-  flex-wrap: wrap;
-  justify-content: center;
-  gap: 32px;
-  margin-top: 40px;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 20px; /* 减小间距 */
   width: 100%;
 }
 
-@media (max-width: 768px) {
-  .app-grid {
-    gap: 16px;
-    margin-top: 24px;
-  }
+.app-grid .app-card.span-two {
+  grid-column: span 2;
 }
 
-@media (max-width: 480px) {
-  .app-grid {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 12px;
-  }
-}
-
-.grid-base-3 .app-card {
-  flex: 0 1 380px; /* 以 3 列为基准，但在 4, 7, 8 以外的情况能较好地排列 */
-}
-
-.grid-base-4 .app-card {
-  flex: 0 1 310px; /* 稍微调小，确保在普通宽屏下能挤下 4 个 */
-}
-
-@media (max-width: 480px) {
-  .grid-base-3 .app-card,
-  .grid-base-4 .app-card {
-    flex: none;
-    width: 100%;
-  }
-}
-
-/* 在超大宽屏下，限制 4 列模式的最大宽度，防止卡片被拉得太宽 */
-.grid-base-4 {
-  max-width: 1400px;
-  margin-left: auto;
-  margin-right: auto;
-}
-
+/* --- 卡片样式 (紧凑版) --- */
 .app-card {
-  background: white;
-  border-radius: 20px;
+  background: #ffffff;
+  border-radius: 12px;
   overflow: hidden;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.04);
-  transition: all 0.4s cubic-bezier(0.165, 0.84, 0.44, 1);
   border: 1px solid #f1f5f9;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.04);
   display: flex;
   flex-direction: column;
+  height: 100%;
 }
 
 .app-card:hover {
-  transform: translateY(-8px);
-  box-shadow: 0 24px 48px -12px rgba(79, 70, 229, 0.15);
-  border-color: #c7d2fe;
+  border-color: #cbd5e1;
 }
 
 .app-card-image {
-  height: 200px;
+  /* 关键：大幅减小图片高度，从 160px 降到 120px */
+  height: 120px;
   position: relative;
   overflow: hidden;
-}
-
-@media (max-width: 768px) {
-  .app-card-image {
-    height: 140px;
-  }
-}
-
-@media (max-width: 480px) {
-  .app-card-image {
-    height: 110px;
-  }
+  background: #f8fafc;
+  flex-shrink: 0;
 }
 
 .app-card-image img {
   width: 100%;
   height: 100%;
   object-fit: cover;
-  transition: transform 0.6s cubic-bezier(0.25, 0.46, 0.45, 0.94);
-}
-
-.app-card:hover .app-card-image img {
-  transform: scale(1.08);
 }
 
 .app-card-content {
-  padding: 28px;
+  /* 减小内边距 */
+  padding: 14px;
   display: flex;
   flex-direction: column;
   flex: 1;
 }
 
-@media (max-width: 768px) {
-  .app-card-content {
-    padding: 16px;
-  }
-}
-
-@media (max-width: 480px) {
-  .app-card-content {
-    padding: 12px;
-  }
-}
-
 .app-card-header {
   display: flex;
   align-items: center;
-  gap: 16px;
-  margin-bottom: 20px;
+  gap: 10px;
+  margin-bottom: 8px; /* 减小间距 */
 }
 
-@media (max-width: 768px) {
-  .app-card-header {
-    gap: 10px;
-    margin-bottom: 12px;
-  }
-}
-
-.app-icon {
-  width: 50px;
-  height: 50px;
+.app-icon-box {
+  width: 32px; /* 减小图标盒 */
+  height: 32px;
   background: #f8fafc;
-  color: #4f46e5;
-  border-radius: 12px;
+  border-radius: 8px;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 1.5rem;
   border: 1px solid #e2e8f0;
-  box-shadow: inset 0 2px 4px rgba(255, 255, 255, 0.8);
 }
 
-@media (max-width: 768px) {
-  .app-icon {
-    width: 36px;
-    height: 36px;
-    font-size: 1.1rem;
-    border-radius: 8px;
-  }
+.app-icon {
+  font-size: 0.9rem;
+  color: #4f46e5;
 }
 
 .app-titles {
   display: flex;
   flex-direction: column;
+  overflow: hidden;
 }
 
 .app-name {
-  font-size: 1.25rem;
-  font-weight: 800;
+  font-size: 0.95rem;
+  font-weight: 700;
   color: #0f172a;
   margin: 0;
   line-height: 1.2;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .app-name-en {
-  font-size: 0.75rem;
+  font-size: 0.6rem;
   color: #94a3b8;
-  font-weight: 700;
+  font-weight: 600;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  margin-top: 4px;
-}
-
-@media (max-width: 768px) {
-  .app-name {
-    font-size: 1rem;
-  }
-  .app-name-en {
-    font-size: 0.65rem;
-    margin-top: 2px;
-  }
+  margin-top: 1px;
 }
 
 .app-desc {
   color: #475569;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  margin-bottom: 32px;
-  height: 3.2em;
+  font-size: 0.8rem;
+  line-height: 1.4;
+  margin-bottom: 12px; /* 减小间距 */
+  /* 严格限制为 2 行，高度约 2.2em */
+  height: 2.2em;
   display: -webkit-box;
   -webkit-line-clamp: 2;
   -webkit-box-orient: vertical;
   overflow: hidden;
+  flex: 1;
 }
 
-@media (max-width: 768px) {
-  .app-desc {
-    font-size: 0.85rem;
-    margin-bottom: 16px;
-    height: 2.8em;
-  }
-}
-
-@media (max-width: 480px) {
-  .app-desc {
-    display: none; /* In 2-column mobile, hide description to save space */
-  }
-}
-
+/* 按钮 */
 .btn-enter {
   margin-top: auto;
   width: 100%;
-  padding: 14px;
-  border-radius: 10px;
+  padding: 8px; /* 减小按钮高度 */
+  border-radius: 6px;
   background: #f8fafc;
   border: 1px solid #e2e8f0;
   color: #0f172a;
-  font-weight: 700;
-  font-size: 0.95rem;
+  font-weight: 600;
+  font-size: 0.8rem;
   cursor: pointer;
-  transition: all 0.3s;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 8px;
+  gap: 4px;
+}
+
+.btn-enter:hover {
+  background: #eef2ff;
+  border-color: #c7d2fe;
+  color: #4f46e5;
+}
+
+/* --- 移动端适配 --- */
+@media (max-width: 1024px) {
+  .app-grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+  .app-grid .app-card.span-two {
+    grid-column: span 1;
+  }
 }
 
 @media (max-width: 768px) {
-  .btn-enter {
+  .app-main {
+    padding: 70px 12px 30px;
+  }
+
+  .category-module {
+    /* 移动端取消强制一屏高度，改为自然内容高度 */
+    min-height: auto;
+    padding: 20px 12px;
+    margin-bottom: 20px;
+    border-radius: 16px;
+  }
+
+  .category-header {
+    margin-bottom: 20px;
+  }
+
+  .category-title-wrap {
+    padding: 5px 14px;
+  }
+
+  .category-icon {
+    font-size: 1.1rem;
+  }
+
+  .category-title {
+    font-size: 1.15rem;
+  }
+
+  .app-grid {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 10px;
+  }
+
+  .app-grid .app-card.span-two {
+    grid-column: span 2;
+  }
+
+  .app-card-image {
+    height: 100px;
+  }
+
+  .app-card-content {
     padding: 10px;
+  }
+
+  .app-icon-box {
+    width: 28px;
+    height: 28px;
+  }
+
+  .app-icon {
+    font-size: 0.8rem;
+  }
+
+  .app-name {
     font-size: 0.85rem;
   }
-}
 
-@media (max-width: 480px) {
+  .app-desc {
+    display: none;
+  }
+
   .btn-enter {
-    padding: 8px;
-    font-size: 0.8rem;
-    border-radius: 6px;
+    padding: 6px;
+    font-size: 0.75rem;
   }
-  .btn-enter i {
-    font-size: 0.7rem;
-  }
-}
-
-.app-card:hover .btn-enter {
-  background: #4f46e5;
-  color: white;
-  border-color: #4f46e5;
-  box-shadow: 0 4px 15px rgba(79, 70, 229, 0.3);
 }
 
 @media (max-width: 480px) {
-  .hero-title {
-    font-size: 1.8rem;
+  .app-grid {
+    grid-template-columns: 1fr;
   }
-  .app-hero {
-    padding: 80px 0 30px;
+
+  .app-grid .app-card.span-two {
+    grid-column: span 1;
+  }
+
+  .app-card-image {
+    height: 130px;
+  }
+
+  .app-desc {
+    display: -webkit-box;
+    height: 2.2em;
+  }
+}
+/* 大屏下取消强制视口高度，让内容自然展示，减少无谓空白 */
+@media (min-width: 1440px) {
+  .category-module {
+
+    min-height: auto; 
+    justify-content: flex-start; 
+    padding: 40px 40px; 
+  }
+  
+  .app-main {
+    padding: 100px 0 60px; 
   }
 }
 </style>

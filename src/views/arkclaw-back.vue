@@ -493,7 +493,6 @@
         <span data-v-f54f3e5e="">高效新方式！</span>
       </div>
       <div data-v-f54f3e5e="" class="lead-form">
-        <div class="Kami" v-if="!isPermission" @click="handleKamiClick">卡密核销</div>
         <button
           data-v-f54f3e5e=""
           v-if="isPermission"
@@ -531,43 +530,6 @@
         <div class="apply-btn2" @click="goWechat()">客服微信</div>
       </div> -->
     </div>
-
-    <!-- 卡密核销弹窗 -->
-    <el-dialog
-      v-model="kamiDialogVisible"
-      width="350px"
-      title="卡密核销"
-      :close-on-click-modal="false"
-      class="kami-dialog"
-    >
-      <div class="kami-form">
-        <div class="form-group">
-          
-            <label>请输入核销编号和卡密</label>
-            <input
-              v-model="certKey"
-              type="text"
-              placeholder="请输入您的编号"
-              maxlength="20"
-            />
-            <label/>
-            <input
-              v-model="certNo"
-              type="text"
-              placeholder="请输入您的卡密"
-              maxlength="50"
-            />
-        </div>
-        <button
-          type="submit"
-          class="btn-kami-submit"
-          @click="verifyKami"
-          :disabled="!certNo.trim()"
-        >
-          立即核验
-        </button>
-      </div>
-    </el-dialog>
   </div>
 </template>
 
@@ -592,65 +554,6 @@ const wechatDialogVisible = ref(false);
 
 const goWechat = () => {
   wechatDialogVisible.value = true;
-};
-
-// 卡密核销相关
-const kamiDialogVisible = ref(false);
-const certNo = ref("");
-const certKey = ref("");
-
-const handleKamiClick = () => {
-  const token = localStorage.getItem("token");
-  if (!token) {
-    // 未登录，跳转到登录页
-    router.push({ path: "/login", query: { redirect: "/arkclaw" } });
-    return;
-  }
-  // 已登录，显示卡密输入弹窗
-  kamiDialogVisible.value = true;
-};
-
-const verifyKami = async () => {
-  if (!certKey.value.trim()) {
-    ElMessage.warning("请输入核销编号");
-    return;
-  }
-  if (!certNo.value.trim()) {
-    ElMessage.warning("请输入卡密");
-    return;
-  }
-  try {
-    // 核验卡密
-    const res = await newApi.apiVerifyWriteOff({
-      certKey: certKey.value,
-      certNo: certNo.value,
-    });
-    // 模拟核验成功
-    ElMessageBox.confirm(
-      "您的卡密核验已完成，可返回福龙Claw立即体验使用。",
-      "核验成功",
-      {
-        confirmButtonText: "确定",
-        cancelButtonText: "取消",
-        type: "success",
-      }
-    )
-      .then(() => {
-        kamiDialogVisible.value = false;
-        certKey.value = "";
-        certNo.value = "";
-      })
-      .catch(() => {
-        kamiDialogVisible.value = false;
-        certKey.value = "";
-        certNo.value = "";
-      });
-  } catch (error) {
-    ElMessage.error(error.message || "核验失败");
-    return;
-  }
-
-  isPermissionCheck();
 };
 
 // Pricing functionality
@@ -889,35 +792,16 @@ onMounted(() => {
   .lead-form {
     position: absolute;
     z-index: 3;
-    left: 35%;
+    left: 36.8%;
     top: 19%;
-    width: 35%;
+    width: 24%;
     height: 58%;
     min-width: 0;
     display: grid;
-    grid-template-columns: 0.7fr 1fr 0.56fr;
+    grid-template-columns: 1fr 0.56fr;
     gap: 8px;
     border-radius: 999px;
     background-color: #ff7418;
-    .Kami {
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      background: linear-gradient(180deg, #ffe879, #ffc82e);
-      color: #241807;
-      font: 950 clamp(12px, 1.22vw, 20px) / 1 "PingFang SC", "Microsoft YaHei",
-        sans-serif;
-      cursor: pointer;
-      white-space: nowrap;
-      border-radius: 999px;
-      font-weight: 600;
-      box-shadow: inset 0 2px #ffffff59, 0 8px 18px #703c001f;
-      transition: transform 0.2s, box-shadow 0.2s;
-      &:hover {
-        transform: translateY(-2px);
-        box-shadow: inset 0 2px #ffffff59, 0 10px 20px #703c002f;
-      }
-    }
     button {
       border: 0;
       background: linear-gradient(180deg, #ffe879, #ffc82e);
@@ -1407,27 +1291,8 @@ onMounted(() => {
 
   .lead-form {
     left: 35%;
-    width: 50%;
+    width: 30%;
     display: flex;
-    flex-direction: row;
-    gap: 6px;
-    background: none;
-  }
-  .lead-form .Kami {
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 16px;
-    text-align: center;
-    flex: 1;
-  }
-  .lead-form button {
-    font-size: 12px;
-    padding: 6px 10px;
-    border-radius: 16px;
-  }
-  .lead-form .secondary {
-    font-size: 11px;
-    padding: 5px 8px;
   }
 
   .cta-benefits {
@@ -1481,163 +1346,22 @@ onMounted(() => {
     position: static;
     width: auto;
     grid-template-columns: 1fr;
-    gap: 6px;
+    gap: 10px;
     background: none;
     flex: 1;
-    min-width: 180px;
+    min-width: 150px;
     display: flex;
-    flex-direction: row;
-  }
-  .global-bottom-floating-window .lead-form .Kami {
-    font-size: 11px;
-    padding: 5px 10px;
-    border-radius: 16px;
-    text-align: center;
-    flex: 1;
   }
 
   .global-bottom-floating-window .lead-form button {
-    font-size: 11px;
-    padding: 5px 10px;
-    border-radius: 16px;
-    flex: 1;
+    font-size: 14px;
+    padding: 8px 16px;
+    border-radius: 20px;
   }
 
   .global-bottom-floating-window .lead-form .secondary {
-    font-size: 10px;
-    padding: 5px 8px;
-  }
-}
-
-/* 卡密核销弹窗样式 */
-.kami-dialog {
-  width: 480px;
-  max-width: calc(100vw - 32px);
-  .kami-form {
-    padding: 20px 0;
-  }
-  .form-group {
-    margin-bottom: 20px;
-    label {
-      display: block;
-      font-weight: 600;
-      color: #333;
-      margin-bottom: 8px;
-    }
-    input {
-      width: 100%;
-      padding: 12px 16px;
-      border: 1px solid #e2e8f0;
-      border-radius: 8px;
-      font-size: 14px;
-      transition: border-color 0.2s;
-      &:focus {
-        outline: none;
-        border-color: #3b82f6;
-      }
-    }
-  }
-  .btn-kami-submit {
-    width: 100%;
-    padding: 14px;
-    background: linear-gradient(180deg, #ffe879, #ffc82e);
-    color: #241807;
-    border: none;
-    border-radius: 8px;
-    font-weight: 600;
-    font-size: 16px;
-    cursor: pointer;
-    transition: all 0.2s;
-    &:hover:not(:disabled) {
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba(255, 200, 46, 0.3);
-    }
-    &:disabled {
-      background: #e2e8f0;
-      color: #94a3b8;
-      cursor: not-allowed;
-    }
-  }
-}
-
-@media (max-width: 768px) {
-  .kami-dialog {
-    width: calc(100vw - 32px) !important;
-    max-width: none;
-    .kami-form {
-      padding: 20px 0;
-    }
-    .form-group {
-      margin-bottom: 16px;
-      label {
-        font-size: 15px;
-        margin-bottom: 8px;
-      }
-      input {
-        padding: 14px 16px;
-        font-size: 15px;
-        border-radius: 8px;
-      }
-    }
-    .btn-kami-submit {
-      padding: 14px;
-      font-size: 16px;
-      border-radius: 8px;
-    }
-  }
-}
-
-@media (max-width: 480px) {
-  .kami-dialog {
-    width: calc(100vw - 24px) !important;
-    max-width: none;
-    .kami-form {
-      padding: 15px 0;
-    }
-    .form-group {
-      margin-bottom: 15px;
-      label {
-        font-size: 14px;
-        margin-bottom: 6px;
-      }
-      input {
-        padding: 12px 14px;
-        font-size: 14px;
-        border-radius: 6px;
-      }
-    }
-    .btn-kami-submit {
-      padding: 12px;
-      font-size: 15px;
-      border-radius: 6px;
-    }
-  }
-}
-
-@media (max-width: 375px) {
-  .kami-dialog {
-    width: calc(100vw - 16px) !important;
-    max-width: none;
-    .kami-form {
-      padding: 12px 0;
-    }
-    .form-group {
-      margin-bottom: 12px;
-      label {
-        font-size: 13px;
-        margin-bottom: 5px;
-      }
-      input {
-        padding: 10px 12px;
-        font-size: 14px;
-        border-radius: 6px;
-      }
-    }
-    .btn-kami-submit {
-      padding: 11px;
-      font-size: 14px;
-      border-radius: 6px;
-    }
+    font-size: 12px;
+    padding: 6px 12px;
   }
 }
 

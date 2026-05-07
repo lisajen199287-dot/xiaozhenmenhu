@@ -172,7 +172,7 @@ const defaultNav: NavigationMenu[] = [
   {
     id: 5,
     parentId: null,
-    title: "模型与算力",
+    title: "大模型与词元",
     titleEn: "Infrastructure",
     url: "/infra",
     icon: "",
@@ -280,7 +280,7 @@ onUnmounted(() => {
         >
           <div class="logo-text">
             <span class="main">福州市仓山区人工智能公共服务平台</span>
-            <span class="sub">FUZHOUSHI CANGSHAN AI PUBLIC SERVICE PLATFORM</span>
+            <span class="sub">FUZHOU CANGSHAN AI PUBLIC SERVICE PLATFORM</span>
           </div>
         </RouterLink>
 
@@ -956,6 +956,27 @@ onUnmounted(() => {
   .nav-header-mobile {
     height: 72px;
     padding: 0 16px;
+  }
+
+  .logo-text {
+    flex-direction: column;
+    gap: 2px;
+  }
+
+  .logo-text .main {
+    font-size: clamp(0.75rem, 4vw, 0.9rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    max-width: 60vw;
+  }
+
+  .logo-text .sub {
+    font-size: clamp(0.45rem, 2.5vw, 0.55rem);
+    font-weight: 600;
+    letter-spacing: 0.03em;
   }
 
   .hamburger-btn,

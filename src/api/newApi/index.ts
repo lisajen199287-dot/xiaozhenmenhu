@@ -326,3 +326,11 @@ export const getDictDataByType = (data: any) => {
     params: data,
   })
 }
+
+
+export const apiVerifyWriteOff = (data: any) => {
+  return request.post({
+    url: `/api/verify/write-off`,
+    data,
+  })
+}

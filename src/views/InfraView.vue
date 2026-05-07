@@ -56,7 +56,7 @@ const handleNewsClick = (id) => {
       <div class="hero-content">
         <h1 class="hero-title">大模型聚合平台</h1>
 
-        <p class="hero-subtitle">AI算力聚合平台</p>
+        <!-- <p class="hero-subtitle">AI算力聚合平台</p> -->
 
         <div class="hero-links">
           <div class="text" @click="Connect()">接入</div>
@@ -72,9 +72,39 @@ const handleNewsClick = (id) => {
 
     <div class="wrapper">
       <section class="content-section recommended-models">
-        <h2 class="section-title-v2">大模型与词元</h2>
+        <h2 class="section-title-v2">模型推荐</h2>
 
         <div class="models-grid">
+          <div class="model-card">
+            <div class="model-tag">[文本生成]</div>
+            <a
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=deepseek-v3-2"
+              target="_blank"
+              class="model-img multimodal"
+              style="display: block"
+            >
+              <img
+                src="@/assets/images/img3.png"
+                alt="DeepSeek-V4"
+                class="model-inner-img"
+              />
+            </a>
+
+            <h3>DeepSeek-V4</h3>
+
+            <p>
+              平衡推理能力与输出长度，适合日常使用，例如问答场景和通用 Agent
+              任务场景
+            </p>
+
+            <a
+              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=deepseek-v3-2"
+              target="_blank"
+              class="details-link"
+              >[详情]</a
+            >
+          </div>
+
           <div class="model-card">
             <div class="model-tag">[视频生成]</div>
 
@@ -227,36 +257,6 @@ const handleNewsClick = (id) => {
           </div>
 
           <!-- Model Card 3 -->
-
-          <div class="model-card">
-            <div class="model-tag">[文本生成]</div>
-            <a
-              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=deepseek-v3-2"
-              target="_blank"
-              class="model-img multimodal"
-              style="display: block"
-            >
-              <img
-                src="@/assets/images/img3.png"
-                alt="DeepSeek-V4"
-                class="model-inner-img"
-              />
-            </a>
-
-            <h3>DeepSeek-V4</h3>
-
-            <p>
-              平衡推理能力与输出长度，适合日常使用，例如问答场景和通用 Agent
-              任务场景
-            </p>
-
-            <a
-              href="https://console.volcengine.com/ark/region:ark+cn-beijing/model/detail?Id=deepseek-v3-2"
-              target="_blank"
-              class="details-link"
-              >[详情]</a
-            >
-          </div>
 
           <div class="model-card">
             <div class="model-tag">[语音模型]</div>
@@ -523,7 +523,7 @@ const handleNewsClick = (id) => {
             <h2 class="section-title-v2">金融级安全架构</h2>
 
             <p class="section-desc-v2">
-              全链路数据加密与隔离，通过等保三级认证
+              全链路数据加密与隔离
             </p>
           </div>
 
@@ -557,7 +557,7 @@ const handleNewsClick = (id) => {
               </div>
             </div>
 
-            <div class="sec-card-v2">
+            <!-- <div class="sec-card-v2">
               <div class="sec-icon-circle green">
                 <i class="fas fa-user-secret"></i>
               </div>
@@ -569,9 +569,9 @@ const handleNewsClick = (id) => {
                   支持联邦学习与多方安全计算，在不共享原始数据的前提下实现联合建模
                 </p>
               </div>
-            </div>
+            </div> -->
 
-            <div class="sec-card-v2">
+            <!-- <div class="sec-card-v2">
               <div class="sec-icon-circle purple">
                 <i class="fas fa-server"></i>
               </div>
@@ -583,7 +583,7 @@ const handleNewsClick = (id) => {
                   提供独占物理机群，资源完全物理隔离，避免多租户环境下的资源争抢与数据泄露风险
                 </p>
               </div>
-            </div>
+            </div> -->
           </div>
         </div>
       </section>
