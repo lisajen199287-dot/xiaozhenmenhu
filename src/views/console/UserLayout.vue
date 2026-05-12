@@ -125,7 +125,7 @@ onMounted(() => {
               <img v-if="user?.avatar" :src="user.avatar" class="avatar-img" />
               <template v-else>{{
                 (user?.nickname || user?.username || "U")
-                  .substring(0, 2)
+                  .slice(-2)
                   .toUpperCase()
               }}</template>
             </div>

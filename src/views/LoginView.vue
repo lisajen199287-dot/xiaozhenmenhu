@@ -268,6 +268,7 @@ const lLogin = async (type?: string) => {
   let res1 = await LoginApi.getFrontUserInfo();
   const item = res;
   item.nickname = res1.nickname;
+  item.avatar = res1.userAvatar;
   // authUtil.setToken(res);
   //存储用户信息
   await login(item);

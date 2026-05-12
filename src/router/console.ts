@@ -11,7 +11,7 @@ const routes: RouteRecordRaw[] = [
         name: 'ConsoleHome',
         component: () => import('@/views/console/UserLayout.vue'),
         children: [
-            { path: '', redirect: '/apikeys' },
+            { path: '', redirect: '/profile' },
             { path: 'profile', name: 'UserProfile', component: () => import('@/views/console/UserBasicInfoView.vue') },
             { path: 'apps', name: 'UserApps', component: () => import('@/views/console/UserAppsView.vue') },
             { path: 'apikeys', name: 'UserApiKeys', component: () => import('@/views/console/UserApiKeyView.vue') },
