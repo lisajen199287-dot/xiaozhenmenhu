@@ -266,6 +266,22 @@ export const apiAgUserGet = () => {
   })
 }
 
+// 修改用户基本信息（昵称、头像等）
+export const apiUpdateProfile = (data: any) => {
+  return request.put({
+    url: `/member/user/update`,
+    data,
+  })
+}
+
+// 上传文件（头像等）
+export const apiUploadFile = (data: FormData) => {
+  return request.upload({
+    url: `/infra/file/upload`,
+    data,
+  })
+}
+
 
 // 门户服务端获取aippt的accessCode返回给门户前端
 export const apiPortalAiPptAccessCode = () => {
