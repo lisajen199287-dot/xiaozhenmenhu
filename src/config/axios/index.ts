@@ -42,6 +42,6 @@ export default {
   upload: async <T = any>(option: any) => {
     option.headersType = 'multipart/form-data'
     const res = await request({ method: 'POST', ...option })
-    return res as unknown as Promise<T>
+    return res.data as unknown as T
   }
 }

@@ -119,6 +119,12 @@ export function useUser() {
 
 
 
+    const updateUserField = (fields: Partial<UserInfo>) => {
+        if (!user.value) return
+        Object.assign(user.value, fields)
+        localStorage.setItem('user_info', JSON.stringify(user.value))
+    }
+
     return {
 
         user,
@@ -133,7 +139,9 @@ export function useUser() {
 
         initUser,
 
-        refreshCredits
+        refreshCredits,
+
+        updateUserField
 
     }
 

@@ -10,6 +10,7 @@ const { user, isLoggedIn, logout } = useUser();
 const route = useRoute();
 
 const menuItems = [
+  { name: "基本信息", icon: "fas fa-user", path: "/profile" },
   { name: "API 管理", icon: "fas fa-key", path: "/apikeys" },
   { name: "lumi账单", icon: "fas fa-wallet", path: "/lumiBilling" },
   { name: "费用中心", icon: "fas fa-wallet", path: "/billing" },
@@ -121,11 +122,12 @@ onMounted(() => {
 
           <div class="user-profile">
             <div class="avatar">
-              {{
+              <img v-if="user?.avatar" :src="user.avatar" class="avatar-img" />
+              <template v-else>{{
                 (user?.nickname || user?.username || "U")
                   .substring(0, 2)
                   .toUpperCase()
-              }}
+              }}</template>
             </div>
 
             <div class="user-info">
@@ -317,6 +319,13 @@ onMounted(() => {
   justify-content: center;
   font-size: 0.75rem;
   font-weight: 850;
+}
+
+.avatar-img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
 .user-info {
