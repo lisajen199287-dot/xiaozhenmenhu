@@ -550,8 +550,8 @@
             <input
               v-model="certNo"
               type="text"
-              placeholder="请输入您的卡号 (30位)"
-              maxlength="30"
+              placeholder="请输入您的卡号 (32位)"
+              maxlength="32"
             />
           </div>
           <div class="form-item">
@@ -622,7 +622,7 @@ const verifyKami = async () => {
     ElMessage.warning("请输入6位数密码");
     return;
   }
-  if (!certNo.value.trim() || certNo.value.length !== 30) {
+  if (!certNo.value.trim() || certNo.value.length !== 32) {
     ElMessage.warning("请输入30位数卡号");
     return;
   }
