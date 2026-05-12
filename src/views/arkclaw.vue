@@ -493,7 +493,9 @@
         <span data-v-f54f3e5e="">高效新方式！</span>
       </div>
       <div data-v-f54f3e5e="" class="lead-form">
-        <div class="Kami" v-if="!isPermission" @click="handleKamiClick">卡密核销</div>
+        <div class="Kami" v-if="!isPermission" @click="handleKamiClick">
+          卡密核销
+        </div>
         <button
           data-v-f54f3e5e=""
           v-if="isPermission"
@@ -542,27 +544,32 @@
     >
       <div class="kami-form">
         <div class="form-group">
-          
-            <label>请输入核销编号和卡密</label>
-            <input
-              v-model="certKey"
-              type="text"
-              placeholder="请输入您的编号"
-              maxlength="20"
-            />
-            <label/>
+          <!-- <label>请输入核销编号和卡密</label> -->
+          <div class="form-item">
+            <div class="form-item-label">卡号：</div>
             <input
               v-model="certNo"
               type="text"
-              placeholder="请输入您的卡密"
-              maxlength="50"
+              placeholder="请输入您的卡号 (30位)"
+              maxlength="30"
             />
+          </div>
+          <div class="form-item">
+            <div class="form-item-label">密码：</div>
+            <input
+              v-model="certKey"
+              type="text"
+              placeholder="请输入您的密码 (6位)"
+              maxlength="6"
+            />
+          </div>
+          <label />
         </div>
         <button
           type="submit"
           class="btn-kami-submit"
           @click="verifyKami"
-          :disabled="!certNo.trim()"
+          :disabled="!certNo.trim() || !certKey.trim()"
         >
           立即核验
         </button>
@@ -611,12 +618,12 @@ const handleKamiClick = () => {
 };
 
 const verifyKami = async () => {
-  if (!certKey.value.trim()) {
-    ElMessage.warning("请输入核销编号");
+  if (!certKey.value.trim() || certKey.value.length !== 6) {
+    ElMessage.warning("请输入6位数密码");
     return;
   }
-  if (!certNo.value.trim()) {
-    ElMessage.warning("请输入卡密");
+  if (!certNo.value.trim() || certNo.value.length !== 30) {
+    ElMessage.warning("请输入30位数卡号");
     return;
   }
   try {
@@ -625,6 +632,7 @@ const verifyKami = async () => {
       certKey: certKey.value,
       certNo: certNo.value,
     });
+    isPermissionCheck();
     // 模拟核验成功
     ElMessageBox.confirm(
       "您的卡密核验已完成，可返回福龙Claw立即体验使用。",
@@ -649,8 +657,6 @@ const verifyKami = async () => {
     ElMessage.error(error.message || "核验失败");
     return;
   }
-
-  isPermissionCheck();
 };
 
 // Pricing functionality
@@ -770,12 +776,12 @@ const handleClick = async () => {
     }).then(() => {
       const url =
         "https://sd7g8p2f70099ijhlupg0.apigateway-cn-shanghai.volceapi.com";
-      window.open(url, "_blank");
+      window.location.href = url;
     });
   } else {
     const url =
       "https://sd7g8p2f70099ijhlupg0.apigateway-cn-shanghai.volceapi.com";
-    window.open(url, "_blank");
+    window.location.href = url;
   }
 };
 onMounted(() => {
@@ -1513,8 +1519,14 @@ onMounted(() => {
 .kami-dialog {
   width: 480px;
   max-width: calc(100vw - 32px);
-  .kami-form {
-    padding: 20px 0;
+  .form-item {
+    display: flex;
+    flex-wrap: nowrap;
+    align-items: center;
+    margin: 5px 0;
+    .form-item-label {
+      width: 60px;
+    }
   }
   .form-group {
     margin-bottom: 20px;
