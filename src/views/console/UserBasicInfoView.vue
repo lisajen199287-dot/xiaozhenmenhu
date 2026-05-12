@@ -140,7 +140,7 @@ const copyUserId = () => {
           <div class="avatar-wrapper" @click="triggerUpload">
             <img v-if="getAvatar()" :src="getAvatar()" class="avatar-img" />
             <div v-else class="avatar-text">
-              {{ (getNickname() || 'U').substring(0, 2).toUpperCase() }}
+              {{ (getNickname() || 'U').slice(-2).toUpperCase() }}
             </div>
             <div class="avatar-overlay">
               <i class="fas fa-camera"></i>
