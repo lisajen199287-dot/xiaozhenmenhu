@@ -72,7 +72,7 @@ onMounted(() => {
 });
 
 const handleEnter = (app: Application) => {
-  if ((app.name = "AI合同审核")) {
+  if ((app.name === "AI合同审核")) {
     if (!localStorage.getItem("token")) {
       router.push({ path: "/login", query: { redirect: "/apps" } });
       return;
