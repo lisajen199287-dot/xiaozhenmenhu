@@ -86,10 +86,22 @@ const todayCredits = ref(0);
 const statsInterval = ref("Day");
 const statsApiKey = ref<number | undefined>(undefined);
 const statsModel = ref("");
-const statsDateRange = ref<string[]>([]);
+const statsDateRange = ref<string[]>((() => {
+  const end = new Date();
+  const start = new Date();
+  start.setDate(start.getDate() - 6);
+  const fmt = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  return [fmt(start), fmt(end)];
+})());
 const statsMetric = ref("tokens"); // 'tokens' | 'credits'
 const statsLoading = ref(false);
 const statsDataPoints = ref<any[]>([]);
+const statsModelDataPoints = ref<any[]>([]);
+const MODEL_COLOR_PALETTE = [
+  '#4f46e5', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6',
+  '#06b6d4', '#ec4899', '#f97316', '#14b8a6', '#6366f1',
+  '#84cc16', '#e11d48', '#0ea5e9', '#a855f7', '#22c55e',
+];
 let chartInstance: EChartsType | null = null;
 const chartRef = ref<HTMLElement | null>(null);
 const modelOptions = ref<string[]>([]);
@@ -250,6 +262,81 @@ const getStatusType = (status: number) => (status === 1 ? "success" : "danger");
 const getStatusText = (status: number) => (status === 1 ? "启用" : "禁用");
 
 // ==================== 用量统计图表 ====================
+const statsTotalCalls = ref(0);
+const statsTotalMetric = ref(0);
+
+const fillTimeGaps = (points: any[], startDate: string, endDate: string, interval: string): any[] => {
+  const map = new Map(points.map((p: any) => [p.timeKey, p]));
+  const result: any[] = [];
+  const fmtDate = (d: Date) => `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  if (interval === "Hour") {
+    const start = new Date(startDate + "T00:00:00");
+    const end = new Date(endDate + "T23:00:00");
+    for (let d = new Date(start); d <= end; d.setHours(d.getHours() + 1)) {
+      const key = fmtDate(d) + " " + String(d.getHours()).padStart(2, "0") + ":00";
+      result.push(map.get(key) || { timeKey: key, callCount: 0, actualTokens: 0, totalCost: 0 });
+    }
+  } else {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      const key = fmtDate(d);
+      result.push(map.get(key) || { timeKey: key, callCount: 0, actualTokens: 0, totalCost: 0 });
+    }
+  }
+  return result;
+};
+
+const fillTimeGapsByModel = (
+  modelPoints: any[],
+  startDate: string,
+  endDate: string,
+  interval: string
+): { timeKeys: string[]; models: string[]; dataMap: Map<string, Map<string, any>> } => {
+  const modelSet = new Set<string>();
+  modelPoints.forEach((p: any) => { if (p.model) modelSet.add(p.model); });
+  const models = Array.from(modelSet);
+
+  const dataMap = new Map<string, Map<string, any>>();
+  modelPoints.forEach((p: any) => {
+    if (!dataMap.has(p.timeKey)) dataMap.set(p.timeKey, new Map());
+    dataMap.get(p.timeKey)!.set(p.model, p);
+  });
+
+  const fmtDate = (d: Date) =>
+    `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`;
+  const timeKeys: string[] = [];
+
+  if (interval === 'Hour') {
+    const start = new Date(startDate + 'T00:00:00');
+    const end = new Date(endDate + 'T23:00:00');
+    for (let d = new Date(start); d <= end; d.setHours(d.getHours() + 1)) {
+      const key = fmtDate(d) + ' ' + String(d.getHours()).padStart(2, '0') + ':00';
+      timeKeys.push(key);
+    }
+  } else {
+    const start = new Date(startDate);
+    const end = new Date(endDate);
+    for (let d = new Date(start); d <= end; d.setDate(d.getDate() + 1)) {
+      timeKeys.push(fmtDate(d));
+    }
+  }
+
+  const zeroPoint = (timeKey: string, model: string) => ({
+    timeKey, model, callCount: 0, actualTokens: 0, totalCost: 0
+  });
+  timeKeys.forEach(tk => {
+    if (!dataMap.has(tk)) dataMap.set(tk, new Map());
+    models.forEach(m => {
+      if (!dataMap.get(tk)!.has(m)) {
+        dataMap.get(tk)!.set(m, zeroPoint(tk, m));
+      }
+    });
+  });
+
+  return { timeKeys, models, dataMap };
+};
+
 const fetchUsageStats = async () => {
   statsLoading.value = true;
   try {
@@ -274,9 +361,17 @@ const fetchUsageStats = async () => {
     if (statsModel.value) params.model = statsModel.value;
     const res = await apiGetUsageStats(params);
     const data = res?.data || res;
-    const points = data?.dataPoints || [];
+    const rawPoints = data?.dataPoints || [];
+    const rawModelPoints = data?.modelDataPoints || [];
+    const sd = params.startDate || (() => { const d = new Date(); d.setDate(d.getDate() - 6); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; })();
+    const ed = params.endDate || (() => { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, '0')}-${String(d.getDate()).padStart(2, '0')}`; })();
+    const points = fillTimeGaps(rawPoints, sd, ed, statsInterval.value);
     statsDataPoints.value = points;
-    renderChart(points);
+    statsModelDataPoints.value = rawModelPoints;
+    statsTotalCalls.value = points.reduce((s: number, p: any) => s + (Number(p.callCount) || 0), 0);
+    const metricKey = statsMetric.value === "tokens" ? "actualTokens" : "totalCost";
+    statsTotalMetric.value = points.reduce((s: number, p: any) => s + (Number(p[metricKey]) || 0), 0);
+    renderChart(points, rawModelPoints);
   } catch {
     ElMessage.error("获取统计数据失败");
   } finally {
@@ -284,55 +379,83 @@ const fetchUsageStats = async () => {
   }
 };
 
-const renderChart = (points: any[]) => {
+const renderChart = (points: any[], modelPoints: any[] = []) => {
   if (!chartRef.value) return;
   if (!chartInstance) chartInstance = init(chartRef.value);
-  const times = points.map((p: any) => p.timeKey);
   const isTokens = statsMetric.value === "tokens";
-  const values = points.map((p: any) =>
-    Number(isTokens ? p.actualTokens || 0 : p.totalCost || 0)
-  );
-  const seriesName = isTokens ? "Token 消耗" : "积分消耗";
-  const color = isTokens ? "#4f46e5" : "#f59e0b";
-  const option: EChartsOption = {
-    tooltip: { trigger: "axis" },
-    grid: { left: 60, right: 30, top: 30, bottom: 30 },
-    xAxis: {
-      type: "category",
-      data: times,
-      axisLabel: { rotate: times.length > 15 ? 45 : 0, fontSize: 11 },
-    },
-    yAxis: { type: "value", name: isTokens ? "Token" : "积分" },
-    series: [
-      {
-        name: seriesName,
-        type: "line", // 把 bar 改成 line 即可
-        data: values,
-        itemStyle: { color }, // 折线颜色
-        symbol: "circle", // 拐点样式：圆点
-        symbolSize: 6, // 拐点大小
-        lineStyle: {
-          // 折线样式
-          width: 3,
-          color: color,
-        },
-        areaStyle: {
-          // 可选：开启渐变填充（更好看）
-          color: {
-            type: "linear",
-            x: 0,
-            y: 0,
-            x2: 0,
-            y2: 1,
-            colorStops: [
-              { offset: 0, color: color + "80" }, // 上深
-              { offset: 1, color: color + "10" }, // 下浅
-            ],
-          },
-        },
+  const metricKey = isTokens ? "actualTokens" : "totalCost";
+  const yAxisName = isTokens ? "Tokens" : "积分";
+  const isStacked = !statsModel.value && modelPoints.length > 0;
+
+  let option: EChartsOption;
+
+  if (isStacked) {
+    const sd = statsDateRange.value?.[0] || '';
+    const ed = statsDateRange.value?.[1] || '';
+    const { timeKeys, models, dataMap } = fillTimeGapsByModel(modelPoints, sd, ed, statsInterval.value);
+
+    const series = models.map((model, index) => ({
+      name: model,
+      type: 'bar' as const,
+      stack: 'total',
+      data: timeKeys.map(tk => {
+        const p = dataMap.get(tk)?.get(model);
+        return p ? Number(p[metricKey]) || 0 : 0;
+      }),
+      itemStyle: {
+        color: MODEL_COLOR_PALETTE[index % MODEL_COLOR_PALETTE.length],
+        borderRadius: index === models.length - 1 ? [4, 4, 0, 0] : [0, 0, 0, 0],
       },
-    ],
-  };
+      barMaxWidth: 40,
+    }));
+
+    option = {
+      tooltip: {
+        trigger: 'axis',
+        axisPointer: { type: 'shadow' },
+      },
+      legend: {
+        data: models,
+        top: 0,
+        type: 'scroll',
+      },
+      grid: { left: 60, right: 30, top: 40, bottom: 30 },
+      xAxis: {
+        type: 'category',
+        data: timeKeys,
+        axisLabel: { rotate: timeKeys.length > 15 ? 45 : 0, fontSize: 11 },
+      },
+      yAxis: { type: 'value', name: yAxisName },
+      series,
+    };
+  } else {
+    const times = points.map((p: any) => p.timeKey);
+    const values = points.map((p: any) =>
+      Number(isTokens ? p.actualTokens || 0 : p.totalCost || 0)
+    );
+    const seriesName = isTokens ? "Tokens 消耗" : "积分消耗";
+    const color = isTokens ? "#4f46e5" : "#f59e0b";
+    option = {
+      tooltip: { trigger: "axis" },
+      grid: { left: 60, right: 30, top: 30, bottom: 30 },
+      xAxis: {
+        type: "category",
+        data: times,
+        axisLabel: { rotate: times.length > 15 ? 45 : 0, fontSize: 11 },
+      },
+      yAxis: { type: "value", name: yAxisName },
+      series: [
+        {
+          name: seriesName,
+          type: "bar",
+          data: values,
+          itemStyle: { color, borderRadius: [4, 4, 0, 0] },
+          barMaxWidth: 40,
+        },
+      ],
+    };
+  }
+
   chartInstance.setOption(option, true);
 };
 
@@ -363,7 +486,11 @@ const handleLogsPageChange = (page: number) => {
 
 // Tab 切换时触发数据加载
 watch(statsMetric, () => {
-  if (statsDataPoints.value.length > 0) renderChart(statsDataPoints.value);
+  if (statsDataPoints.value.length > 0) {
+    const metricKey = statsMetric.value === "tokens" ? "actualTokens" : "totalCost";
+    statsTotalMetric.value = statsDataPoints.value.reduce((s: number, p: any) => s + (Number(p[metricKey]) || 0), 0);
+    renderChart(statsDataPoints.value, statsModelDataPoints.value);
+  }
 });
 
 watch(activeTab, (tab) => {
@@ -419,7 +546,7 @@ onUnmounted(() => {
         <div class="stat-icon tokens"><i class="fas fa-microchip"></i></div>
         <div class="stat-info">
           <div class="stat-value">{{ todayCredits.toLocaleString() }}</div>
-          <div class="stat-label">今日 Token 消耗</div>
+          <div class="stat-label">今日 Tokens 消耗</div>
         </div>
       </div>
     </div>
@@ -565,7 +692,7 @@ onUnmounted(() => {
             :class="['metric-btn', { active: statsMetric === 'tokens' }]"
             @click="statsMetric = 'tokens'"
           >
-            Token
+            Tokens
           </button>
           <button
             :class="['metric-btn', { active: statsMetric === 'credits' }]"
@@ -596,6 +723,17 @@ onUnmounted(() => {
         >
           {{ statsLoading ? "加载中..." : "查询" }}
         </button>
+      </div>
+      <div class="stats-summary" v-if="statsDataPoints.length > 0">
+        <div class="summary-item">
+          <span class="summary-label">调用次数</span>
+          <span class="summary-value">{{ statsTotalCalls.toLocaleString() }}</span>
+        </div>
+        <div class="summary-divider"></div>
+        <div class="summary-item">
+          <span class="summary-label">{{ statsMetric === 'tokens' ? 'Tokens 总量' : '积分总量' }}</span>
+          <span class="summary-value">{{ statsTotalMetric.toLocaleString() }}</span>
+        </div>
       </div>
       <div ref="chartRef" class="chart-container"></div>
     </div>
@@ -885,6 +1023,34 @@ onUnmounted(() => {
 .filter-input:focus {
   outline: none;
   border-color: #4f46e5;
+}
+
+.stats-summary {
+  display: flex;
+  align-items: center;
+  gap: 24px;
+  padding: 12px 24px;
+  border-bottom: 1px solid #f1f5f9;
+}
+.summary-item {
+  display: flex;
+  align-items: baseline;
+  gap: 8px;
+}
+.summary-label {
+  font-size: 0.85rem;
+  color: #64748b;
+  font-weight: 600;
+}
+.summary-value {
+  font-size: 1.1rem;
+  color: #0f172a;
+  font-weight: 800;
+}
+.summary-divider {
+  width: 1px;
+  height: 20px;
+  background: #e2e8f0;
 }
 
 .chart-container {
