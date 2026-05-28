@@ -61,7 +61,7 @@ const handleNewsClick = (id) => {
         <div class="hero-links">
           <div class="text" @click="Connect()">接入</div>
           <span class="divider">|</span>
-          <div class="text" @click="Application()">申请算力补贴</div>
+          <div class="text" @click="Application()">申请政策补贴</div>
           <span class="divider">|</span>
           <a href="/docs.html" class="text">API文档</a>
         </div>
