@@ -350,3 +350,17 @@ export const apiVerifyWriteOff = (data: any) => {
     data,
   })
 }
+
+export const apiVerifyWriteOffWithNatural = (data: any) => {
+  return request.post({
+    url: `/api/verify/write-off?channel=natural`,
+    data,
+  })
+}
+
+export const apiWriteOffWithNaturalUser = (data: any) => {
+  return request.post({
+    url: `/api/verify/write-off?channel=naturalUser`,
+    data,
+  })
+}

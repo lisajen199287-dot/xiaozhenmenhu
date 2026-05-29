@@ -150,12 +150,26 @@ export interface Role {
 
 
 
+// const getStorage = <T>(key: string, defaultValue: T): T => {
+
+//     const stored = localStorage.getItem(key)
+
+//     return stored ? JSON.parse(stored) : defaultValue
+
+// }
+
 const getStorage = <T>(key: string, defaultValue: T): T => {
-
-    const stored = localStorage.getItem(key)
-
-    return stored ? JSON.parse(stored) : defaultValue
-
+    try {
+        const raw = localStorage.getItem(key);
+        if (!raw) return defaultValue;
+        const parsed = JSON.parse(raw);
+        // 确保类型匹配：如果默认值是数组但解析结果不是数组，返回默认值
+        if (Array.isArray(defaultValue) && !Array.isArray(parsed)) return defaultValue;
+        return parsed;
+    } catch (e) {
+        console.warn(`Failed to parse storage key "${key}":`, e);
+        return defaultValue;
+    }
 }
 
 

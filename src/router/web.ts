@@ -124,6 +124,16 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/arkclaw.vue')
     },
     {
+        path: '/writeOff',
+        name: 'WriteOff',
+        component: () => import('@/views/writeOff.vue')
+    },
+    {
+        path: '/writeOffExclusive/aloneUser',
+        name: 'WriteOffExclusive',
+        component: () => import('@/views/writeOffExclusive.vue')
+    },
+    {
         path: '/ai-conversation',
         name: 'conversation',
         component: () => import('@/views/conversation.vue')
