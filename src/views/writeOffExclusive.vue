@@ -36,109 +36,38 @@
         </button>
       </div>
     </section>
-
     <!-- Application Packages Section -->
     <section class="packages-section" id="packages">
+      <div class="section-header">
+        <h2 class="section-title">选择适合您的应用包</h2>
+        <p class="section-subtitle">一站式AI能力兑换，助力企业数字化转型</p>
+      </div>
       <div class="packages-inner">
-        <div class="packages-header">
-          <h2 class="packages-title">应用包内容一览</h2>
-          <div class="packages-title-bar"></div>
+        <!-- 综合应用包 ¥469 -->
+        <div class="pkg-card pkg-premium">
+          <img src="@/assets/images/claw/469icon.png" alt="AI综合应用包 ¥469" class="pkg-bg-img" />
         </div>
-        <div class="packages-grid">
-          <!-- Basic Package -->
-          <div class="package-card basic-card">
-            <div class="card-header">
-              <h3 class="card-title">仓山平台AI基础应用包</h3>
-              <div class="card-price">
-                <span class="price-symbol">￥</span>
-                <span class="price-value">69</span>
-                <span class="price-unit">/ 基础体验</span>
-              </div>
-            </div>
-            <div class="card-body">
-              <div class="card-group">
-                <div class="group-title">
-                  <span class="group-icon">🏢</span>
-                  行政办公类
-                </div>
-                <ul class="group-list">
-                  <li><span class="list-check">✓</span> 智能会议纪要</li>
-                  <li><span class="list-check">✓</span> 日常办公文档生成</li>
-                </ul>
-              </div>
-              <div class="card-group">
-                <div class="group-title">
-                  <span class="group-icon">🎨</span>
-                  AI内容创作类
-                </div>
-                <ul class="group-list">
-                  <li><span class="list-check">✓</span> 基础图文生成</li>
-                  <li><span class="list-check">✓</span> 营销文案撰写</li>
-                </ul>
-              </div>
-              <div class="card-group">
-                <div class="group-title">
-                  <span class="group-icon">📈</span>
-                  AI销售增长类
-                </div>
-                <ul class="group-list">
-                  <li><span class="list-check">✓</span> 基础客资分析</li>
-                </ul>
-              </div>
-            </div>
-          </div>
 
-          <!-- Comprehensive Package -->
-          <div class="package-card premium-card">
-            <div class="premium-badge">【推荐企业版】最受欢迎</div>
-            <div class="premium-inner">
-              <div class="card-header">
-                <h3 class="card-title">仓山平台AI综合应用包</h3>
-                <div class="card-price">
-                  <span class="price-symbol">￥</span>
-                  <span class="price-value">469</span>
-                  <span class="price-unit">/ 核心全链路</span>
-                </div>
-              </div>
-              <div class="card-body">
-                <div class="card-group">
-                  <div class="group-title">
-                    <span class="group-icon">🔐</span>
-                    深度企业管理
-                  </div>
-                  <ul class="group-list">
-                    <li><span class="list-check">✓</span> 企业智能财税法</li>
-                    <li><span class="list-check">✓</span> AI合同审核</li>
-                    <li><span class="list-check">✓</span> 组织架构智能优化</li>
-                  </ul>
-                </div>
-                <div class="card-group">
-                  <div class="group-title">
-                    <span class="group-icon">🎬</span>
-                    高级内容生成
-                  </div>
-                  <ul class="group-list">
-                    <li><span class="list-check">✓</span> 高品质视频生成</li>
-                    <li><span class="list-check">✓</span> 品牌专属模型微调</li>
-                  </ul>
-                </div>
-                <div class="card-group">
-                  <div class="group-title">
-                    <span class="group-icon">🚀</span>
-                    全链路营销增长
-                  </div>
-                  <ul class="group-list">
-                    <li><span class="list-check">✓</span> 全域跨平台数据分析</li>
-                    <li><span class="list-check">✓</span> 智能客服深度定制</li>
-                  </ul>
-                </div>
-              </div>
-            </div>
-          </div>
+        <!-- 基础应用包 ¥69 -->
+        <div class="pkg-card pkg-basic">
+          <img src="@/assets/images/claw/69icon.png" alt="AI基础应用包 ¥69" class="pkg-bg-img" />
         </div>
       </div>
     </section>
 
+    <!-- Footer -->
+    <!-- <footer class="page-footer">
+      <div class="footer-inner">
+        <div class="footer-brand">AI算力消费券</div>
+        <div class="footer-right">
+          <div class="footer-links">
+            <a href="#">隐私协议</a>
+            <a href="#">服务条款</a>
+          </div>
+          <div class="footer-copy">© 2024 仓山区人工智能公共服务平台</div>
+        </div>
+      </div>
+    </footer> -->
 
     <!-- 核销弹窗 -->
     <el-dialog
@@ -187,7 +116,7 @@
           <span v-if="verifying" class="loading-spinner"></span>
           {{ verifying ? '核验中...' : '立即核验' }}
         </button>
-        <p class="form-tip">核销成功后，算力补贴将即刻到账</p>
+        <!-- <p class="form-tip">核销成功后，算力补贴将即刻到账</p> -->
       </div>
     </el-dialog>
 
@@ -352,24 +281,12 @@ $border-color: #e5e2e3;
   display: flex;
   align-items: center;
   justify-content: center;
-  background-image: url("@/assets/images/claw/icon25.png");
+  background-image: url("@/assets/images/claw/icon27.png");
   background-size: cover;
   background-position: center;
   border-radius: 2rem;
   margin: calc(80px + 16px) 16px 16px;
   overflow: hidden;
-}
-
-.hero-overlay {
-  position: absolute;
-  inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(15, 12, 41, 0.7) 0%,
-    rgba(26, 17, 69, 0.6) 50%,
-    rgba(36, 36, 62, 0.7) 100%
-  );
-  border-radius: inherit;
 }
 
 .hero-content {
@@ -401,12 +318,6 @@ $border-color: #e5e2e3;
   letter-spacing: -0.04em;
   margin-bottom: 32px;
   text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
-  .highlight {
-    background: linear-gradient(135deg, $tertiary, $primary-light);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-  }
 }
 
 .hero-features {
@@ -467,189 +378,77 @@ $border-color: #e5e2e3;
 }
 
 /* ========== Packages Section ========== */
+$pkg-red: #e53935;
+$pkg-red-dark: #c62828;
+$pkg-gold: #f9a825;
+$pkg-orange: #ef6c00;
+
 .packages-section {
   padding: 80px 0 120px;
-  background: $bg-surface;
+  background: #f8f9fb;
 }
 
-.packages-inner {
-  max-width: 1280px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
-
-.packages-header {
+.section-header {
   text-align: center;
-  margin-bottom: 64px;
+  margin-bottom: 48px;
 }
 
-.packages-title {
-  font-size: 48px;
-  font-weight: 700;
-  color: $text-dark;
+.section-title {
+  font-size: 32px;
+  font-weight: 800;
+  color: #1a1a2e;
+  margin: 0 0 12px;
   letter-spacing: -0.02em;
 }
 
-.packages-title-bar {
-  width: 96px;
-  height: 4px;
-  background: linear-gradient(90deg, $primary, #007e85);
-  border-radius: 999px;
-  margin: 24px auto 0;
+.section-subtitle {
+  font-size: 16px;
+  color: #64748b;
+  margin: 0;
 }
 
-.packages-grid {
-  max-width: 1024px;
+.packages-inner {
+  max-width: 1700px;
   margin: 0 auto;
+  padding: 0 24px;
   display: grid;
   grid-template-columns: 1fr 1fr;
-  gap: 48px;
-  align-items: stretch;
+  gap: 28px;
+  align-items: start;
 }
 
-/* ---- 基础卡片 ---- */
-.package-card {
-  border-radius: 16px;
-  display: flex;
-  flex-direction: column;
-}
-
-.basic-card {
-  background: #fff;
-  padding: 32px;
-  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
-  border: 1px solid #f0f0f0;
-  transition: all 0.3s;
-  &:hover {
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.1);
-    transform: translateY(-8px);
-  }
-}
-
-/* ---- 推荐卡片 ---- */
-.premium-card {
-  background: linear-gradient(90deg, $pink-start, $pink-mid, $purple-end);
-  padding: 2px;
-  padding-top: 34px;
+/* ---- Package Card ---- */
+.pkg-card {
   position: relative;
-  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
-  transition: all 0.3s;
+  border-radius: 24px;
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
   &:hover {
-    box-shadow: 0 16px 48px rgba(0, 0, 0, 0.15);
-    transform: translateY(-8px);
+    transform: translateY(-4px);
   }
 }
 
-.premium-badge {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  height: 32px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  color: #fff;
-  font-size: 12px;
-  font-weight: 500;
-  letter-spacing: 0.05em;
+.pkg-bg-img {
+  display: block;
+  width: 100%;
+  height: auto;
+  border-radius: 24px;
 }
 
-.premium-inner {
-  background: #fff;
-  border-radius: 14px;
-  padding: 32px;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-}
-
-/* ---- 卡片内部样式 ---- */
-.card-header {
-  margin-bottom: 24px;
-}
-
-.card-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: $text-dark;
-  margin-bottom: 16px;
-}
-
-.card-price {
-  display: flex;
-  align-items: baseline;
-  gap: 2px;
-  color: $text-dark;
-}
-
-.price-symbol {
-  font-size: 24px;
-  font-weight: 700;
-}
-
-.price-value {
-  font-size: 40px;
-  font-weight: 700;
-  line-height: 1;
-}
-
-.price-unit {
-  font-size: 14px;
-  color: $text-muted;
-  font-weight: 400;
-  margin-left: 8px;
-}
-
-.card-body {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-  gap: 24px;
-  padding-top: 16px;
-  border-top: 1px solid #f0f0f0;
-}
-
-.card-group {
-  &:last-child {
-    margin-bottom: 0;
+.pkg-premium {
+  border: 1px solid rgba(249, 168, 37, 0.25);
+  box-shadow: 0 20px 60px rgba(74, 53, 0, 0.4);
+  &:hover {
+    box-shadow: 0 24px 72px rgba(74, 53, 0, 0.55);
   }
 }
 
-.group-title {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  font-size: 14px;
-  font-weight: 700;
-  color: $text-dark;
-  margin-bottom: 12px;
-}
-
-.group-icon {
-  font-size: 16px;
-}
-
-.group-list {
-  list-style: none;
-  padding: 0;
-  margin: 0;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.group-list li {
-  display: flex;
-  align-items: flex-start;
-  gap: 8px;
-  font-size: 14px;
-  color: $text-secondary;
-}
-
-.list-check {
-  color: $text-muted;
-  flex-shrink: 0;
+.pkg-basic {
+  border: 1px solid rgba(229, 57, 53, 0.2);
+  box-shadow: 0 8px 32px rgba(74, 16, 16, 0.3);
+  &:hover {
+    box-shadow: 0 12px 48px rgba(74, 16, 16, 0.45);
+  }
 }
 
 /* ========== Footer ========== */
@@ -840,8 +639,17 @@ $border-color: #e5e2e3;
   .hero-title {
     font-size: 48px;
   }
-  .packages-grid {
-    gap: 32px;
+  .packages-inner {
+    grid-template-columns: 1fr;
+    max-width: 680px;
+    gap: 24px;
+  }
+  .price-num { font-size: 36px; }
+  .pkg-guarantees {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  .pkg-guarantees-basic {
+    grid-template-columns: repeat(3, 1fr);
   }
 }
 
@@ -864,13 +672,27 @@ $border-color: #e5e2e3;
   .hero-feature-dot {
     display: none;
   }
-  .packages-title {
-    font-size: 32px;
+
+  .section-title { font-size: 24px; }
+  .section-subtitle { font-size: 14px; }
+  .packages-section { padding: 48px 0 80px; }
+
+  .pkg-card { padding: 24px 20px; border-radius: 18px; }
+  .pkg-top {
+    flex-direction: column;
+    gap: 16px;
   }
-  .packages-grid {
-    grid-template-columns: 1fr;
-    gap: 24px;
+  .pkg-price-area, .pkg-price-basic {
+    align-self: flex-start;
+    text-align: left;
   }
+  .price-row { justify-content: flex-start; }
+  .price-meta { justify-content: flex-start; }
+  .pkg-name { font-size: 20px; }
+
+  .feat-list li { font-size: 12px; }
+  .guarantee-item { padding: 10px 6px; }
+
   .footer-inner {
     flex-direction: column;
     align-items: flex-start;
@@ -891,6 +713,17 @@ $border-color: #e5e2e3;
   .hero-cta {
     padding: 14px 32px;
     font-size: 16px;
+  }
+  .section-title { font-size: 22px; }
+  .pkg-card { padding: 20px 16px; border-radius: 14px; }
+  .pkg-name { font-size: 18px; }
+  .price-num { font-size: 32px; }
+  .pkg-guarantees {
+    grid-template-columns: repeat(2, 1fr);
+    gap: 8px;
+  }
+  .pkg-guarantees-basic {
+    grid-template-columns: 1fr 1fr;
   }
 }
 </style>
