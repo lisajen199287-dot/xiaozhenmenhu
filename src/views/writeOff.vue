@@ -181,7 +181,6 @@ const verifyKami = async () => {
     certKey.value = "";
     certNo.value = "";
   } catch (error: any) {
-    ElMessage.error(error.message || "核验失败，请检查卡号和密码");
   } finally {
     verifying.value = false;
   }
