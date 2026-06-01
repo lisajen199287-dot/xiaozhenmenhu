@@ -364,3 +364,10 @@ export const apiWriteOffWithNaturalUser = (data: any) => {
     data,
   })
 }
+
+
+export const apiWriteOffhasComputPower = () => {
+  return request.get({
+    url: `/api/verify/has-comput-power`,
+  })
+}

@@ -7,7 +7,7 @@
         <div class="navbar-links">
           <a href="#packages">应用包</a>
         </div>
-        <button class="navbar-cta" @click="handleVerifyClick">立即核销</button>
+        <!-- <button class="navbar-cta" @click="handleVerifyClick">立即核销</button> -->
       </div>
     </nav>
 
@@ -30,10 +30,16 @@
             企业数字化应用加速落地
           </div>
         </div>
-        <button class="hero-cta" @click="handleVerifyClick">
-          <span class="cta-icon">🎫</span>
-          立即核销
-        </button>
+        <div class="hero-actions">
+          <button class="hero-cta" :class="{ 'is-disabled': isVerified }" :disabled="isVerified" @click="handleVerifyClick">
+            <span class="cta-icon">🎫</span>
+            {{ isVerified ? '已核销' : '立即核销' }}
+          </button>
+          <button class="hero-cta hero-cta-secondary" type="button" @click="goWechat()">
+            <span class="cta-icon">💬</span>
+            客服咨询
+          </button>
+        </div>
       </div>
     </section>
     <!-- Application Packages Section -->
@@ -120,6 +126,22 @@
       </div>
     </el-dialog>
 
+    <el-dialog
+      v-model="wechatDialogVisible"
+      title="客服微信"
+      width="400px"
+      center
+      align-center
+    >
+      <div class="wechat-qrcode-wrapper">
+        <img
+          src="@/assets/images/claw/WeChat_bgc.png"
+          alt="客服微信"
+          class="wechat-qrcode"
+        />
+      </div>
+    </el-dialog>
+
     <!-- 核销成功弹窗 -->
     <el-dialog
       v-model="successDialogVisible"
@@ -131,14 +153,14 @@
       <div class="success-content">
         <div class="success-icon">✅</div>
         <h3 class="success-title">核销成功！</h3>
-        <button class="btn-success" @click="successDialogVisible = false">确定</button>
+        <button class="btn-success" @click="handleSuccessConfirm">确定</button>
       </div>
     </el-dialog>
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref } from "vue";
+import { ref, onMounted } from "vue";
 import { useRouter } from "vue-router";
 import * as newApi from "@/api/newApi/index";
 import { ElMessage } from "element-plus";
@@ -151,14 +173,41 @@ const successDialogVisible = ref(false);
 const certNo = ref("");
 const certKey = ref("");
 const verifying = ref(false);
+const isVerified = ref(false);
+
+const wechatDialogVisible = ref(false);
+const goWechat = () => {
+  wechatDialogVisible.value = true;
+};
+const isPermissionCheck = async () => {
+  //判断是否登录，是否核销过
+  const isLogin = localStorage.getItem("token") || "";
+  if (isLogin) {
+    //已登录，判断是否核销过
+    const res = await newApi.apiWriteOffhasComputPower();
+    isVerified.value = res;
+  } else {
+    isVerified.value = false;
+  }
+};
+
+onMounted(() => {
+  isPermissionCheck();
+});
 
 const handleVerifyClick = () => {
+  if (isVerified.value) return;
   const token = localStorage.getItem("token");
   if (!token) {
     router.push({ path: "/login", query: { redirect: "/writeOff" } });
     return;
   }
   kamiDialogVisible.value = true;
+};
+
+const handleSuccessConfirm = () => {
+  successDialogVisible.value = false;
+  location.reload();
 };
 
 const verifyKami = async () => {
@@ -177,9 +226,9 @@ const verifyKami = async () => {
       certNo: certNo.value,
     });
     kamiDialogVisible.value = false;
-    successDialogVisible.value = true;
     certKey.value = "";
     certNo.value = "";
+    successDialogVisible.value = true;
   } catch (error: any) {
   } finally {
     verifying.value = false;
@@ -263,12 +312,18 @@ $border-color: #e5e2e3;
   cursor: pointer;
   box-shadow: 0 4px 12px rgba($primary, 0.3);
   transition: all 0.3s;
-  &:hover {
+  &:hover:not(:disabled) {
     background: $primary-dark;
     box-shadow: 0 6px 16px rgba($primary, 0.4);
   }
-  &:active {
+  &:active:not(:disabled) {
     transform: scale(0.97);
+  }
+  &.is-disabled, &:disabled {
+    background: #c0c4cc;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.7;
   }
 }
 
@@ -349,16 +404,26 @@ $border-color: #e5e2e3;
   background: $border-color;
 }
 
+.hero-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 20px;
+  flex-wrap: wrap;
+}
+
 .hero-cta {
   display: inline-flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
+  min-width: 160px;
   background: $primary;
   color: #fff;
   border: none;
-  padding: 18px 48px;
-  border-radius: 8px;
-  font-size: 18px;
+  padding: 16px 40px;
+  border-radius: 12px;
+  font-size: 17px;
   font-weight: 700;
   cursor: pointer;
   transition: all 0.3s;
@@ -366,12 +431,34 @@ $border-color: #e5e2e3;
   .cta-icon {
     font-size: 20px;
   }
-  &:hover {
+  &:hover:not(:disabled) {
     background: $primary-dark;
     box-shadow: 0 8px 30px rgba($primary, 0.5);
     transform: translateY(-2px);
   }
-  &:active {
+  &:active:not(:disabled) {
+    transform: scale(0.97);
+  }
+  &.is-disabled, &:disabled {
+    background: #c0c4cc;
+    box-shadow: none;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+  }
+}
+
+.hero-cta-secondary {
+  background: transparent;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+  box-shadow: none;
+  backdrop-filter: blur(4px);
+  &:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.15);
+    border-color: rgba(255, 255, 255, 0.8);
+    box-shadow: 0 4px 16px rgba(255, 255, 255, 0.1);
+  }
+  &:active:not(:disabled) {
     transform: scale(0.97);
   }
 }
@@ -712,6 +799,10 @@ $pkg-orange: #ef6c00;
   .hero-cta {
     padding: 14px 32px;
     font-size: 16px;
+    min-width: 140px;
+  }
+  .hero-actions {
+    gap: 14px;
   }
   .section-title { font-size: 22px; }
   .pkg-card { padding: 20px 16px; border-radius: 14px; }
