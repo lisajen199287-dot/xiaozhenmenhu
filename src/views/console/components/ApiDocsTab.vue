@@ -54,8 +54,8 @@ const docGroups: DocGroup[] = [
       { id: 'image-gen', title: 'Seedream 图片生成', icon: 'fas fa-image', fileName: '图片生成API.md' },
       { id: 'nano-banana-text2img', title: 'Doubao-Banana 文生图', icon: 'fas fa-paint-brush', fileName: 'nano banana 2 文生图 API.md' },
       { id: 'nano-banana-img2img', title: 'Doubao-Banana 图生图', icon: 'fas fa-magic', fileName: 'nano banana 2 图生图 API.md' },
-      { id: 'gpt-image2-edit', title: 'Doubao-Image-2 图生图', icon: 'fas fa-crop-alt', fileName: 'GPT Image 2 编辑图片 API.md' },
       { id: 'gpt-image2-gen', title: 'Doubao-Image-2 文生图', icon: 'fas fa-palette', fileName: 'GPT Image 2 官方生图接口 API.md' },
+      { id: 'gpt-image2-edit', title: 'Doubao-Image-2 图生图', icon: 'fas fa-crop-alt', fileName: 'GPT Image 2 编辑图片 API.md' },
     ]
   },
   {
