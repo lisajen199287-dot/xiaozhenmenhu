@@ -12,26 +12,78 @@ interface DocItem {
   fileName: string
 }
 
-const docList: DocItem[] = [
-  { id: 'create-task', title: '创建视频生成任务', icon: 'fas fa-plus-circle', fileName: '创建视频生成任务 API.md' },
-  { id: 'query-task', title: '查询视频生成任务', icon: 'fas fa-search', fileName: '查询视频生成任务 API.md' },
-  { id: 'query-task-list', title: '查询视频生成任务列表', icon: 'fas fa-list', fileName: '查询视频生成任务列表.md' },
-  { id: 'cancel-delete', title: '取消或删除任务', icon: 'fas fa-trash-alt', fileName: '取消或删除视频生成任务.md' },
-  { id: 'image-gen', title: '图片生成', icon: 'fas fa-image', fileName: '图片生成API.md' },
-  { id: 'create-material-group', title: '创建素材组', icon: 'fas fa-folder-plus', fileName: '创建素材组 API.md' },
-  { id: 'list-material-group', title: '列表查询素材组', icon: 'fas fa-th-list', fileName: '列表查询素材组 API.md' },
-  { id: 'query-material-group', title: '查询素材组详情', icon: 'fas fa-folder-open', fileName: '查询素材组详情 API.md' },
-  { id: 'update-material-group', title: '更新素材组', icon: 'fas fa-edit', fileName: '更新素材组 API.md' },
-  { id: 'create-material', title: '创建素材', icon: 'fas fa-file-upload', fileName: '创建素材 API.md' },
-  { id: 'list-material', title: '列表查询素材', icon: 'fas fa-images', fileName: '列表查询素材 API.md' },
-  { id: 'query-material', title: '查询素材详情', icon: 'fas fa-search-plus', fileName: '查询素材详情 API.md' },
-  { id: 'update-material', title: '更新素材', icon: 'fas fa-pen', fileName: '更新素材 API.md' },
-  { id: 'error-codes', title: '错误码参考', icon: 'fas fa-exclamation-triangle', fileName: '错误码.md' },
+interface DocGroup {
+  id: string
+  label: string
+  icon: string
+  items: DocItem[]
+}
 
+const docGroups: DocGroup[] = [
+  {
+    id: 'seedance',
+    label: 'Seedance 视频生成',
+    icon: 'fas fa-video',
+    items: [
+      { id: 'create-task', title: '创建视频生成任务', icon: 'fas fa-plus-circle', fileName: '创建视频生成任务 API.md' },
+      { id: 'query-task', title: '查询视频生成任务', icon: 'fas fa-search', fileName: '查询视频生成任务 API.md' },
+      { id: 'query-task-list', title: '查询视频生成任务列表', icon: 'fas fa-list', fileName: '查询视频生成任务列表.md' },
+      { id: 'cancel-delete', title: '取消或删除任务', icon: 'fas fa-trash-alt', fileName: '取消或删除视频生成任务.md' },
+    ]
+  },
+  {
+    id: 'material',
+    label: '素材库',
+    icon: 'fas fa-box-open',
+    items: [
+      { id: 'create-material-group', title: '创建素材组', icon: 'fas fa-folder-plus', fileName: '创建素材组 API.md' },
+      { id: 'list-material-group', title: '列表查询素材组', icon: 'fas fa-th-list', fileName: '列表查询素材组 API.md' },
+      { id: 'query-material-group', title: '查询素材组详情', icon: 'fas fa-folder-open', fileName: '查询素材组详情 API.md' },
+      { id: 'update-material-group', title: '更新素材组', icon: 'fas fa-edit', fileName: '更新素材组 API.md' },
+      { id: 'create-material', title: '创建素材', icon: 'fas fa-file-upload', fileName: '创建素材 API.md' },
+      { id: 'list-material', title: '列表查询素材', icon: 'fas fa-images', fileName: '列表查询素材 API.md' },
+      { id: 'query-material', title: '查询素材详情', icon: 'fas fa-search-plus', fileName: '查询素材详情 API.md' },
+      { id: 'update-material', title: '更新素材', icon: 'fas fa-pen', fileName: '更新素材 API.md' },
+    ]
+  },
+  {
+    id: 'image-gen',
+    label: '图片生成',
+    icon: 'fas fa-image',
+    items: [
+      { id: 'image-gen', title: 'Seedream 图片生成', icon: 'fas fa-image', fileName: '图片生成API.md' },
+      { id: 'nano-banana-text2img', title: 'Doubao-Banana 文生图', icon: 'fas fa-paint-brush', fileName: 'nano banana 2 文生图 API.md' },
+      { id: 'nano-banana-img2img', title: 'Doubao-Banana 图生图', icon: 'fas fa-magic', fileName: 'nano banana 2 图生图 API.md' },
+      { id: 'gpt-image2-edit', title: 'Doubao-Image-2 图生图', icon: 'fas fa-crop-alt', fileName: 'GPT Image 2 编辑图片 API.md' },
+      { id: 'gpt-image2-gen', title: 'Doubao-Image-2 文生图', icon: 'fas fa-palette', fileName: 'GPT Image 2 官方生图接口 API.md' },
+    ]
+  },
+  {
+    id: 'common',
+    label: '通用',
+    icon: 'fas fa-cog',
+    items: [
+      { id: 'error-codes', title: '错误码参考', icon: 'fas fa-exclamation-triangle', fileName: '错误码.md' },
+    ]
+  },
 ]
+
+// Flat list for easy lookup by id
+const docList = docGroups.flatMap(g => g.items)
 
 // ==================== Reactive state ====================
 const activeDocId = ref<string>('create-task')
+const collapsedGroups = ref<Set<string>>(new Set())
+
+function toggleGroup(groupId: string) {
+  const next = new Set(collapsedGroups.value)
+  if (next.has(groupId)) {
+    next.delete(groupId)
+  } else {
+    next.add(groupId)
+  }
+  collapsedGroups.value = next
+}
 const gatewayDomain = config.gateway_domain
 const allCollapsed = ref(false)
 const collapseVersion = ref(0)
@@ -213,15 +265,24 @@ function selectDoc(id: string) {
     <aside class="docs-sidebar">
       <div class="sidebar-title">API 文档</div>
       <nav class="sidebar-nav">
-        <a
-          v-for="doc in docList"
-          :key="doc.id"
-          :class="['sidebar-item', { active: activeDocId === doc.id }]"
-          @click="selectDoc(doc.id)"
-        >
-          <i :class="doc.icon"></i>
-          <span>{{ doc.title }}</span>
-        </a>
+        <div v-for="group in docGroups" :key="group.id" class="sidebar-group">
+          <div class="sidebar-group-header" @click="toggleGroup(group.id)">
+            <i :class="group.icon" class="group-icon"></i>
+            <span class="group-label">{{ group.label }}</span>
+            <i :class="['fas fa-chevron-down', 'group-toggle', { collapsed: collapsedGroups.has(group.id) }]"></i>
+          </div>
+          <div class="sidebar-group-items" v-show="!collapsedGroups.has(group.id)">
+            <a
+              v-for="doc in group.items"
+              :key="doc.id"
+              :class="['sidebar-item', { active: activeDocId === doc.id }]"
+              @click="selectDoc(doc.id)"
+            >
+              <i :class="doc.icon"></i>
+              <span>{{ doc.title }}</span>
+            </a>
+          </div>
+        </div>
       </nav>
     </aside>
 
@@ -280,10 +341,59 @@ function selectDoc(id: string) {
 }
 
 .sidebar-nav {
-  padding: 12px 8px;
+  padding: 8px 8px;
+  display: flex;
+  flex-direction: column;
+  gap: 0;
+  overflow-y: auto;
+  flex: 1;
+}
+
+.sidebar-group {
+  display: flex;
+  flex-direction: column;
+}
+
+.sidebar-group-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 12px 6px;
+  cursor: pointer;
+  user-select: none;
+}
+
+.sidebar-group-header .group-icon {
+  width: 16px;
+  text-align: center;
+  font-size: 0.75rem;
+  color: #94a3b8;
+}
+
+.sidebar-group-header .group-label {
+  flex: 1;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: #94a3b8;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.sidebar-group-header .group-toggle {
+  font-size: 0.6rem;
+  color: #cbd5e1;
+  transition: transform 0.2s;
+}
+
+.sidebar-group-header .group-toggle.collapsed {
+  transform: rotate(-90deg);
+}
+
+.sidebar-group-items {
   display: flex;
   flex-direction: column;
   gap: 2px;
+  padding-bottom: 4px;
 }
 
 .sidebar-item {
