@@ -28,6 +28,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/news/NewsDetailView.vue')
     },
     {
+        path: '/login/password',
+        name: 'LoginPassword',
+        component: () => import('@/views/LoginPasswordView.vue')
+    },
+    {
         path: '/login',
         name: 'Login',
         component: () => import('@/views/LoginView.vue')
@@ -179,6 +184,12 @@ const routes: RouteRecordRaw[] = [
         name: 'Privacy',
         component: () => import('@/views/PrivacyView.vue')
     },
+    {
+        path: '/group-usage',
+        name: 'GroupUsage',
+        component: () => import('@/views/GroupUsageView.vue'),
+        meta: { requiresAuth: true }
+    },
     // ---- Admin Routes ----
     {
         path: '/system-mgnt-portal/login',
@@ -234,12 +245,19 @@ const router = createRouter({
     }
 })
 
-// Admin auth guard
+// Auth guard
 router.beforeEach((to, _from, next) => {
     if (to.matched.some(record => record.meta.requiresAdminAuth)) {
         const token = localStorage.getItem('admin_token')
         if (!token) {
             next('/system-mgnt-portal/login')
+        } else {
+            next()
+        }
+    } else if (to.matched.some(record => record.meta.requiresAuth)) {
+        const token = localStorage.getItem('token')
+        if (!token) {
+            next(`/login/password?redirect=${encodeURIComponent(to.fullPath)}`)
         } else {
             next()
         }

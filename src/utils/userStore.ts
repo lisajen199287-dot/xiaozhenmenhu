@@ -96,6 +96,7 @@ export function useUser() {
     const refreshCredits = async () => {
 
         if (!user.value) return
+        if (!user.value.userId) return
 
         try {
             const res = await newApi.apiCreditBalance(user.value.userId)

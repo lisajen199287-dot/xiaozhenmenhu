@@ -162,3 +162,15 @@ export const reqCheck = (data: any) => {
 export const smsResetPassword = (data: any) => {
   return request.post({ url: '/system/auth/reset-password', data })
 }
+
+// 手机号密码登录
+export const loginByPassword = (data: { mobile: string; password: string }) => {
+  return request.post({
+    url: '/member/auth/login',
+    data,
+    headers: {
+      isEncrypt: false,
+      isAPP: true
+    }
+  })
+}

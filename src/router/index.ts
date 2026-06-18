@@ -33,6 +33,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/AppCenterView.vue')
     },
     {
+        path: '/login/password',
+        name: 'LoginPassword',
+        component: () => import('@/views/LoginPasswordView.vue')
+    },
+    {
         path: '/login',
         name: 'Login',
         component: () => import('@/views/LoginView.vue')
@@ -140,6 +145,12 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/PlatformIntroView.vue')
     },
     {
+        path: '/group-usage',
+        name: 'GroupUsage',
+        component: () => import('@/views/GroupUsageView.vue'),
+        meta: { requiresAuth: true }
+    },
+    {
         path: '/console',
         name: 'Console',
         component: () => import('@/views/console/UserLayout.vue'),
@@ -186,15 +197,25 @@ const router = createRouter({
     routes
 })
 
-// Navigation Guard for Admin
+// Navigation Guard
 router.beforeEach((to, _from, next) => {
     if (to.matched.some(record => record.meta.requiresAuth)) {
-        const token = localStorage.getItem('admin_token')
-        if (!token) {
-            next('/system-mgnt-portal/login')
+        // Admin routes
+        if (to.path.startsWith('/admin') || to.path.startsWith('/console')) {
+            const adminToken = localStorage.getItem('admin_token')
+            if (!adminToken) {
+                next('/system-mgnt-portal/login')
+                return
+            }
         } else {
-            next()
+            // Member routes
+            const token = localStorage.getItem('token')
+            if (!token) {
+                next(`/login/password?redirect=${encodeURIComponent(to.fullPath)}`)
+                return
+            }
         }
+        next()
     } else {
         next()
     }
