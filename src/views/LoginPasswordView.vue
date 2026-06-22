@@ -81,9 +81,6 @@ const handleLogin = async () => {
           登录
         </el-button>
       </div>
-      <div class="back-link">
-        <router-link to="/login">返回其他登录方式</router-link>
-      </div>
     </div>
   </div>
 </template>
@@ -128,13 +125,4 @@ const handleLogin = async () => {
   margin-top: 12px;
 }
 
-.back-link {
-  text-align: center;
-  margin-top: 16px;
-}
-
-.back-link a {
-  color: #4f46e5;
-  text-decoration: none;
-}
 </style>

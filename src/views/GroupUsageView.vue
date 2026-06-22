@@ -1,8 +1,6 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
-import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
-import { useUser } from "@/utils/userStore";
 import * as newApi from "@/api/newApi/index";
 
 interface UsageItem {
@@ -15,6 +13,9 @@ interface UsageItem {
   ratio: string;
   duration: number;
   actualCost: number;
+  inputType: string;
+  audioMode: string;
+  framespersecond: number;
 }
 
 interface Pagination {
@@ -22,18 +23,6 @@ interface Pagination {
   pageSize: number;
   total: number;
 }
-
-const router = useRouter();
-const { isLoggedIn } = useUser();
-
-const checkLogin = (): boolean => {
-  if (!isLoggedIn.value) {
-    const currentPath = window.location.pathname + window.location.search;
-    router.push(`/login/password?redirect=${encodeURIComponent(currentPath)}`);
-    return false;
-  }
-  return true;
-};
 
 const loading = ref(false);
 const list = ref<UsageItem[]>([]);
@@ -50,6 +39,16 @@ const totalCost = computed(() => {
 
 const formatDateTime = (value: string): string => {
   return value ? value.replace("T", " ") : "-";
+};
+
+const formatInputType = (value: string): string => {
+  if (value === "with_video") return "参考视频";
+  return "无参考";
+};
+
+const formatAudioMode = (value: string): string => {
+  if (value === "audio") return "有音频";
+  return "无声";
 };
 
 const setDefaultDateRange = () => {
@@ -86,7 +85,6 @@ const fetchData = async () => {
 };
 
 const handleSearch = () => {
-  if (!checkLogin()) return;
   pagination.value.pageNo = 1;
   fetchData();
 };
@@ -134,7 +132,6 @@ const handleExport = async () => {
 };
 
 onMounted(() => {
-  if (!checkLogin()) return;
   setDefaultDateRange();
   fetchData();
 });
@@ -190,6 +187,17 @@ onMounted(() => {
         <el-table-column prop="resolution" label="分辨率" />
         <el-table-column prop="ratio" label="比例" />
         <el-table-column prop="duration" label="时长" />
+        <el-table-column prop="inputType" label="输入类型">
+          <template #default="scope">
+            {{ formatInputType(scope.row.inputType) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="audioMode" label="音频模式">
+          <template #default="scope">
+            {{ formatAudioMode(scope.row.audioMode) }}
+          </template>
+        </el-table-column>
+        <el-table-column prop="framespersecond" label="帧率" />
         <el-table-column prop="actualCost" label="积分消耗" />
       </el-table>
 
