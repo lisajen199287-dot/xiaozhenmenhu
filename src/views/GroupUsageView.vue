@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
+import { useUser } from "@/utils/userStore";
 import * as newApi from "@/api/newApi/index";
 
 interface UsageItem {
@@ -20,6 +22,18 @@ interface Pagination {
   pageSize: number;
   total: number;
 }
+
+const router = useRouter();
+const { isLoggedIn } = useUser();
+
+const checkLogin = (): boolean => {
+  if (!isLoggedIn.value) {
+    const currentPath = window.location.pathname + window.location.search;
+    router.push(`/login/password?redirect=${encodeURIComponent(currentPath)}`);
+    return false;
+  }
+  return true;
+};
 
 const loading = ref(false);
 const list = ref<UsageItem[]>([]);
@@ -72,6 +86,7 @@ const fetchData = async () => {
 };
 
 const handleSearch = () => {
+  if (!checkLogin()) return;
   pagination.value.pageNo = 1;
   fetchData();
 };
@@ -119,6 +134,7 @@ const handleExport = async () => {
 };
 
 onMounted(() => {
+  if (!checkLogin()) return;
   setDefaultDateRange();
   fetchData();
 });
