@@ -1,6 +1,8 @@
 <script setup lang="ts">
 import { ref, onMounted, computed } from "vue";
+import { useRouter } from "vue-router";
 import { ElMessage } from "element-plus";
+import { useUser } from "@/utils/userStore";
 import * as newApi from "@/api/newApi/index";
 
 interface UsageItem {
@@ -23,6 +25,9 @@ interface Pagination {
   pageSize: number;
   total: number;
 }
+
+const router = useRouter();
+const { logout } = useUser();
 
 const loading = ref(false);
 const list = ref<UsageItem[]>([]);
@@ -131,6 +136,15 @@ const handleExport = async () => {
   }
 };
 
+const handleLogout = async () => {
+  try {
+    await logout();
+  } catch {
+    // ignore logout API error
+  }
+  router.push("/login/password");
+};
+
 onMounted(() => {
   setDefaultDateRange();
   fetchData();
@@ -144,9 +158,12 @@ onMounted(() => {
         <h2>积分消耗明细</h2>
         <p>查看您所在用户组的积分消耗记录</p>
       </div>
-      <el-button type="primary" @click="handleExport">
-        <i class="fas fa-download"></i> 导出数据
-      </el-button>
+      <div class="header-actions">
+        <el-button type="primary" @click="handleExport">
+          <i class="fas fa-download"></i> 导出数据
+        </el-button>
+        <el-button @click="handleLogout">退出登录</el-button>
+      </div>
     </div>
 
     <div class="content-card search-section">
@@ -230,6 +247,11 @@ onMounted(() => {
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  gap: 12px;
 }
 
 .header-text h2 {
