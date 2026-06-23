@@ -22,6 +22,7 @@ import {
   apiGetApiCallLogs,
   apiGetUsageStats,
   apiGetModels,
+  apiGetUserAuthors,
 } from "@/api/newApi/index";
 import { init } from "echarts";
 import type { EChartsOption, EChartsType } from "echarts";
@@ -74,6 +75,7 @@ const loadingFullKeys = ref<Set<number>>(new Set());
 const createDialogVisible = ref(false);
 const newKeyName = ref("");
 const newCreatedKey = ref("");
+const apiApplication = ref(false); // 控制创建按钮显示
 
 // 当前显示的 Tab
 const activeTab = ref(route.query.tab === "docs" ? "docs" : "keys");
@@ -113,6 +115,17 @@ const fetchModels = async () => {
     modelOptions.value = list;
   } catch {
     modelOptions.value = [];
+  }
+};
+
+// 获取用户权限信息
+const fetchUserAuthors = async () => {
+  try {
+    const res = await apiGetUserAuthors();
+    const data = res?.data || res;
+    apiApplication.value = data?.apiApplication === true;
+  } catch {
+    apiApplication.value = false;
   }
 };
 
@@ -373,7 +386,7 @@ const fetchUsageStats = async () => {
     statsTotalMetric.value = points.reduce((s: number, p: any) => s + (Number(p[metricKey]) || 0), 0);
     renderChart(points, rawModelPoints);
   } catch {
-    ElMessage.error("获取统计数据失败");
+    // ElMessage.error("获取统计数据失败");
   } finally {
     statsLoading.value = false;
   }
@@ -473,7 +486,7 @@ const fetchLogs = async () => {
     logs.value = data?.list || data?.records || [];
     logsTotal.value = data?.total || 0;
   } catch {
-    ElMessage.error("获取日志失败");
+    // ElMessage.error("获取日志失败");
   } finally {
     logsLoading.value = false;
   }
@@ -505,6 +518,7 @@ onMounted(() => {
   fetchApiKeys();
   fetchModels();
   fetchUsage();
+  fetchUserAuthors();
   window.addEventListener("resize", handleResize);
 });
 
@@ -521,7 +535,7 @@ onUnmounted(() => {
         <h2>API Key 管理</h2>
         <p>管理您的 API 密钥，查看调用统计和使用量</p>
       </div>
-      <button class="btn-primary" @click="createDialogVisible = true">
+      <button v-if="apiApplication" class="btn-primary" @click="createDialogVisible = true">
         <i class="fas fa-plus"></i> 创建密钥
       </button>
     </div>
@@ -587,7 +601,7 @@ onUnmounted(() => {
       <div v-else-if="apiKeys.length === 0" class="empty-state">
         <i class="fas fa-key"></i>
         <p>暂无 API Key</p>
-        <button class="btn-primary" @click="createDialogVisible = true">
+        <button v-if="apiApplication" class="btn-primary" @click="createDialogVisible = true">
           立即创建
         </button>
       </div>

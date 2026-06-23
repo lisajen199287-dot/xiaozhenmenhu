@@ -371,3 +371,10 @@ export const apiWriteOffhasComputPower = () => {
     url: `/api/verify/has-comput-power`,
   })
 }
+
+// 获取用户权限信息
+export const apiGetUserAuthors = () => {
+  return request.get({
+    url: `/api/apikey/user-authors`,
+  })
+}
