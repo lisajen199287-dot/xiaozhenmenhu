@@ -122,28 +122,11 @@ const scenarios = [
 ];
 
 import { config } from "@/config/axios/config";
-import { ElNotification, ElMessage } from "element-plus";
+import { ElMessage } from "element-plus";
 const handleClick = async () => {
   if (!localStorage.getItem("token")) {
     ElMessage.warning("请先登录");
   } else {
-    // 先检查 broadcastApplication 权限
-    try {
-      const authRes = await newApi.apiGetUserAuthors();
-      const authData = authRes?.data || authRes;
-      if (authData?.broadcastApplication === false) {
-        ElNotification.error({
-          message: "<span style='font-size:16px;font-weight:900;color:#000000'>您的账号暂未开通数字人应用，请联系客服开通后使用</span>",
-          duration: 4700,
-          dangerouslyUseHTMLString: true,
-        });
-        return;
-      }
-    } catch (error) {
-      console.error("检查权限失败:", error);
-    }
-
-    // 权限检查通过，继续检查积分
     const res = await newApi.apiAgUserGet();
     if (res.point >= PointsNumber.value) {
       const url =

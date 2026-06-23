@@ -5,7 +5,6 @@ import { useRouter, RouterLink } from "vue-router";
 
 import { useAdminStore, type CaseStudy } from "@/utils/adminStore";
 import * as newApi from "@/api/newApi/index";
-import { ElNotification } from "element-plus";
 
 // Get data from store
 
@@ -97,24 +96,7 @@ const solutions = [
   },
 ];
 import { config } from "@/config/axios/config";
-const golink = async () => {
-  try {
-    // 先检查权限
-    const res = await newApi.apiGetUserAuthors();
-    const data = res?.data || res;
-    if (data?.videoApplication === false) {
-      ElNotification.error({
-        message: "<span style='font-size:16px;font-weight:900;color:#000000'>您的账号暂未开通商品图转带货视频应用，请联系客服开通后使用</span>",
-        duration: 4500,
-        dangerouslyUseHTMLString: true,
-      });
-      return;
-    }
-  } catch (error) {
-    console.error("检查权限失败:", error);
-  }
-
-  // 权限检查通过，继续跳转
+const golink = () => {
   if (localStorage.getItem("token")) {
     const url =
       config.aiVideoUrl +
