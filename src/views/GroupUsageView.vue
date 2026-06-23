@@ -58,8 +58,10 @@ const formatAudioMode = (value: string): string => {
 
 const setDefaultDateRange = () => {
   const end = new Date();
+  end.setHours(23, 59, 59, 0);
   const start = new Date();
   start.setDate(start.getDate() - 6);
+  start.setHours(0, 0, 0, 0);
   const pad = (n: number) => String(n).padStart(2, "0");
   const fmt = (d: Date) => {
     return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
@@ -202,7 +204,6 @@ onMounted(() => {
         <el-table-column prop="userName" label="用户名" />
         <el-table-column prop="model" label="模型" />
         <el-table-column prop="resolution" label="分辨率" />
-        <el-table-column prop="ratio" label="比例" />
         <el-table-column prop="duration" label="时长" />
         <el-table-column prop="inputType" label="输入类型">
           <template #default="scope">
@@ -214,7 +215,6 @@ onMounted(() => {
             {{ formatAudioMode(scope.row.audioMode) }}
           </template>
         </el-table-column>
-        <el-table-column prop="framespersecond" label="帧率" />
         <el-table-column prop="actualCost" label="积分消耗" />
       </el-table>
 
