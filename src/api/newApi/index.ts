@@ -372,6 +372,22 @@ export const apiWriteOffhasComputPower = () => {
   })
 }
 
+// ==================== 团队积分消耗明细 ====================
+
+export const getGroupApiKeyTaskUsagePage = (params: any) => {
+  return request.get({
+    url: '/member/api-key-task/group-usage/page',
+    params,
+  })
+}
+
+export const exportGroupApiKeyTaskUsage = (params: any) => {
+  return request.download({
+    url: '/member/api-key-task/group-usage/export',
+    params,
+  })
+}
+
 // 获取用户权限信息
 export const apiGetUserAuthors = () => {
   return request.get({

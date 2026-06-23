@@ -227,6 +227,12 @@ const handleAuthorized = () => {
   localStorage.removeItem('token')
   localStorage.removeItem('refreshToken')
   localStorage.removeItem('user_info')
+  const currentPath = window.location.pathname + window.location.search
+  // group-usage 页面直接跳转登录密码页面，不弹框
+  if (window.location.pathname === '/group-usage') {
+    window.location.href = `/login/password?redirect=${encodeURIComponent(currentPath)}`
+    return Promise.reject('登录超时,请重新登录!')
+  }
   // 询问用户是否前往登录页
   ElMessageBox.confirm('注册/登录后可查看', '提示', {
     confirmButtonText: '确定',
@@ -234,7 +240,6 @@ const handleAuthorized = () => {
     type: 'warning'
   }).then(() => {
     // 确认去登录，携带当前页面地址
-    const currentPath = window.location.pathname + window.location.search
     // 使用window.location.href进行跳转，确保页面能够正确改变
     window.location.href = `/login?redirect=${encodeURIComponent(currentPath)}`
   }).catch(() => {

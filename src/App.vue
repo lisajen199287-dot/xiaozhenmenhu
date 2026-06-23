@@ -6,7 +6,7 @@ import AppFooter from './components/AppFooter.vue'
 
 
 const route = useRoute()
-const hideNavRoutes = ['AdminDashboard', 'AdminArticles', 'AdminEvents', 'AdminUsers', 'AdminAdmins', 'AdminCases', 'AdminIntro']
+const hideNavRoutes = ['AdminDashboard', 'AdminArticles', 'AdminEvents', 'AdminUsers', 'AdminAdmins', 'AdminCases', 'AdminIntro', 'GroupUsage', 'LoginPassword']
 const showNav = computed(() => {
   if (route.path.startsWith('/admin')) return false
   const path = route.path

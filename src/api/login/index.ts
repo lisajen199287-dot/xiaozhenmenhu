@@ -29,10 +29,14 @@ export const nav = () => {
   })
 }
 
-// 获取wx二维码
-export const wxCode = () => {
+// 获取wx二维码（✅ 已改为支持参数）
+export const wxCode = (params?: { sessionId?: string }) => {
+  const url = params?.sessionId 
+    ? `/api/auth/qrcode/generate?sessionId=${params.sessionId}`
+    : '/api/auth/qrcode/generate';
+    
   return request.get({
-    url: '/api/auth/qrcode/generate',
+    url,
     headers: {
       isEncrypt: false,
       isAPP: true
@@ -157,4 +161,16 @@ export const reqCheck = (data: any) => {
 // 通过短信重置密码
 export const smsResetPassword = (data: any) => {
   return request.post({ url: '/system/auth/reset-password', data })
+}
+
+// 手机号密码登录
+export const loginByPassword = (data: { mobile: string; password: string }) => {
+  return request.post({
+    url: '/member/auth/login',
+    data,
+    headers: {
+      isEncrypt: false,
+      isAPP: true
+    }
+  })
 }

@@ -1,6 +1,5 @@
 <script setup lang="ts">
 import { ref, onMounted } from "vue";
-
 import { useRouter, useRoute } from "vue-router";
 
 const { push } = useRouter();
@@ -17,9 +16,13 @@ const { login } = useUser();
 
 const redirect = ref<string>((route.query.redirect as string) || "");
 
+// ========== 二维码相关变量 ==========
 const qrCodeUrl = ref("");
 const wxToken = ref("");
 const qrcodeToken = ref("");
+
+// ========== 🆕 Session ID 用于后端缓存复用 ==========
+const qrSessionId = ref<string>("");
 
 const pollingTimer = ref<number | null>(null);
 const pollingCount = ref(0);
@@ -29,13 +32,24 @@ const ProcessStatus = ref("login");
 const isCounting = ref(false);
 
 const loginType = ref("2");
+
+// ========== 🆕 智能切换登录类型（带缓存判断）==========
 const switchLoginType = (type: string) => {
   loginType.value = type;
   if (type == "2") {
     if (pollingTimer.value) {
       clearTimeout(pollingTimer.value);
     }
-    getWxCode();
+    
+    // 🧠 智能判断：有有效二维码就直接恢复轮询，不重新生成
+    if (!isQrCodeExpired.value && qrCodeUrl.value && wxToken.value) {
+      pollingCount.value = 0;
+      getWxStatus();  // 继续轮询旧二维码
+      console.log('♻️ 复用已有二维码');
+    } else {
+      getWxCode();    // 需要新生成
+      console.log('🔄 生成新二维码');
+    }
   } else {
     if (pollingTimer.value) {
       clearTimeout(pollingTimer.value);
@@ -82,7 +96,6 @@ const startCountdown = () => {
 
     if (countdown.value <= 0) {
       clearInterval(timer);
-
       isSending.value = false;
     }
   }, 1000);
@@ -91,29 +104,19 @@ const startCountdown = () => {
 const handleLogin = async () => {
   if (!agreed.value) {
     showAgreementError.value = true;
-
     setTimeout(() => {
       showAgreementError.value = false;
     }, 3000);
-
     return;
   }
 
   loginError.value = "";
 
   if (loginMethod.value === "account") {
-    let res = await LoginApi.login({
-      email: username.value,
-      password: password.value,
-    });
-    console.log(res);
-
     try {
       const res = await fetch("/api/identity/login", {
         method: "POST",
-
         headers: { "Content-Type": "application/json" },
-
         body: JSON.stringify({
           email: username.value,
           password: password.value,
@@ -123,23 +126,20 @@ const handleLogin = async () => {
       if (res.ok) {
         const data = await res.json();
         console.log(data);
-        await login(data.user); // data contains {user, token, code}
+        await login(data.user);
 
         if (!redirect.value) {
-          redirect.value = "/"; // 默认为首页
+          redirect.value = "/";
         }
         await push({ path: redirect.value });
       } else {
         const err = await res.json();
-
         loginError.value = err.msg || "登录失败，请检查账号密码";
       }
     } catch (e) {
       loginError.value = "服务器连接失败";
     }
   } else {
-    // Phone/WeChat still mock for this demo but could be added similarly
-
     await login({
       id: 10001,
       username: "MockUser",
@@ -148,7 +148,7 @@ const handleLogin = async () => {
     });
 
     if (!redirect.value) {
-      redirect.value = "/"; // 默认为首页
+      redirect.value = "/";
     }
     await push({ path: redirect.value });
   }
@@ -164,10 +164,11 @@ const getCode = async () => {
     ElMessage.warning("请输入正确的手机号");
     return;
   }
+  
   await LoginApi.captcha({
     mobile: phoneForm.value.phone,
   });
-  // phoneForm.value.code = res;
+  
   isCounting.value = true;
   const timer = setInterval(() => {
     countdown.value--;
@@ -199,54 +200,116 @@ const Skip = async () => {
   await push({ path: redirect.value });
 };
 
+// ========== 🆕 改进后的获取微信二维码 ==========
 const getWxCode = async () => {
-  let res = await LoginApi.wxCode();
-  qrCodeUrl.value = res.qrCodeUrl;
-  wxToken.value = res.token;
-  pollingCount.value = 0;
-  isQrCodeExpired.value = false;
-  // 开始轮询微信登录状态
-  if (pollingTimer.value) {
-    clearTimeout(pollingTimer.value);
+  try {
+    // 1️⃣ 先从 sessionStorage 恢复或生成 sessionId
+    if (!qrSessionId.value) {
+      const savedSessionId = sessionStorage.getItem('wx_qr_session_id');
+      
+      if (savedSessionId) {
+        // 有缓存的 sessionId，先检查是否还有效
+        qrSessionId.value = savedSessionId;
+        console.log('♻️ 从sessionStorage恢复sessionId:', savedSessionId);
+      } else {
+        // 首次访问，生成新的
+        qrSessionId.value = 'qr_' + Date.now() + '_' + Math.random().toString(36).substring(2, 10);
+        sessionStorage.setItem('wx_qr_session_id', qrSessionId.value);
+        console.log('🆕 生成新sessionId并存入sessionStorage:', qrSessionId.value);
+      }
+    }
+    
+    // 2️⃣ 调用后端接口
+    const params = { sessionId: qrSessionId.value };
+    let res = await LoginApi.wxCode(params);
+    
+    qrCodeUrl.value = res.qrCodeUrl;
+    wxToken.value = res.token;
+    pollingCount.value = 0;
+    isQrCodeExpired.value = false;
+
+    if (pollingTimer.value) clearTimeout(pollingTimer.value);
+    getWxStatus();
+    console.log(`✅ 二维码已获取 (session: ${qrSessionId.value.substring(0,16)}...)`);
+    
+  } catch (error) {
+    console.error('❌ 获取二维码失败:', error);
+    ElMessage.error('获取二维码失败，请点击刷新重试');
   }
-  getWxStatus();
 };
+
+
+// ========== ✅ 修复后的轮询方法 ==========
 const getWxStatus = async () => {
   if (!wxToken.value) return;
 
-  let res = await LoginApi.wxCodeStatus({
-    token: wxToken.value,
-  });
-  if (res.status == "scanned") {
-    // 登录成功，停止轮询
-    if (pollingTimer.value) {
-      clearTimeout(pollingTimer.value);
-      pollingTimer.value = null;
-    }
-    pollingCount.value = 0;
-    isQrCodeExpired.value = false;
-    qrcodeToken.value = res.token;
-    if (res.isBand == "Y") {
-      lLogin();
-    } else {
-      ProcessStatus.value = "bind";
-    }
-  } else if (res.status == "waiting") {
-    pollingCount.value++;
-    if (pollingCount.value >= 30) {
-      // 超过30次查询，停止轮询，标记二维码失效
+  try {
+    // 🎯 用 let 声明（虽然只赋值一次，但保险）
+    const res = await LoginApi.wxCodeStatus({ token: wxToken.value });
+    
+    if (res.status == "scanned") {
+      // ===== 扫码成功 =====
       if (pollingTimer.value) {
         clearTimeout(pollingTimer.value);
-        pollingTimer.value = null;
+        pollingTimer.value = null;  // ← 这里可以赋值，因为是 .value
       }
-      isQrCodeExpired.value = true;
+      
       pollingCount.value = 0;
-    } else {
-      // 登录未成功，继续轮询
-      pollingTimer.value = window.setTimeout(getWxStatus, 2000);
+      isQrCodeExpired.value = false;
+      qrcodeToken.value = res.token;
+      
+      // 清除 sessionStorage（下次打开是新会话）
+      sessionStorage.removeItem('wx_qr_session_id');
+      qrSessionId.value = '';
+      
+      console.log('✅ 用户已扫码');
+      
+      if (res.isBand == "Y") {
+        lLogin();  // 已绑定 → 登录
+      } else {
+        ProcessStatus.value = "bind";  // 未绑定 → 绑定手机号页
+      }
+      
+    } else if (res.status == "waiting") {
+      // ===== 等待扫码，继续轮询 =====
+      pollingCount.value++;
+      
+      if (pollingCount.value >= 30) {
+        // ===== 超时处理（60秒） =====
+        if (pollingTimer.value) {
+          clearTimeout(pollingTimer.value);
+          pollingTimer.value = null;
+        }
+        
+        isQrCodeExpired.value = true;
+        pollingCount.value = 0;
+        
+        // 清除 sessionId（让用户点击刷新时生成新的）
+        sessionStorage.removeItem('wx_qr_session_id');
+        qrSessionId.value = '';
+        
+        console.log('⏰ 二维码超时失效');
+        
+      } else {
+        // ⏳ 继续轮询（2秒后）
+        pollingTimer.value = window.setTimeout(() => {
+          getWxStatus();
+        }, 2000);
+      }
     }
+    
+  } catch (error: any) {
+    console.error('❌ 查询扫码状态失败:', error?.message || error);
+    
+    // 出错后延迟重试（3秒），避免频繁请求
+    pollingTimer.value = window.setTimeout(() => {
+      getWxStatus();
+    }, 3000);
   }
 };
+
+
+
 const lLogin = async (type?: string) => {
   if (type == "phone") {
     if (!agreed.value) {
@@ -257,73 +320,71 @@ const lLogin = async (type?: string) => {
       return;
     }
   }
+  
   const params = {
     mobile: phoneForm.value.phone || "",
     captcha: phoneForm.value.code || "",
     loginType: loginType.value,
     wxToken: loginType.value == "2" ? qrcodeToken.value : "",
   };
-  let res = await LoginApi.validateCaptcha(params);
-  localStorage.setItem("token", res.accessToken);
-  let res1 = await LoginApi.getFrontUserInfo();
-  const item = res;
-  item.nickname = res1.nickname;
-  item.avatar = res1.userAvatar;
-  // authUtil.setToken(res);
-  //存储用户信息
-  await login(item);
-  if (!redirect.value) {
-    redirect.value = "/";
+  
+  try {
+    let res = await LoginApi.validateCaptcha(params);
+    localStorage.setItem("token", res.accessToken);
+    
+    let res1 = await LoginApi.getFrontUserInfo();
+    const item = res;
+    item.nickname = res1.nickname;
+    item.avatar = res1.userAvatar;
+    
+    // 存储用户信息
+    await login(item);
+    
+    if (!redirect.value) {
+      redirect.value = "/";
+    }
+
+    ElMessage.success(`登录成功!`);
+
+    setTimeout(async () => {
+      await push({ path: redirect.value });
+    }, 1500);
+    
+  } catch (error) {
+    console.error('登录失败:', error);
+    ElMessage.error('登录失败，请重试');
   }
-
-  ElMessage.success(`登录成功!`);
-
-  setTimeout(async () => {
-    await push({ path: redirect.value });
-  }, 1500);
-  // if (res.isRegister == "Y") {
-  //   // ProcessStatus.value = "edit";
-  //   await push({ path: redirect.value });
-
-  // } else if (res.isRegister == "N") {
-  //   await push({ path: redirect.value });
-  //   // window.location.href = "/";
-  // }
 };
+
 onMounted(() => {
+  console.log('📱 登录页加载完成，初始化二维码...');
   getWxCode();
 });
 </script>
-
-
 
 <template>
   <div class="split-auth-page">
     <div class="auth-visual-side">
       <div class="visual-gradient"></div>
-
       <div class="visual-content">
         <div class="logo-white" @click="router.push('/')">
-          <!-- Removed Icon as requested -->
-
           <span>福州市仓山区人工智能公共服务平台</span>
         </div>
-
         <div class="hero-quote">
           <h2 class="animate-up">欢迎回来</h2>
-
           <p class="animate-up delay-1">继续您的智能创新之旅</p>
         </div>
-
         <div class="shape shape-1"></div>
-
         <div class="shape shape-2"></div>
       </div>
     </div>
 
     <div class="auth-form-side">
       <div class="auth-card-v2">
+        
+        <!-- ========== 主登录界面 ========== -->
         <div class="login" v-if="ProcessStatus === 'login'">
+          <!-- 切换标签 -->
           <div class="login_type">
             <div
               class="type_name"
@@ -340,10 +401,14 @@ onMounted(() => {
               手机登录
             </div>
           </div>
+          
+          <!-- 微信二维码区域 -->
           <div class="QCode" v-if="loginType === '2'">
             <div class="img" v-if="!isQrCodeExpired">
               <img :src="qrCodeUrl" class="img" alt="" v-if="qrCodeUrl" />
             </div>
+            
+            <!-- 过期提示 -->
             <div class="img expired" @click="getWxCode" v-else>
               <div class="expired-content">
                 <div class="icon">
@@ -356,6 +421,8 @@ onMounted(() => {
               </div>
             </div>
           </div>
+          
+          <!-- 手机号登录表单 -->
           <div class="phone" v-else>
             <div class="row">
               <div class="row_title">手机号码</div>
@@ -398,6 +465,7 @@ onMounted(() => {
               </el-button>
             </div>
           </div>
+          
           <div class="tips">
             {{
               loginType === "2"
@@ -405,6 +473,8 @@ onMounted(() => {
                 : "未注册手机号登录即自动注册"
             }}
           </div>
+          
+          <!-- 协议勾选 -->
           <div class="agreement">
             <div class="agreement-footer-v2">
               <label class="checkbox-label">
@@ -414,6 +484,7 @@ onMounted(() => {
                   v-if="loginType === '1'"
                 />
                 <span class="checkmark" v-if="loginType === '1'"></span>
+                
                 <div class="agreement-text-group">
                   <span class="agreement-main">
                     {{
@@ -425,6 +496,7 @@ onMounted(() => {
                     <RouterLink to="/privacy">《隐私政策》</RouterLink>
                   </span>
                 </div>
+                
                 <transition name="toast">
                   <div v-if="showAgreementError" class="agreement-toast">
                     请先同意并勾选上述协议
@@ -434,6 +506,8 @@ onMounted(() => {
             </div>
           </div>
         </div>
+        
+        <!-- ========== 绑定手机号界面 ========== -->
         <div class="login bind" v-if="ProcessStatus === 'bind'">
           <div class="login_type">
             <div class="type_name">绑定手机号</div>
@@ -481,6 +555,8 @@ onMounted(() => {
             </div>
           </div>
         </div>
+        
+        <!-- ========== 完善信息界面 ========== -->
         <div class="login edit" v-if="ProcessStatus === 'edit'">
           <div class="Skip" @click="Skip">跳过</div>
           <div class="login_type">
@@ -493,7 +569,7 @@ onMounted(() => {
                 <el-input
                   class="input-i"
                   v-model="phoneForm.companyName"
-                  maxlength="11"
+                  maxlength="50"
                   placeholder="请输入您的公司名称"
                 />
               </div>
@@ -515,16 +591,13 @@ onMounted(() => {
             </div>
           </div>
         </div>
+        
       </div>
     </div>
   </div>
 </template>
 
-
-
 <style scoped lang="scss">
-/* Copied from RegisterView.vue for consistency */
-
 .split-auth-page {
   display: flex;
   min-height: 100vh;
@@ -629,6 +702,7 @@ onMounted(() => {
   border-radius: 12px;
   box-shadow: 0 4px 6px -1px rgb(0 0 0 / 0.1);
   position: relative;
+  
   .login {
     .Skip {
       position: absolute;
@@ -738,7 +812,6 @@ onMounted(() => {
 
           .input-i {
             flex: 1;
-            height: 40px;
             height: 52px;
             background: #f8fafc;
             border: 1px solid #e2e8f0;
@@ -812,181 +885,6 @@ onMounted(() => {
   }
 }
 
-.brand-header {
-  margin-bottom: 40px;
-}
-
-.mini-logo {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  color: #3b82f6;
-  font-weight: 700;
-  font-size: 1.2rem;
-  margin-bottom: 16px;
-}
-
-.brand-header h1 {
-  font-size: 2rem;
-  color: #0f172a;
-  font-weight: 700;
-}
-
-.auth-tabs-v2 {
-  display: flex;
-  gap: 32px;
-  margin-bottom: 40px;
-  border-bottom: 1px solid #f1f5f9;
-}
-
-.tab-btn-v2 {
-  padding: 12px 0;
-  background: none;
-  border: none;
-  font-size: 1rem;
-  font-weight: 600;
-  color: #64748b;
-  cursor: pointer;
-  position: relative;
-}
-
-.tab-btn-v2.active {
-  color: #0f172a;
-}
-
-.tab-btn-v2.active::after {
-  content: "";
-  position: absolute;
-  bottom: -1px;
-  left: 0;
-  width: 100%;
-  height: 2px;
-  background: #3b82f6;
-}
-
-.tab-content-v2 {
-  min-height: 240px;
-}
-
-.qr-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 24px;
-}
-
-.qr-inner {
-  position: relative;
-  width: 200px;
-  height: 200px;
-  background: white;
-  border: 1px solid #f1f5f9;
-  border-radius: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 10px;
-}
-
-.qr-inner i {
-  font-size: 8rem;
-  color: #07c160;
-  opacity: 0.1;
-}
-
-.qr-inner::before {
-  content: "";
-  position: absolute;
-  width: 160px;
-  height: 160px;
-  background-image: repeating-linear-gradient(
-    45deg,
-    #f1f5f9 0,
-    #f1f5f9 2px,
-    transparent 2px,
-    transparent 10px
-  );
-  z-index: 1;
-}
-
-.agreement-mask {
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(255, 255, 255, 0.85);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  text-align: center;
-  z-index: 10;
-  border-radius: 8px;
-}
-
-.agreement-mask p {
-  color: #1e293b;
-  font-size: 0.95rem;
-  line-height: 1.6;
-  font-weight: 600;
-}
-
-.qr-text-hint {
-  color: #475569;
-  font-size: 0.95rem;
-}
-
-.input-field-v2 {
-  margin-bottom: 20px;
-}
-
-.input-field-v2 input {
-  width: 100%;
-  height: 52px;
-  padding: 0 16px;
-  background: #f8fafc;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  outline: none;
-  font-size: 1rem;
-  transition: all 0.2s;
-}
-
-.input-field-v2 input:focus {
-  border-color: #3b82f6;
-  background: white;
-  box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.1);
-}
-
-.code-row {
-  display: flex;
-  gap: 12px;
-}
-
-.send-btn-v2 {
-  white-space: nowrap;
-  padding: 0 20px;
-  background: white;
-  border: 1px solid #e2e8f0;
-  border-radius: 8px;
-  color: #64748b;
-  font-weight: 600;
-  cursor: pointer;
-}
-
-.submit-btn-v2 {
-  width: 100%;
-  height: 52px;
-  background: #3b82f6;
-  color: white;
-  border: none;
-  border-radius: 8px;
-  font-size: 1.1rem;
-  font-weight: 600;
-  margin-top: 10px;
-  cursor: pointer;
-}
-
 .agreement-footer-v2 {
   display: flex;
   justify-content: center;
@@ -1058,18 +956,6 @@ onMounted(() => {
   text-decoration: none;
 }
 
-.auth-footer-v2 {
-  text-align: center;
-  color: #64748b;
-  margin-top: 24px;
-}
-
-.auth-footer-v2 a {
-  color: #3b82f6;
-  font-weight: 600;
-  text-decoration: none;
-}
-
 .agreement-toast {
   position: absolute;
   bottom: 80px;
@@ -1124,28 +1010,5 @@ onMounted(() => {
   .auth-form-side {
     width: 100%;
   }
-}
-
-.forgot-pwd-row {
-  text-align: right;
-  margin-bottom: 20px;
-  font-size: 0.9rem;
-}
-
-.forgot-pwd-row a {
-  color: #64748b;
-  text-decoration: none;
-}
-
-.forgot-pwd-row a:hover {
-  color: #3b82f6;
-}
-
-.login-error-msg {
-  color: #ef4444;
-  font-size: 0.85rem;
-  margin-top: -12px;
-  margin-bottom: 20px;
-  font-weight: 500;
 }
 </style>
