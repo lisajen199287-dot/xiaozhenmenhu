@@ -204,6 +204,7 @@ onMounted(() => {
         <el-table-column prop="userName" label="用户名" />
         <el-table-column prop="model" label="模型" />
         <el-table-column prop="resolution" label="分辨率" />
+        <el-table-column prop="ratio" label="比例" />
         <el-table-column prop="duration" label="时长" />
         <el-table-column prop="inputType" label="输入类型">
           <template #default="scope">
