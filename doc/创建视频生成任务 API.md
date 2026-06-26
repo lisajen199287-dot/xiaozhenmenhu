@@ -44,7 +44,7 @@ return (<Tabs>
 
 
 **model** `string` %%require%%
-您需要调用的模型的 ID （Model ID）doubao-seedance-2.0、doubao-seedance-2.0-fast、doubao-seedance-1.5-pro
+您需要调用的模型的 ID （Model ID）doubao-seedance-2.0、doubao-seedance-2.0-fast、doubao-seedance-2.0-mini、doubao-seedance-1.5-pro
 
 ---
 
@@ -474,8 +474,8 @@ tools.**type ** `string`
 
 * 480p
 * 720p
-* 1080p：seedance 1.0 lite 参考图场景、seedance 2.0 & 2.0 fast 不支持
-
+* 1080p：seedance 1.0 lite 参考图场景、seedance 2.0 & 2.0 fast 不支持、seedance 2.0 mini不支持
+* 4k：seedance 2.0支持
 
 ---
 
