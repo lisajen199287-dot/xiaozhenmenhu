@@ -14,13 +14,17 @@
   <script src="https://cdn.tailwindcss.com"></script>
 </head>
 <script>
-  var _hmt = _hmt || [];
-  (function () {
-    var hm = document.createElement("script");
-    hm.src = "https://hm.baidu.com/hm.js?be56ca376347895f806bfdd44ca2f759";
-    var s = document.getElementsByTagName("script")[0];
-    s.parentNode.insertBefore(hm, s);
-  })();
+    (function () {
+        // 仅生产环境域名才加载百度统计
+        var prodHost = 'www.cii-group.com';
+        if (window.location.hostname !== prodHost) return;
+
+        var _hmt = _hmt || [];
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?be56ca376347895f806bfdd44ca2f759";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+    })();
 </script>
 
 <body>
