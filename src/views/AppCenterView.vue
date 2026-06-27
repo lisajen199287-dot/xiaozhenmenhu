@@ -3,6 +3,7 @@ import { ref, onMounted, computed } from "vue";
 import { useRouter } from "vue-router";
 import NavBar from "@/components/NavBar.vue";
 import * as newApi from "@/api/newApi/index";
+import { track } from "@/utils/tracker";
 
 interface Application {
   name: string;
@@ -72,7 +73,8 @@ onMounted(() => {
 });
 
 const handleEnter = (app: Application) => {
-  if ((app.name === "AI合同审核")) {
+
+    if ((app.name === "AI合同审核")) {
     if (!localStorage.getItem("token")) {
       router.push({ path: "/login", query: { redirect: "/apps" } });
       return;
@@ -82,11 +84,16 @@ const handleEnter = (app: Application) => {
     console.log("Component not ready yet");
     return;
   }
+
+  // 👇 加这一行
+  track({ event: "click", element: "app_enter", feature: app.name, page: "/apps" });
+
   if (app.url.startsWith("http") || app.url.startsWith("https")) {
     window.open(app.url, "_blank");
   } else {
     window.open(app.url, "_blank");
   }
+
 };
 </script>
 

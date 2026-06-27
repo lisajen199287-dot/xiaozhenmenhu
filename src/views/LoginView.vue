@@ -8,6 +8,7 @@ import { ElInput, ElButton, ElMessage } from "element-plus";
 import { useUser } from "@/utils/userStore";
 import * as LoginApi from "@/api/login/index";
 import * as authUtil from "@/utils/auth";
+import { getFirstTouchData } from "@/utils/tracker";
 
 const router = useRouter();
 const route = useRoute();
@@ -321,11 +322,13 @@ const lLogin = async (type?: string) => {
     }
   }
   
+  const firstTouch = getFirstTouchData();
   const params = {
     mobile: phoneForm.value.phone || "",
     captcha: phoneForm.value.code || "",
     loginType: loginType.value,
     wxToken: loginType.value == "2" ? qrcodeToken.value : "",
+    ...firstTouch,
   };
   
   try {
