@@ -1,905 +1,1316 @@
 <script setup lang="ts">
-import { ref } from "vue";
-
+import { ref, onMounted, onUnmounted } from "vue";
 import * as newApi from "@/api/newApi/index";
 import { ElMessage } from 'element-plus'
 
-const employees = [
-  {
-    role: "全网智能招商雷达",
-
-    desc: "强力穿透各类变更、融资、产学研扩建等全网数据网络，自动筛选存在极高外溢潜力的黄金招商目标线索名单",
-
-    skills: ["迁址意愿预测", "上下游强弱脉络追踪", "隐形潜力挖掘"],
-
-    icon: "fas fa-broadcast-tower",
-
-    color: "#EC4899",
-  },
-
-  {
-    role: "政策智能解读与申报",
-
-    desc: "政策文件往往艰深晦涩。AI 每日自动拆解各类补贴条文条线，并自动匹配给契合资质的企业甚至辅助撰写关键申报底稿",
-
-    skills: ["申报条件原子化拆分", "资质缺项反向提醒", "政策精准化推荐"],
-
-    icon: "fas fa-file-invoice-dollar",
-
-    color: "#8B5CF6",
-  },
-
-  {
-    role: "全天候政企服务窗口",
-
-    desc: "7x24 在线快速分诊入驻企业的社保、法务疑惑与各类设施报单请求，秒级响应工单分派追踪",
-
-    skills: ["秒级语义工单流转", "跨部门无缝调度", "杂乱问法高容错"],
-
-    icon: "fas fa-concierge-bell",
-
-    color: "#3B82F6",
-  },
-
-  {
-    role: "碳中和动态综管中心",
-
-    desc: "全面接驳楼宇系统端点并全量分析人员潮汐出入模型频率，通过毫秒级精细化微调扼杀设备空转隐形能耗浪费",
-
-    skills: ["深海潮汐用能算法", "高维度调优策略", "无人区深度休眠定制"],
-
-    icon: "fas fa-leaf",
-
-    color: "#10B981",
-  },
-];
-
 const form = ref({
   company: "",
-
-  contact: "",
-
+  name: "",
   phone: "",
-
-  demand: "",
+  message: "",
 });
 
 const submitting = ref(false);
-
 const submitted = ref(false);
 
 const handleSubmit = async () => {
-  if (!form.value.contact || !form.value.phone)
-    return alert("请填写联系人与手机号");
+  if (!form.value.name || !form.value.phone)
+    return ElMessage.warning("请填写姓名与手机号");
 
   submitting.value = true;
   try {
-    const solutionName =
-      document.querySelector("h1")?.innerText || "未知解决方案";
-    newApi.apiAdmSolutionRequests(
+    const solutionName = "智慧园区一体化管理平台";
+    await newApi.apiAdmSolutionRequests(
       JSON.stringify({ ...form.value, solutionName })
     );
     submitted.value = true;
-    form.value = { company: "", contact: "", phone: "", demand: "" };
+    form.value = { company: "", name: "", phone: "", message: "" };
     ElMessage.success("提交成功，我们会尽快联系您");
   } catch (e) {
-    ElMessage.info("提交失败，请重试");
+    ElMessage.error("提交失败，请重试");
   } finally {
     submitting.value = false;
   }
 };
 
-const scrollToForm = () => {
-  const el = document.getElementById("consult-form");
-
+const scrollToContact = () => {
+  const el = document.getElementById("contact");
   if (el) el.scrollIntoView({ behavior: "smooth" });
 };
+
+// 轮播逻辑
+const featureIndex = ref(0);
+let featureTimer: number | null = null;
+
+const setFeatureSlide = (index: number) => {
+  featureIndex.value = index;
+  restartAutoPlay();
+};
+
+const restartAutoPlay = () => {
+  if (featureTimer) window.clearInterval(featureTimer);
+  featureTimer = window.setInterval(() => {
+    featureIndex.value = (featureIndex.value + 1) % 6;
+  }, 4800);
+};
+
+onMounted(() => {
+  restartAutoPlay();
+});
+
+onUnmounted(() => {
+  if (featureTimer) window.clearInterval(featureTimer);
+});
 </script>
 
-
-
 <template>
-  <div class="ecommerce-page">
-    <!-- Hero -->
-
-    <header class="eco-hero">
-      <div class="hero-bg"></div>
-
-      <div class="wrapper hero-content">
-        <span class="badge">Park Service Solution</span>
-
-        <h1>园区与产业服务解决方案</h1>
-
-        <p>基于前沿AI大模型，实现招引雷达与全景无感物业的高精跨越</p>
-
-        <button class="btn-hero" @click="scrollToForm">免费定制方案</button>
+  <div class="park-page">
+    <!-- 导航栏 -->
+    <header class="nav-bar">
+      <div class="wrapper nav-inner">
+        <a class="brand" href="#top">
+          <span class="brand-icon">
+            <svg viewBox="0 0 24 24" fill="none">
+              <path d="M4 20V8l8-4 8 4v12" stroke="currentColor" stroke-width="2" stroke-linejoin="round" />
+              <path d="M8 20v-7h8v7M8 9h.01M12 8h.01M16 9h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+            </svg>
+          </span>
+          <span class="brand-text">
+            <span class="brand-main">智慧园区一体化管理平台</span>
+          </span>
+        </a>
+        <nav class="nav-links">
+          <a href="#advantages">平台核心优势</a>
+          <a href="#features">核心功能</a>
+          <a href="#benefits">平台优势</a>
+          <a href="#contact">咨询对接</a>
+        </nav>
       </div>
     </header>
 
-    <!-- Problem & Solution -->
-
-    <section class="section-intro wrapper">
-      <div class="intro-grid">
-        <div class="intro-text">
-          <h2>招商大海捞针？服务体验割裂？</h2>
-
-          <div class="pain-point-list">
-            <div class="pain-item">
-              <i class="fas fa-times-circle"></i>
-
-              <span
-                ><strong>招商拓客无准星：</strong
-                >缺乏精准的企业图谱数据网联能力，招商效率极其低下且低产低效</span
-              >
-            </div>
-
-            <div class="pain-item">
-              <i class="fas fa-times-circle"></i>
-
-              <span
-                ><strong>园区配套服务延滞</strong
-                >企业入驻后的政策申报答疑、水电网物业需求响应极度滞后，推诿扯皮多</span
-              >
-            </div>
-
-            <div class="pain-item">
-              <i class="fas fa-times-circle"></i>
-
-              <span
-                ><strong>资产楼宇管理粗放</strong
-                >大量设备依然处于黑盒空转，依赖人工定期巡检反馈，高耗能暗坑与隐患难以杜绝</span
-              >
-            </div>
-          </div>
-        </div>
-
-        <div class="intro-highlight">
-          <h3>AI 赋能 · 靶向引擎与绿色智联</h3>
-
-          <p>
-            以算力为底座全面融通园区物联网监控、政企招商库与服务办事大厅。精准绘制潜力迁址企业画像雷达，并为在园企业提供随需随叫的顶级金牌数字物管助理
-          </p>
-        </div>
+    <!-- Hero -->
+    <section class="hero" id="top">
+      <div class="wrapper hero-content">
+        <span class="badge">一站式数字化园区运营中台</span>
+        <h1>智慧园区一体化管理平台</h1>
+        <p class="hero-lead">一套系统覆盖招商、租赁、物业、物联、财务全流程，实现园区全生命周期数字化管理</p>
+        <p class="hero-sub">打通内外业务数据，降本增效、数字化赋能园区经营</p>
+        <button class="hero-btn" @click="scrollToContact">咨询对接</button>
       </div>
     </section>
 
-    <!-- Digital Employee Roles -->
+    <!-- 平台核心优势 Intro -->
+    <section class="intro wrapper" id="advantages">
+      <div class="intro-title">
+        <h2>平台核心优势</h2>
+      </div>
+    </section>
 
-    <section class="section-roles">
+    <!-- 优势卡片 -->
+    <section class="content-section">
       <div class="wrapper">
-        <div class="section-title">
-          <h2>全链AI 提效引擎</h2>
+        <div class="card-grid">
+          <article class="advantage-card featured" data-index="01">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 5h16v14H4zM8 5v14M16 5v14" stroke="currentColor" stroke-width="2" />
+              </svg>
+            </div>
+            <h3>一体化整合</h3>
+            <p>招商、租客、合同、财务、物业、智能硬件统一中台，无需多套系统来回登录</p>
+          </article>
 
-          <p>覆盖跨境与电商核心场景，从高品质物料大批 AI 量产到数字归因闭环</p>
+          <article class="advantage-card compact" data-index="02">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M7 7h10M7 12h10M7 17h6M4 4h16v16H4z" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </div>
+            <div><h3>全流程线上化</h3><p>企业招商入驻、日常运维、缴费结算、合同归档完整业务闭环</p></div>
+          </article>
+
+          <article class="advantage-card compact" data-index="03">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M6 12a6 6 0 0 1 12 0M8.5 16a3.5 3.5 0 0 1 7 0M12 20h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </div>
+            <div><h3>软硬协同联动</h3><p>智能水电、门禁、充电桩、安防设备统一接入，自动抄表计费</p></div>
+          </article>
+
+          <article class="advantage-card compact" data-index="04">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 3l7 4v5c0 4-3 7-7 9-4-2-7-5-7-9V7zM9 12l2 2 4-5" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <div><h3>权限灵活可控</h3><p>模块化工作台自定义，招商 / 财务 / 物业分级账号权限管理</p></div>
+          </article>
+
+          <article class="advantage-card compact" data-index="05">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M5 7h14M5 12h9M5 17h14M16 12l3 3 3-3" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" />
+              </svg>
+            </div>
+            <div><h3>内外双向服务</h3><p>对内飞书协同办公，对外可配置租客小程序、公众号服务端口</p></div>
+          </article>
+
+          <article class="advantage-card compact" data-index="06">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </div>
+            <div><h3>数据可视化决策</h3><p>全域经营数据自动汇总，可视化大屏直观掌握园区运营情况</p></div>
+          </article>
+
+          <article class="advantage-card wide" data-index="07">
+            <div class="card-icon">
+              <svg viewBox="0 0 24 24" fill="none">
+                <path d="M12 3v18M3 12h18M6 6l12 12M18 6 6 18" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+              </svg>
+            </div>
+            <div><h3>本地化定制重构</h3><p>专为仓山园区迭代优化，贴合本地产业招商、企业服务场景</p></div>
+          </article>
         </div>
+      </div>
+    </section>
 
-        <div class="roles-grid">
-          <div v-for="emp in employees" :key="emp.role" class="role-card">
-            <div
-              class="role-icon"
-              :style="{ background: emp.color + '15', color: emp.color }"
-            >
-              <i :class="emp.icon"></i>
-            </div>
-
-            <h3>{{ emp.role }}</h3>
-
-            <p class="role-desc">{{ emp.desc }}</p>
-
-            <div class="role-skills">
-              <span v-for="skill in emp.skills" :key="skill" class="skill-tag">
-                <i class="fas fa-check" :style="{ color: emp.color }"></i>
-                {{ skill }}
-              </span>
-            </div>
+    <!-- 核心功能轮播 -->
+    <section class="content-section features" id="features">
+      <div class="wrapper">
+        <div class="section-title"><h2>核心功能，覆盖园区全部运营场景</h2></div>
+        <div class="feature-carousel">
+          <div class="feature-track" :style="{ transform: `translateX(-${featureIndex * 100}%)` }">
+            <article class="feature-slide">
+              <div class="feature-copy">
+                <span class="feature-index">01</span>
+                <h3>智慧招商管理</h3>
+                <p>线索归集、意向客户跟进、渠道管理、招商数据统计，完整拓客流程线上留存，辅助招商转化</p>
+              </div>
+              <div class="feature-media"><img src="https://images.unsplash.com/photo-1556761175-b413da4baf72?auto=format&fit=crop&q=80&w=1200" alt="智慧招商管理" /></div>
+            </article>
+            <article class="feature-slide">
+              <div class="feature-copy">
+                <span class="feature-index">02</span>
+                <h3>租控 & 财务一体化</h3>
+                <p>租客一户一档、线上合同起草归档、租金能耗账单自动生成、收支流水一键导出对账，减少财务人工统计</p>
+              </div>
+              <div class="feature-media"><img src="https://images.unsplash.com/photo-1450101499163-c8848c66ca85?auto=format&fit=crop&q=80&w=1200" alt="租控与财务一体化" /></div>
+            </article>
+            <article class="feature-slide">
+              <div class="feature-copy">
+                <span class="feature-index">03</span>
+                <h3>智慧物业运维</h3>
+                <p>线上报修、访客预约、场地 / 停车 / 充电桩管理、设备巡检、保洁绿化核查，物业工单全程线上流转</p>
+              </div>
+              <div class="feature-media"><img src="https://images.unsplash.com/photo-1497366811353-6870744d04b2?auto=format&fit=crop&q=80&w=1200" alt="智慧物业运维" /></div>
+            </article>
+            <article class="feature-slide">
+              <div class="feature-copy">
+                <span class="feature-index">04</span>
+                <h3>智能物联硬件管控</h3>
+                <p>统一接入智能水表、电表、人脸识别门禁、智能门锁、园区安防设备，硬件数据自动同步业务账单，实现无人值守计量</p>
+              </div>
+              <div class="feature-media"><img src="https://images.unsplash.com/photo-1518770660439-4636190af475?auto=format&fit=crop&q=80&w=1200" alt="智能物联硬件管控" /></div>
+            </article>
+            <article class="feature-slide">
+              <div class="feature-copy">
+                <span class="feature-index">05</span>
+                <h3>内部协同办公</h3>
+                <p>外接飞书/钉钉/企业微信办公体系，内部办公协同一体化</p>
+              </div>
+              <div class="feature-media"><img src="https://images.unsplash.com/photo-1552664730-d307ca884978?auto=format&fit=crop&q=80&w=1200" alt="内部协同办公" /></div>
+            </article>
+            <article class="feature-slide">
+              <div class="feature-copy">
+                <span class="feature-index">06</span>
+                <h3>园区数据驾驶舱</h3>
+                <p>整合入驻率、营收、能耗、工单、招商进度多维度数据，可视化图表直观展示，为管理层经营决策提供数据支撑</p>
+              </div>
+              <div class="feature-media"><img src="https://images.unsplash.com/photo-1551288049-bebda4e38f71?auto=format&fit=crop&q=80&w=1200" alt="园区数据驾驶舱" /></div>
+            </article>
+          </div>
+          <div class="feature-controls">
+            <button class="feature-tab" :class="{ active: featureIndex === 0 }" @click="setFeatureSlide(0)"><b>01</b><span>智慧招商管理</span></button>
+            <button class="feature-tab" :class="{ active: featureIndex === 1 }" @click="setFeatureSlide(1)"><b>02</b><span>租控 & 财务一体化</span></button>
+            <button class="feature-tab" :class="{ active: featureIndex === 2 }" @click="setFeatureSlide(2)"><b>03</b><span>智慧物业运维</span></button>
+            <button class="feature-tab" :class="{ active: featureIndex === 3 }" @click="setFeatureSlide(3)"><b>04</b><span>智能物联硬件管控</span></button>
+            <button class="feature-tab" :class="{ active: featureIndex === 4 }" @click="setFeatureSlide(4)"><b>05</b><span>内部协同办公</span></button>
+            <button class="feature-tab" :class="{ active: featureIndex === 5 }" @click="setFeatureSlide(5)"><b>06</b><span>园区数据驾驶舱</span></button>
           </div>
         </div>
       </div>
     </section>
 
-    <!-- Consultation Form -->
+    <!-- 平台核心优势 -->
+    <section class="content-section benefits" id="benefits">
+      <div class="wrapper">
+        <div class="section-title"><h2>平台核心优势</h2></div>
+        <div class="benefit-grid">
+          <article class="benefit-card"><h3>低学习成本</h3><p>功能分类清晰，自定义常用工作台，新手快速上手</p></article>
+          <article class="benefit-card"><h3>高运营效率</h3><p>全业务线上流转，大幅减少纸质台账、线下沟通工作量</p></article>
+          <article class="benefit-card"><h3>数据互通无孤岛</h3><p>各模块数据打通，硬件、业务、财务数据自动联动</p></article>
+          <article class="benefit-card"><h3>轻量化可拓展</h3><p>模块化应用中心，后续新增业务无需整体重构系统</p></article>
+        </div>
+      </div>
+    </section>
 
-    <section id="consult-form" class="section-form">
-      <div class="wrapper form-wrapper">
-        <div class="form-content-left">
-          <h2>
-            与行业专家 <br /><span class="highlight-text">1V1</span> 深度对谈
-          </h2>
-
-          <p class="form-lead">
-            我们深知每个跨境品牌的业务基因都不相同
-            <br />不仅提供工具，更提供战略破局点
-          </p>
-
-          <div class="trust-features">
-            <div class="trust-feat-item">
-              <i class="fas fa-search-dollar"></i>
-
-              <div>
-                <h4>全面痛点诊断</h4>
-
-                <p>从选品、流量到履约，深度剖析您的核心卡点</p>
-              </div>
+    <!-- 咨询对接 -->
+    <section class="contact" id="contact">
+      <div class="wrapper contact-layout">
+        <div class="contact-copy">
+          <h2>咨询对接</h2>
+          <p>一套系统覆盖招商、租赁、物业、物联、财务全流程，实现园区全生命周期数字化管理</p>
+          <div class="contact-points">
+            <div class="contact-point">
+              <span class="form-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M4 19V5M4 19h16M8 16v-5M12 16V8M16 16v-8" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </span>
+              <div><h3>打通内外业务数据</h3><p>降本增效、数字化赋能园区经营</p></div>
             </div>
-
-            <div class="trust-feat-item">
-              <i class="fas fa-drafting-compass"></i>
-
-              <div>
-                <h4>定制化系统方案</h4>
-
-                <p>由资深架构师量身定制软硬件结合的 AI 构建计划</p>
-              </div>
-            </div>
-
-            <div class="trust-feat-item">
-              <i class="fas fa-user-lock"></i>
-
-              <div>
-                <h4>严格商业保密</h4>
-
-                <p>签署数据隐私协议，确保所有企业信息与选品策略绝对安全</p>
-              </div>
+            <div class="contact-point">
+              <span class="form-icon">
+                <svg viewBox="0 0 24 24" fill="none">
+                  <path d="M6 12a6 6 0 0 1 12 0M8.5 16a3.5 3.5 0 0 1 7 0M12 20h.01" stroke="currentColor" stroke-width="2" stroke-linecap="round" />
+                </svg>
+              </span>
+              <div><h3>软硬协同联动</h3><p>智能水电、门禁、充电桩、安防设备统一接入，自动抄表计费</p></div>
             </div>
           </div>
         </div>
 
-        <div class="form-container-right">
-          <div v-if="submitted" class="success-message">
-            <i class="fas fa-check-circle"></i>
-
-            <h3>提交成功</h3>
-
-            <p>我们已收到您的诉求卷宗，<br />架构师将火速与您联系。</p>
-
-            <button class="btn-reset" @click="submitted = false">
-              再次咨询
-            </button>
-          </div>
-
-          <form v-else class="consult-form" @submit.prevent="handleSubmit">
-            <div class="form-header-minimal">
-              <h3>免费获取专属方案</h3>
-
-              <p>请留下您的联系方式</p>
-            </div>
-
+        <div class="form-card">
+          <h3>咨询对接</h3>
+          <p>请留下您的联系方式</p>
+          <form v-if="!submitted" class="park-form" @submit.prevent="handleSubmit">
             <div class="form-group">
-              <label>企业/品牌名称</label>
-
-              <input
-                v-model="form.company"
-                type="text"
-                placeholder="输入企业主体或独立站名称"
-              />
+              <label for="company">园区 / 企业</label>
+              <input id="company" v-model="form.company" type="text" placeholder="请输入园区或企业名称" />
             </div>
-
             <div class="form-row">
               <div class="form-group">
-                <label>您的姓名 <span class="required">*</span></label>
-
-                <input
-                  v-model="form.contact"
-                  type="text"
-                  placeholder="怎么称呼"
-                  required
-                />
+                <label for="name">姓名</label>
+                <input id="name" v-model="form.name" type="text" placeholder="请输入姓名" required />
               </div>
-
               <div class="form-group">
-                <label>联系电话 <span class="required">*</span></label>
-
-                <input
-                  v-model="form.phone"
-                  type="text"
-                  placeholder="用于接收方案"
-                  required
-                />
+                <label for="phone">联系电话</label>
+                <input id="phone" v-model="form.phone" type="text" placeholder="请输入联系电话" required />
               </div>
             </div>
-
             <div class="form-group">
-              <label>核心诉求描述</label>
-
-              <textarea
-                v-model="form.demand"
-                rows="3"
-                placeholder="例如：我们需要批量生TikTok 英语带货视频，目前人工成本极高等..."
-              ></textarea>
+              <label for="message">需求说明</label>
+              <textarea id="message" v-model="form.message" placeholder="请输入需求说明"></textarea>
             </div>
-
-            <button type="submit" class="btn-submit" :disabled="submitting">
-              {{ submitting ? "信息加密上传.." : "提交需求" }}
+            <button class="submit-btn" type="submit" :disabled="submitting">
+              {{ submitting ? "提交中..." : "提交咨询" }}
             </button>
-
-            <p class="privacy-note">
-              <i class="fas fa-lock"></i> 信息已采用端到端加密保护
-            </p>
           </form>
+          <div v-else class="success-message">
+            <i class="fas fa-check-circle"></i>
+            <h3>提交成功</h3>
+            <p>我们已收到您的需求，<br />工作人员将尽快与您联系。</p>
+            <button class="submit-btn" style="margin-top:20px" @click="submitted = false">再次咨询</button>
+          </div>
         </div>
       </div>
     </section>
+
+    <footer>智慧园区一体化管理平台</footer>
   </div>
 </template>
 
-
-
 <style scoped>
-.ecommerce-page {
+.park-page {
   background: #f8fafc;
+  --primary: #4f46e5;
+  --secondary: #3b82f6;
+  --accent: #10b981;
+  --text: #0f172a;
+  --muted: #64748b;
+  --soft: #f8fafc;
+  --line: #e2e8f0;
+  --white: #ffffff;
 }
 
-.eco-hero {
+.wrapper {
+  width: min(1200px, calc(100% - 80px));
+  margin: 0 auto;
+}
+
+/* 导航栏 */
+.nav-bar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 100;
+  height: 72px;
+  background: rgba(255, 255, 255, 0.94);
+  border-bottom: 1px solid #f1f5f9;
+  backdrop-filter: blur(20px);
+}
+
+.nav-inner {
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 28px;
+}
+
+.brand {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.brand-icon {
+  width: 40px;
+  height: 40px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  border-radius: 10px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow: 0 8px 18px rgba(59, 130, 246, 0.28);
+}
+
+.brand-icon svg {
+  width: 22px;
+  height: 22px;
+  display: block;
+}
+
+.brand-text {
+  display: flex;
+  flex-direction: column;
+}
+
+.brand-main {
+  font-size: 1.08rem;
+  font-weight: 850;
+  letter-spacing: 0;
+  color: #0f172a;
+  white-space: nowrap;
+}
+
+.nav-links {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.nav-links a {
+  height: 40px;
+  display: flex;
+  align-items: center;
+  padding: 0 16px;
+  color: #475569;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  font-weight: 500;
+  transition: color 0.2s;
+}
+
+.nav-links a:hover {
+  color: var(--secondary);
+}
+
+/* Hero */
+.hero {
   position: relative;
-
-  padding: 180px 0 120px; /* Matched AppCenterView height */
-
-  background: linear-gradient(rgba(15, 23, 42, 0.55), rgba(15, 23, 42, 0.55)),
-    url("@/assets/images/park-bg.png");
-
-  background-size: cover;
-
-  background-position: center;
-
-  color: white;
-
+  min-height: 720px;
+  padding: 190px 0 150px;
+  color: #fff;
   text-align: center;
-
   overflow: hidden;
+  background:
+    linear-gradient(rgba(15, 23, 42, 0.66), rgba(15, 23, 42, 0.7)),
+    url("@/assets/images/park-bg.png") center / cover no-repeat;
+}
+
+.hero::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(79, 70, 229, 0.28), transparent 45%, rgba(59, 130, 246, 0.22)),
+    radial-gradient(circle at 50% 35%, rgba(255, 255, 255, 0.2), transparent 28%);
 }
 
 .hero-content {
   position: relative;
-
-  z-index: 10;
-
-  max-width: 800px;
-
+  z-index: 2;
+  max-width: 900px;
   margin: 0 auto;
 }
 
 .badge {
   display: inline-block;
-
   padding: 6px 16px;
-
-  background: rgba(255, 255, 255, 0.1);
-
-  border: 1px solid rgba(255, 255, 255, 0.2);
-
-  border-radius: 20px;
-
-  font-size: 0.75rem;
-
-  font-weight: 800;
-
-  letter-spacing: 0.1em;
-
-  text-transform: uppercase;
-
   margin-bottom: 24px;
-
-  color: #a5b4fc;
-
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  border-radius: 20px;
+  color: #c7d2fe;
+  background: rgba(255, 255, 255, 0.12);
   backdrop-filter: blur(4px);
+  font-size: 0.78rem;
+  font-weight: 800;
+  letter-spacing: 0.08em;
 }
 
-.eco-hero h1 {
-  font-size: 3.5rem;
-
+.hero h1 {
+  margin: 0 0 24px;
+  font-size: clamp(2.7rem, 6vw, 4.3rem);
+  line-height: 1.12;
   font-weight: 900;
-
-  margin-bottom: 24px;
-
-  letter-spacing: -0.02em;
-
+  letter-spacing: 0;
   text-shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
 }
 
-.eco-hero p {
-  font-size: 1.25rem;
-
-  color: rgba(255, 255, 255, 0.95);
-
-  margin-bottom: 40px;
-
-  font-weight: 600;
-
-  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.5);
+.hero-lead {
+  max-width: 850px;
+  margin: 0 auto 12px;
+  color: rgba(255, 255, 255, 0.94);
+  font-size: 1.28rem;
+  font-weight: 700;
+  text-shadow: 0 2px 10px rgba(0, 0, 0, 0.48);
 }
 
-.btn-hero {
-  padding: 16px 48px;
+.hero-sub {
+  max-width: 760px;
+  margin: 0 auto 42px;
+  color: rgba(255, 255, 255, 0.86);
+  font-size: 1.06rem;
+  font-weight: 500;
+}
 
-  background: white;
-
-  color: #0f172a;
-
-  border: none;
-
+.hero-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-height: 54px;
+  padding: 0 48px;
+  border: 0;
   border-radius: 50px;
-
-  font-size: 1.1rem;
-
+  color: #0f172a;
+  background: #fff;
+  font-size: 1.08rem;
   font-weight: 800;
-
   cursor: pointer;
-
-  transition: all 0.2s;
+  transition: transform 0.2s, box-shadow 0.2s;
 }
 
-.btn-hero:hover {
+.hero-btn:hover {
   transform: translateY(-2px);
-
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
 }
 
-/* Intro Section */
-
-.section-intro {
-  margin-top: -80px;
-
+/* Intro */
+.intro {
   position: relative;
-
-  z-index: 20;
-
-  margin-bottom: 80px;
+  z-index: 4;
+  margin-top: 72px;
+  margin-bottom: 46px;
 }
 
-.intro-grid {
-  display: grid;
-
-  grid-template-columns: 1.2fr 0.8fr;
-
-  gap: 40px;
+.intro-title {
+  max-width: 520px;
+  margin: 0 auto;
+  padding: 0;
+  text-align: center;
 }
 
-.intro-text,
-.intro-highlight {
-  background: white;
-
-  border-radius: 20px;
-
-  padding: 40px;
-
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+.intro-title h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  font-weight: 850;
+  letter-spacing: 0;
 }
 
-.intro-text h2 {
-  font-size: 1.8rem;
-
-  color: #1e293b;
-
-  margin-bottom: 32px;
-}
-
-.pain-point-list {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 20px;
-}
-
-.pain-item {
-  display: flex;
-
-  gap: 16px;
-
-  align-items: flex-start;
-}
-
-.pain-item i {
-  color: #ef4444;
-
-  font-size: 1.2rem;
-
-  margin-top: 4px;
-}
-
-.pain-item span {
-  color: #475569;
-
-  line-height: 1.6;
-}
-
-.intro-highlight {
-  background: #4f46e5;
-
-  color: white;
-
-  display: flex;
-
-  flex-direction: column;
-
-  justify-content: center;
-}
-
-.intro-highlight h3 {
-  font-size: 2rem;
-
-  margin-bottom: 20px;
-}
-
-.intro-highlight p {
-  line-height: 1.8;
-
-  color: rgba(255, 255, 255, 0.9);
-
-  font-size: 1.1rem;
-}
-
-/* Roles Section */
-
-.section-roles {
-  padding: 80px 0;
+/* 内容区域 */
+.content-section {
+  padding: 88px 0;
 }
 
 .section-title {
+  max-width: 900px;
+  margin: 0 auto 58px;
   text-align: center;
-
-  margin-bottom: 60px;
 }
 
 .section-title h2 {
-  font-size: 2.5rem;
-
+  margin: 0 0 16px;
   color: #0f172a;
-
-  margin-bottom: 16px;
-
-  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 2.7rem);
+  font-weight: 850;
+  letter-spacing: 0;
 }
 
 .section-title p {
+  margin: 0;
   color: #64748b;
-
-  font-size: 1.2rem;
+  font-size: 1.12rem;
 }
 
-.roles-grid {
+/* 卡片网格 */
+.card-grid {
   display: grid;
-
-  grid-template-columns: repeat(2, 1fr);
-
-  gap: 32px;
+  grid-template-columns: 1.12fr 0.88fr 0.88fr;
+  grid-auto-rows: minmax(190px, auto);
+  gap: 22px;
 }
 
-.role-card {
-  background: white;
-
-  padding: 40px;
-
+.advantage-card {
+  position: relative;
+  min-width: 0;
+  border: 1px solid var(--line);
   border-radius: 24px;
-
-  border: 1px solid #e2e8f0;
-
-  transition: all 0.3s;
+  background: #fff;
+  transition: transform 0.3s, box-shadow 0.3s, border-color 0.3s;
+  overflow: hidden;
+  padding: 30px;
 }
 
-.role-card:hover {
+.advantage-card:hover {
   transform: translateY(-8px);
-
-  box-shadow: 0 20px 40px rgba(0, 0, 0, 0.05);
-
   border-color: #a5b4fc;
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
 }
 
-.role-icon {
-  width: 64px;
-
-  height: 64px;
-
-  border-radius: 16px;
-
-  display: flex;
-
-  align-items: center;
-
-  justify-content: center;
-
-  font-size: 2rem;
-
-  margin-bottom: 24px;
+.advantage-card::after {
+  content: attr(data-index);
+  position: absolute;
+  right: 15px;
+  top: 22%;
+  transform: translateY(-50%);
+  color: #e0e7ff;
+  font-size: 3.8rem;
+  line-height: 1;
+  font-weight: 900;
+  letter-spacing: 0;
+  z-index: 0;
 }
 
-.role-card h3 {
-  font-size: 1.5rem;
-
-  margin-bottom: 12px;
-
-  color: #1e293b;
+.advantage-card > * {
+  position: relative;
+  z-index: 1;
 }
 
-.role-desc {
-  color: #64748b;
-
-  line-height: 1.6;
-
-  margin-bottom: 24px;
+.advantage-card.featured {
+  grid-row: span 2;
+  min-height: 402px;
+  padding: 42px;
+  color: #fff;
+  border: 0;
+  background:
+    linear-gradient(135deg, rgba(79, 70, 229, 0.94), rgba(59, 130, 246, 0.9)),
+    url("https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&q=80&w=900") center / cover no-repeat;
+  box-shadow: 0 28px 70px rgba(79, 70, 229, 0.26);
 }
 
-.role-skills {
-  display: flex;
-
-  gap: 12px;
-
-  flex-wrap: wrap;
+.advantage-card.featured::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(180deg, rgba(15, 23, 42, 0.05), rgba(15, 23, 42, 0.36)),
+    radial-gradient(circle at 18% 18%, rgba(255, 255, 255, 0.22), transparent 24%);
 }
 
-.skill-tag {
-  background: #f8fafc;
-
-  padding: 6px 12px;
-
-  border-radius: 8px;
-
-  font-size: 0.85rem;
-
-  font-weight: 600;
-
-  color: #475569;
+.advantage-card.featured::after {
+  color: rgba(255, 255, 255, 0.16);
+  right: 28px;
+  top:20%;
+  font-size: 5.4rem;
 }
 
-/* Form Section */
-
-.section-form {
-  padding: 80px 0 120px;
+.advantage-card.featured .card-icon {
+  color: #fff;
+  background: rgba(255, 255, 255, 0.18);
+  border: 1px solid rgba(255, 255, 255, 0.22);
+  backdrop-filter: blur(6px);
 }
 
-.form-wrapper {
+.advantage-card.featured h3 {
+  max-width: 330px;
+  margin-top: 78px;
+  color: #fff;
+  font-size: 2.1rem;
+  line-height: 1.22;
+}
+
+.advantage-card.featured p {
+  max-width: 360px;
+  color: rgba(255, 255, 255, 0.92);
+  font-size: 1.08rem;
+}
+
+.advantage-card.compact {
   display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 18px;
+  align-items: start;
+}
 
-  grid-template-columns: 1fr 1fr;
+.advantage-card.compact .card-icon {
+  width: 54px;
+  height: 54px;
+  margin: 0;
+  border-radius: 14px;
+}
 
-  gap: 80px;
+.advantage-card.compact h3 {
+  padding-right: 54px;
+}
 
+.advantage-card.wide {
+  grid-column: span 2;
+  display: grid;
+  grid-template-columns: 70px minmax(0, 1fr);
+  gap: 22px;
   align-items: center;
+  min-height: 170px;
+  padding: 30px;
+  background:
+    linear-gradient(135deg, #ffffff 0%, #f8fbff 58%, #eef2ff 100%);
 }
 
-/* Form Left Content */
-
-.form-content-left h2 {
-  font-size: 2.8rem;
-
-  color: #0f172a;
-
-  line-height: 1.2;
-
+.card-icon {
+  width: 62px;
+  height: 62px;
   margin-bottom: 24px;
-
-  font-weight: 800;
-}
-
-.highlight-text {
-  color: #4f46e5;
-}
-
-.form-lead {
-  font-size: 1.25rem;
-
-  color: #475569;
-
-  line-height: 1.7;
-
-  margin-bottom: 48px;
-}
-
-.trust-features {
-  display: flex;
-
-  flex-direction: column;
-
-  gap: 32px;
-}
-
-.trust-feat-item {
-  display: flex;
-
-  gap: 20px;
-
-  align-items: flex-start;
-}
-
-.trust-feat-item i {
-  font-size: 1.8rem;
-
-  color: #4f46e5;
-
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: var(--primary);
   background: #eef2ff;
-
-  padding: 16px;
-
-  border-radius: 16px;
 }
 
-.trust-feat-item h4 {
-  font-size: 1.2rem;
+.card-icon svg {
+  width: 28px;
+  height: 28px;
+  display: block;
+}
 
+.advantage-card h3 {
+  margin: 0 0 12px;
   color: #1e293b;
-
-  margin-bottom: 8px;
-
-  font-weight: 700;
-}
-
-.trust-feat-item p {
-  color: #64748b;
-
-  line-height: 1.6;
-}
-
-/* Form Right Container */
-
-.form-container-right {
-  background: white;
-
-  border-radius: 24px;
-
-  padding: 48px;
-
-  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.08),
-    0 4px 12px rgba(15, 23, 42, 0.04);
-}
-
-.form-header-minimal {
-  margin-bottom: 32px;
-}
-
-.form-header-minimal h3 {
-  font-size: 1.6rem;
-
-  color: #0f172a;
-
-  margin-bottom: 8px;
-
+  font-size: 1.35rem;
   font-weight: 800;
 }
 
-.form-header-minimal p {
+.advantage-card p {
+  margin: 0;
   color: #64748b;
+  line-height: 1.7;
 }
 
-.consult-form {
-  padding: 0; /* Resetting padding since container has it */
+/* 功能轮播 */
+.features {
+  background: #fff;
 }
 
-.success-message {
-  text-align: center;
-
-  padding: 60px 0;
+.feature-carousel {
+  position: relative;
+  border-radius: 24px;
+  overflow: hidden;
+  background: #0f172a;
+  box-shadow: 0 2px 12px rgba(15, 23, 42, 0.06);
 }
 
-.form-row {
+.feature-track {
+  display: flex;
+  transition: transform 0.55s cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+.feature-slide {
+  flex: 0 0 100%;
   display: grid;
+  grid-template-columns: 0.92fr 1.08fr;
+  min-height: 560px;
+  background: #fff;
+}
 
-  grid-template-columns: 1fr 1fr;
+.feature-copy {
+  position: relative;
+  z-index: 2;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  padding: 58px;
+  background:
+    radial-gradient(circle at 0% 0%, rgba(79, 70, 229, 0.1), transparent 32%),
+    #fff;
+}
 
+.feature-index {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 44px;
+  height: 44px;
+  margin-bottom: 28px;
+  border-radius: 12px;
+  color: #fff;
+  background: #0f172a;
+  font-size: 0.95rem;
+  font-weight: 900;
+}
+
+.feature-copy h3 {
+  margin: 0 0 20px;
+  color: #0f172a;
+  font-size: clamp(2rem, 4vw, 2.8rem);
+  line-height: 1.15;
+  font-weight: 850;
+}
+
+.feature-copy p {
+  max-width: 520px;
+  margin: 0;
+  color: #475569;
+  font-size: 1.08rem;
+  line-height: 1.9;
+}
+
+.feature-media {
+  position: relative;
+  min-height: 560px;
+  overflow: hidden;
+  background: #111827;
+}
+
+.feature-media img {
+  width: 100%;
+  height: 100%;
+  display: block;
+  object-fit: cover;
+  filter: saturate(0.95);
+}
+
+.feature-media::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, rgba(15, 23, 42, 0.35), rgba(15, 23, 42, 0.04)),
+    linear-gradient(0deg, rgba(79, 70, 229, 0.26), transparent 48%);
+}
+
+.feature-controls {
+  display: flex;
+  gap: 10px;
+  padding: 20px 24px;
+  background: linear-gradient(180deg, #f1f5f9 0%, #f8fafc 60%, #fff 100%);
+  border-top: 1px solid #e2e8f0;
+  border-radius: 0 0 20px 20px;
+}
+
+.feature-tab {
+  flex: 1;
+  min-height: 68px;
+  padding: 14px 18px;
+  border: 1px solid transparent;
+  border-radius: 14px;
+  color: #64748b;
+  background: rgba(255, 255, 255, 0.6);
+  cursor: pointer;
+  text-align: left;
+  transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+  position: relative;
+  overflow: hidden;
+  backdrop-filter: blur(4px);
+}
+
+.feature-tab::after {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: 14px;
+  background: linear-gradient(135deg, rgba(79, 70, 229, 0.06), rgba(139, 92, 246, 0.03));
+  opacity: 0;
+  transition: opacity 0.35s ease;
+  pointer-events: none;
+}
+
+.feature-tab:hover {
+  color: #4338ca;
+  background: rgba(255, 255, 255, 0.9);
+  border-color: #e0e7ff;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(79, 70, 229, 0.08);
+}
+
+.feature-tab:hover::after {
+  opacity: 1;
+}
+
+.feature-tab b {
+  display: block;
+  margin-bottom: 4px;
+  color: #a5b4fc;
+  font-size: 0.68rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  transition: color 0.3s ease;
+}
+
+.feature-tab span {
+  display: block;
+  font-weight: 600;
+  line-height: 1.4;
+  font-size: 0.9rem;
+  color: #475569;
+  transition: color 0.3s ease;
+}
+
+.feature-tab.active {
+  color: #fff;
+  background: linear-gradient(135deg, #4f46e5, #7c3aed);
+  border-color: transparent;
+  box-shadow:
+    0 8px 24px rgba(79, 70, 229, 0.3),
+    0 2px 6px rgba(79, 70, 229, 0.15);
+  transform: translateY(-3px);
+}
+
+.feature-tab.active::after {
+  opacity: 0;
+}
+
+.feature-tab.active b {
+  color: rgba(255, 255, 255, 0.7);
+}
+
+.feature-tab.active span {
+  color: #fff;
+  font-weight: 700;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+}
+
+.feature-tab.active:hover {
+  transform: translateY(-3px);
+  box-shadow:
+    0 10px 28px rgba(79, 70, 229, 0.35),
+    0 4px 8px rgba(79, 70, 229, 0.18);
+}
+
+/* 优势卡片 */
+.benefit-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
   gap: 24px;
 }
 
+.benefit-card {
+  min-height: 230px;
+  padding: 34px;
+  border-radius: 24px;
+  border: 1px solid var(--line);
+  border-top: 6px solid var(--primary);
+  background: #fff;
+  transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.benefit-card:hover {
+  transform: translateY(-8px);
+  box-shadow: 0 20px 40px rgba(15, 23, 42, 0.08);
+}
+
+.benefit-card:nth-child(2) {
+  border-top-color: var(--secondary);
+}
+
+.benefit-card:nth-child(3) {
+  border-top-color: var(--accent);
+}
+
+.benefit-card:nth-child(4) {
+  border-top-color: #f59e0b;
+}
+
+.benefit-card h3 {
+  margin: 0 0 12px;
+  color: #1e293b;
+  font-size: 1.35rem;
+  font-weight: 800;
+}
+
+.benefit-card p {
+  margin: 0;
+  color: #64748b;
+  line-height: 1.7;
+}
+
+/* 联系表单 */
+.contact {
+  padding: 90px 0 120px;
+}
+
+.contact-layout {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 80px;
+  align-items: center;
+}
+
+.contact-copy h2 {
+  margin: 0 0 24px;
+  color: #0f172a;
+  font-size: clamp(2.2rem, 5vw, 3rem);
+  line-height: 1.15;
+}
+
+.contact-copy p {
+  margin: 0 0 46px;
+  color: #475569;
+  font-size: 1.18rem;
+  line-height: 1.8;
+}
+
+.contact-points {
+  display: grid;
+  gap: 28px;
+}
+
+.contact-point {
+  display: grid;
+  grid-template-columns: 58px 1fr;
+  gap: 18px;
+  align-items: start;
+}
+
+.form-icon {
+  width: 58px;
+  height: 58px;
+  border-radius: 16px;
+  display: grid;
+  place-items: center;
+  color: var(--primary);
+  background: #eef2ff;
+}
+
+.form-icon svg {
+  width: 24px;
+  height: 24px;
+  display: block;
+}
+
+.contact-point h3 {
+  margin: 0 0 8px;
+  font-size: 1.12rem;
+  color: #1e293b;
+}
+
+.contact-point p {
+  margin: 0;
+  color: #64748b;
+  font-size: 0.98rem;
+}
+
+.form-card {
+  padding: 48px;
+  border-radius: 24px;
+  background: #fff;
+  box-shadow: 0 24px 80px rgba(15, 23, 42, 0.12), 0 4px 12px rgba(15, 23, 42, 0.06);
+}
+
+.form-card h3 {
+  margin: 0 0 8px;
+  font-size: 1.55rem;
+  color: #0f172a;
+}
+
+.form-card > p {
+  margin: 0 0 30px;
+  color: #64748b;
+}
+
 .form-group {
-  margin-bottom: 24px;
+  margin-bottom: 22px;
 }
 
 .form-group label {
   display: block;
-
-  font-weight: 700;
-
-  color: #334155;
-
   margin-bottom: 8px;
-}
-
-.required {
-  color: #ef4444;
+  color: #334155;
+  font-weight: 700;
 }
 
 .form-group input,
 .form-group textarea {
   width: 100%;
-
-  padding: 12px;
-
   border: 1px solid #e2e8f0;
-
   border-radius: 8px;
-
-  font-size: 1rem;
-
+  background: #fff;
+  color: #0f172a;
   outline: none;
+  transition: border-color 0.2s, box-shadow 0.2s;
+  padding: 12px 13px;
+  font-size: 1rem;
+}
 
-  transition: all 0.2s;
+.form-group input,
+.form-group select {
+  height: 48px;
+}
+
+.form-group textarea {
+  min-height: 108px;
+  resize: vertical;
 }
 
 .form-group input:focus,
 .form-group textarea:focus {
-  border-color: #4f46e5;
-
+  border-color: var(--primary);
   box-shadow: 0 0 0 3px rgba(79, 70, 229, 0.1);
 }
 
-.btn-submit {
-  width: 100%;
-
-  padding: 18px;
-
-  background: linear-gradient(135deg, #4f46e5, #3b82f6);
-
-  color: white;
-
-  border: none;
-
-  border-radius: 12px;
-
-  font-size: 1.15rem;
-
-  font-weight: 800;
-
-  cursor: pointer;
-
-  transition: all 0.3s;
-
-  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.2);
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
 }
 
-.btn-submit:hover:not(:disabled) {
-  transform: translateY(-2px);
+.submit-btn {
+  width: 100%;
+  min-height: 56px;
+  border: 0;
+  border-radius: 12px;
+  color: #fff;
+  background: linear-gradient(135deg, var(--primary), var(--secondary));
+  box-shadow: 0 8px 20px rgba(79, 70, 229, 0.22);
+  font-size: 1.08rem;
+  font-weight: 800;
+  cursor: pointer;
+  transition: transform 0.2s, box-shadow 0.2s;
+}
 
+.submit-btn:hover:not(:disabled) {
+  transform: translateY(-2px);
   box-shadow: 0 12px 24px rgba(79, 70, 229, 0.3);
 }
 
-.privacy-note {
-  text-align: center;
-
-  margin-top: 16px;
-
-  font-size: 0.85rem;
-
-  color: #94a3b8;
-}
-
-.privacy-note i {
-  color: #10b981;
-
-  margin-right: 4px;
-}
-
-.btn-submit:disabled {
+.submit-btn:disabled {
   opacity: 0.7;
-
   cursor: not-allowed;
 }
 
-.btn-reset {
-  margin-top: 24px;
-
-  background: transparent;
-
-  border: 1px solid #4f46e5;
-
-  color: #4f46e5;
-
-  padding: 10px 24px;
-
-  border-radius: 6px;
-
-  cursor: pointer;
-
+.toast {
+  display: none;
+  margin-top: 16px;
+  padding: 12px 14px;
+  border-radius: 8px;
+  color: #047857;
+  background: #ecfdf5;
   font-weight: 700;
 }
 
-@media (max-width: 768px) {
-  .intro-grid,
-  .roles-grid,
-  .form-row,
-  .form-wrapper {
+.toast.show {
+  display: block;
+}
+
+.success-message {
+  text-align: center;
+  padding: 60px 0;
+}
+
+.success-message i {
+  font-size: 3rem;
+  color: #10b981;
+  margin-bottom: 16px;
+}
+
+.success-message h3 {
+  font-size: 1.6rem;
+  color: #0f172a;
+  margin-bottom: 12px;
+}
+
+.success-message p {
+  color: #64748b;
+  line-height: 1.7;
+}
+
+footer {
+  padding: 24px 0;
+  color: #94a3b8;
+  background: #fff;
+  border-top: 1px solid #f1f5f9;
+  text-align: center;
+  font-size: 0.88rem;
+}
+
+/* 移动端适配 */
+@media (max-width: 1024px) {
+  .wrapper {
+    width: min(100% - 32px, 1200px);
+  }
+
+  .nav-links {
+    display: none;
+  }
+
+  .contact-layout {
     grid-template-columns: 1fr;
   }
 
-  .eco-hero h1 {
-    font-size: 2.5rem;
+  .card-grid,
+  .benefit-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+
+  .advantage-card.featured,
+  .advantage-card.wide {
+    grid-column: span 2;
+    grid-row: auto;
+    min-height: 260px;
+  }
+
+  .feature-slide {
+    grid-template-columns: 1fr;
+  }
+
+  .feature-copy {
+    padding: 42px;
+  }
+
+  .feature-media {
+    height: 360px;
+    min-height: auto;
+  }
+
+  .feature-controls {
+    gap: 8px;
+    padding: 16px 18px;
+    border-radius: 0 0 18px 18px;
+  }
+
+  .feature-tab {
+    min-height: 62px;
+    padding: 12px 14px;
+    border-radius: 12px;
+  }
+
+  .feature-tab b {
+    font-size: 0.65rem;
+    margin-bottom: 3px;
+  }
+
+  .feature-tab span {
+    font-size: 0.84rem;
+  }
+}
+
+@media (max-width: 768px) {
+  .nav-bar {
+    height: 68px;
+  }
+
+  .brand-main {
+    max-width: 68vw;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .hero {
+    min-height: 560px;
+    padding: 128px 0 110px;
+  }
+
+  .hero h1 {
+    font-size: 2.2rem;
+    line-height: 1.18;
+  }
+
+  .advantage-card,
+  .benefit-card,
+  .form-card {
+    border-radius: 18px;
+    padding: 24px;
+  }
+
+  .card-grid,
+  .benefit-grid,
+  .form-row,
+  .advantage-card.featured,
+  .advantage-card.wide {
+    grid-column: auto;
+  }
+
+  .advantage-card.compact,
+  .advantage-card.wide {
+    grid-template-columns: 1fr;
+  }
+
+  .advantage-card.featured h3 {
+    margin-top: 34px;
+    font-size: 1.7rem;
+  }
+
+  .feature-copy {
+    padding: 28px;
+  }
+
+  .feature-copy h3 {
+    font-size: 1.7rem;
+  }
+
+  .feature-media {
+    height: 260px;
+  }
+
+  .feature-controls {
+    gap: 6px;
+    padding: 12px;
+    flex-wrap: wrap;
+    justify-content: center;
+    border-radius: 0 0 16px 16px;
+  }
+
+  .feature-tab {
+    flex: 0 1 calc(33.333% - 4px);
+    min-height: 58px;
+    padding: 10px 8px;
+    text-align: center;
+    border-radius: 10px;
+  }
+
+  .feature-tab b {
+    font-size: 0.6rem;
+    margin-bottom: 2px;
+  }
+
+  .feature-tab span {
+    font-size: 0.78rem;
+    line-height: 1.3;
+  }
+
+  section.content-section,
+  .contact {
+    padding: 58px 0;
+  }
+
+  .section-title {
+    margin-bottom: 32px;
+  }
+
+  .section-title h2,
+  .intro-title h2 {
+    font-size: 1.55rem;
+  }
+
+  .contact-layout {
+    gap: 38px;
   }
 }
 </style>
