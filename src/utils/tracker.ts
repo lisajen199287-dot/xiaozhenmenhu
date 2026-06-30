@@ -112,6 +112,8 @@ export const track = (data: TrackPayload) => {
 
         device: getDeviceType(),
 
+        referrer: document.referrer || '',   // ← 加这一行
+
         userId: localStorage.getItem('user_id') || null, // 假设存在用户ID
 
         appId: 'main',
@@ -153,7 +155,8 @@ export const track = (data: TrackPayload) => {
     }
 
     // 发送事件到后端
-    newApi.apiTrack(JSON.stringify(payload));
+    // newApi.apiTrack(JSON.stringify(payload));
+    newApi.apiTrack(payload);
 }
 
 
