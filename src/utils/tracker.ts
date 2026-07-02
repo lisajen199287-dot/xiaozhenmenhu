@@ -131,7 +131,6 @@ export const track = (data: TrackPayload) => {
         utmDevice: searchParams.get('utm_device') || sessionStorage.getItem('utm_device'),
         utmPlatform: searchParams.get('utm_platform') || sessionStorage.getItem('utm_platform'),
         utmKeywordId: searchParams.get('utm_keyword_id') || sessionStorage.getItem('utm_keyword_id'),
-        utmCreativeId: searchParams.get('utm_creative_id') || sessionStorage.getItem('utm_creative_id'),
         utmMatchtype: searchParams.get('utm_matchtype') || sessionStorage.getItem('utm_matchtype'),
         utmLanding: searchParams.get('utm_landing') || sessionStorage.getItem('utm_landing'),
         bdVid: searchParams.get('bd_vid') || sessionStorage.getItem('bd_vid')
@@ -141,7 +140,7 @@ export const track = (data: TrackPayload) => {
     try {
         const keys = ['utm_source', 'utm_medium', 'utm_campaign', 'utm_content',
             'utm_term', 'utm_device', 'utm_platform', 'utm_keyword_id',
-            'utm_creative_id', 'utm_matchtype', 'utm_landing', 'bd_vid'
+            'utm_matchtype', 'utm_landing', 'bd_vid'
         ]
         for (const param of keys) {
             const val = searchParams.get(param)
@@ -222,7 +221,6 @@ export const getFirstTouchData = () => {
         firstUtmDevice: readUtm('utm_device'),
         firstUtmPlatform: readUtm('utm_platform'),
         firstUtmKeywordId: readUtm('utm_keyword_id'),
-        firstUtmCreativeId: readUtm('utm_creative_id'),
         firstUtmMatchtype: readUtm('utm_matchtype'),
         firstUtmLanding: readUtm('utm_landing'),
         firstBdVid: readUtm('bd_vid'),
