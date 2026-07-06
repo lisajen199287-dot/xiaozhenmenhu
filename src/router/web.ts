@@ -1,6 +1,13 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import type { RouteRecordRaw } from 'vue-router'
 
+// ✅ 最快时机捕获首次访问 URL（在任何路由跳转之前）
+if (!sessionStorage.getItem('_cii_first_url')) {
+    sessionStorage.setItem('_cii_first_url', window.location.href)
+    sessionStorage.setItem('_cii_first_ref', document.referrer || '')
+    sessionStorage.setItem('_cii_first_ts', Date.now().toString())
+}
+
 const routes: RouteRecordRaw[] = [
     {
         path: '/',
@@ -268,6 +275,10 @@ router.beforeEach((to, _from, next) => {
 
 // Tracking middleware
 router.afterEach((to) => {
+    // ✅ 只记录内容页，跳过登录/注册页
+    if (!to.path.startsWith('/login') && to.path !== '/register') {
+        sessionStorage.setItem('_cii_last_path', to.fullPath)
+    }
     import('@/utils/tracker').then(({ track }) => {
         track({ event: 'page_view', page: to.fullPath })
     })

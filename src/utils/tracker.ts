@@ -205,7 +205,8 @@ export const getFirstTouchData = () => {
         visitorId: getVisitorId(),
         sessionId: getSessionId(),
         firstLandingUrl: sessionStorage.getItem(FIRST_URL_KEY) || window.location.href,
-        firstLandingPath: (() => {
+        // 注册时所在的页面（最后一次停留的页面），而非首次进入的页面
+        firstLandingPath: sessionStorage.getItem('_cii_last_path') || (() => {
             const href = sessionStorage.getItem(FIRST_URL_KEY) || window.location.href
             try { return new URL(href).pathname } catch { return '' }
         })(),
