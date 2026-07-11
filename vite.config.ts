@@ -1,21 +1,62 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
-import { resolve } from 'path'
+import { extname, resolve } from 'path'
+
+const htmlFallbackPlugin = () => {
+  const shouldFallback = (req: any) => {
+    if (!req.url || req.method !== 'GET') return false
+    const accept = req.headers?.accept || ''
+    if (!accept.includes('text/html')) return false
+
+    const url = new URL(req.url, 'http://localhost')
+    const pathname = url.pathname
+    if (
+      pathname.startsWith('/api') ||
+      pathname.startsWith('/uploads') ||
+      pathname.startsWith('/@vite') ||
+      pathname.startsWith('/src') ||
+      pathname.startsWith('/node_modules') ||
+      pathname.startsWith('/static') ||
+      pathname.startsWith('/assets')
+    ) {
+      return false
+    }
+    if (pathname.endsWith('.html')) return false
+    if (extname(pathname)) return false
+    return true
+  }
+
+  const fallback = (server: any) => {
+    server.middlewares.use((req: any, _res: any, next: any) => {
+      if (shouldFallback(req)) {
+        const url = new URL(req.url, 'http://localhost')
+        req.url = `/index.html${url.search}`
+      }
+      next()
+    })
+  }
+
+  return {
+    name: 'local-html-history-fallback',
+    configureServer: fallback,
+    configurePreviewServer: fallback
+  }
+}
 
 // https://vite.dev/config/
 export default defineConfig({
-  plugins: [vue()],
+  plugins: [htmlFallbackPlugin(), vue()],
   server: {
     port: 5555,
     strictPort: false,
     proxy: {
       '/api': {
-        target: 'http://127.0.0.1:48080',
+        target: 'http://192.168.12.28:48080',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, '/api')
       },
       '/uploads': {
-        target: 'http://127.0.0.1:48080',
+        target: 'http://192.168.12.28:48080',
         changeOrigin: true
       }
     }

@@ -174,9 +174,9 @@ onMounted(fetchTickets)
 
       <div class="header-text">
 
-        <h2>工单支持</h2>
+        <h2>我的工单</h2>
 
-        <p>提交技术问题或账户咨询</p>
+        <p>创建工单并跟踪历史工单的处理进度</p>
 
       </div>
 

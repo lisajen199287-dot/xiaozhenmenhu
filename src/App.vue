@@ -3,10 +3,11 @@ import { RouterView, useRoute } from 'vue-router'
 import { computed } from 'vue'
 import NavBar from './components/NavBar.vue'
 import AppFooter from './components/AppFooter.vue'
+import FloatingService from './components/FloatingService.vue'
 
 
 const route = useRoute()
-const hideNavRoutes = ['AdminDashboard', 'AdminArticles', 'AdminEvents', 'AdminUsers', 'AdminAdmins', 'AdminCases', 'AdminIntro', 'GroupUsage', 'LoginPassword']
+const hideNavRoutes = ['AdminDashboard', 'AdminArticles', 'AdminEvents', 'AdminUsers', 'AdminAdmins', 'AdminCases', 'AdminIntro', 'GroupUsage', 'LoginPassword', 'ParkCollaborationLogin', 'ParkCollaborationAuth', 'ParkCollaborationWorkbench', 'DigitalVideoLogin', 'DigitalVideoAuth', 'DigitalVideoWorkbench', 'EcommercePracticeWorkbench', 'EcommerceAskLogin', 'EcommerceAskAuth']
 const showNav = computed(() => {
   if (route.path.startsWith('/admin')) return false
   const path = route.path
@@ -50,5 +51,6 @@ onMounted(() => {
   <NavBar v-if="showNav" />
   <RouterView />
   <AppFooter v-if="showNav" />
+  <FloatingService v-if="showNav" />
 
 </template>

@@ -15,6 +15,101 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/HomeView.vue')
     },
     {
+        path: '/information',
+        name: 'Information',
+        component: () => import('@/views/InformationView.vue')
+    },
+    {
+        path: '/park-collaboration',
+        name: 'ParkCollaboration',
+        component: () => import('@/views/ParkCollaborationView.vue')
+    },
+    {
+        path: '/park-collaboration/login',
+        name: 'ParkCollaborationLogin',
+        component: () => import('@/views/ParkCollaborationLoginView.vue')
+    },
+    {
+        path: '/park-collaboration/auth',
+        name: 'ParkCollaborationAuth',
+        component: () => import('@/views/ParkCollaborationAuthView.vue')
+    },
+    {
+        path: '/park-collaboration/workbench',
+        name: 'ParkCollaborationWorkbench',
+        component: () => import('@/views/ParkCollaborationWorkbenchView.vue')
+    },
+    {
+        path: '/digital-employee',
+        name: 'DigitalEmployee',
+        component: () => import('@/views/DigitalEmployeeLandingView.vue')
+    },
+    {
+        path: '/digital-employee/video-login',
+        name: 'DigitalVideoLogin',
+        component: () => import('@/views/DigitalVideoLoginView.vue')
+    },
+    {
+        path: '/digital-employee/video-auth',
+        name: 'DigitalVideoAuth',
+        component: () => import('@/views/DigitalVideoAuthView.vue')
+    },
+    {
+        path: '/digital-employee/video-workbench',
+        name: 'DigitalVideoWorkbench',
+        component: () => import('@/views/DigitalVideoWorkbenchView.vue')
+    },
+    {
+        path: '/digital-employee/practice-user',
+        name: 'EcommercePracticeWorkbench',
+        component: () => import('@/views/EcommercePracticeWorkbenchView.vue')
+    },
+    {
+        path: '/ecommerce-ask',
+        name: 'EcommerceAskLanding',
+        component: () => import('@/views/EcommerceAskLandingView.vue')
+    },
+    {
+        path: '/ecommerce-ask/login',
+        name: 'EcommerceAskLogin',
+        component: () => import('@/views/EcommerceAskLoginView.vue')
+    },
+    {
+        path: '/ecommerce-ask/auth',
+        name: 'EcommerceAskAuth',
+        component: () => import('@/views/EcommerceAskAuthView.vue')
+    },
+    {
+        path: '/data-governance',
+        name: 'DataGovernanceLanding',
+        component: () => import('@/views/DataGovernanceLandingView.vue')
+    },
+    {
+        path: '/data-governance/login',
+        name: 'DataGovernanceLogin',
+        component: () => import('@/views/DataGovernanceLoginView.vue')
+    },
+    {
+        path: '/data-governance/auth',
+        name: 'DataGovernanceAuth',
+        component: () => import('@/views/DataGovernanceAuthView.vue')
+    },
+    {
+        path: '/trusted-connector',
+        name: 'TrustedConnectorLanding',
+        component: () => import('@/views/TrustedConnectorLandingView.vue')
+    },
+    {
+        path: '/trusted-connector/login',
+        name: 'TrustedConnectorLogin',
+        component: () => import('@/views/TrustedConnectorLoginView.vue')
+    },
+    {
+        path: '/trusted-connector/auth',
+        name: 'TrustedConnectorAuth',
+        component: () => import('@/views/TrustedConnectorAuthView.vue')
+    },
+    {
         path: '/infra',
         name: 'Infra',
         component: () => import('@/views/InfraView.vue')
@@ -237,6 +332,11 @@ const routes: RouteRecordRaw[] = [
             { path: 'active-users', name: 'AdminActiveUsers', component: () => import('@/views/admin/AdminActiveUsersView.vue') },
             { path: 'tickets', name: 'AdminTickets', component: () => import('@/views/admin/AdminTicketsView.vue') },
         ]
+    },
+    {
+        path: '/:pathMatch(.*)*',
+        name: 'WebNotFoundFallback',
+        redirect: '/'
     }
 ]
 

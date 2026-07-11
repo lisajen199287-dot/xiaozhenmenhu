@@ -154,7 +154,6 @@ const routes: RouteRecordRaw[] = [
         path: '/console',
         name: 'Console',
         component: () => import('@/views/console/UserLayout.vue'),
-        meta: { requiresAuth: true }, // Ideally should be true, but for demo maybe optional
         children: [
             { path: '', name: 'UserDashboard', component: () => import('@/views/console/UserDashboardView.vue') },
             // Add placeholders for other routes as needed

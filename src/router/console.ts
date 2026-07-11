@@ -13,14 +13,10 @@ const routes: RouteRecordRaw[] = [
         children: [
             { path: '', redirect: '/profile' },
             { path: 'profile', name: 'UserProfile', component: () => import('@/views/console/UserBasicInfoView.vue') },
-            { path: 'apps', name: 'UserApps', component: () => import('@/views/console/UserAppsView.vue') },
-            { path: 'apikeys', name: 'UserApiKeys', component: () => import('@/views/console/UserApiKeyView.vue') },
-            { path: 'api', name: 'UserAPI', component: () => import('@/views/console/UserApiView.vue') },
+            { path: 'tickets', name: 'UserTickets', component: () => import('@/views/console/UserSupportView.vue') },
+            { path: 'api', name: 'UserApi', component: () => import('@/views/console/UserApiView.vue') },
             { path: 'billing', name: 'UserBilling', component: () => import('@/views/console/UserBillingView.vue') },
-            { path: 'lumiBilling', name: 'UserLumiBilling', component: () => import('@/views/console/UserLumiBillingView.vue') },
-            { path: 'support', name: 'UserSupport', component: () => import('@/views/console/UserSupportView.vue') },
-            { path: 'settings', name: 'UserSettings', component: () => import('@/views/console/UserSettingsView.vue') },
-            { path: 'logs', name: 'UserLogs', component: () => import('@/views/console/UserLogsView.vue') }
+            { path: 'help', name: 'UserHelp', component: () => import('@/views/console/UserHelpView.vue') }
         ]
     }
 ]
