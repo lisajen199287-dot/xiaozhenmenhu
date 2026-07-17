@@ -7,7 +7,7 @@ import FloatingService from './components/FloatingService.vue'
 
 
 const route = useRoute()
-const hideNavRoutes = ['AdminDashboard', 'AdminArticles', 'AdminEvents', 'AdminUsers', 'AdminAdmins', 'AdminCases', 'AdminIntro', 'GroupUsage', 'LoginPassword', 'ParkCollaborationLogin', 'ParkCollaborationAuth', 'ParkCollaborationWorkbench', 'DigitalVideoLogin', 'DigitalVideoAuth', 'DigitalVideoWorkbench', 'EcommercePracticeWorkbench', 'EcommerceAskLogin', 'EcommerceAskAuth']
+const hideNavRoutes = ['AdminDashboard', 'AdminArticles', 'AdminEvents', 'AdminUsers', 'AdminAdmins', 'AdminCases', 'AdminIntro', 'GroupUsage', 'LoginPassword', 'ParkCollaborationLogin', 'ParkCollaborationAuth', 'ParkCollaborationWorkbench', 'DigitalVideoLogin', 'DigitalVideoAuth', 'DigitalVideoWorkbench', 'EcommercePracticeWorkbench', 'EcommerceAskLogin', 'EcommerceAskAuth', 'EcommerceAskWorkbench']
 const showNav = computed(() => {
   if (route.path.startsWith('/admin')) return false
   const path = route.path

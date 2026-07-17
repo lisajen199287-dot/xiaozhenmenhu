@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const enterPlatform = () => {
-  router.push("/ecommerce-ask/login");
+  router.push("/ecommerce-ask/workbench");
 };
 
 const capabilities = [

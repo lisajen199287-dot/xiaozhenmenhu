@@ -53,15 +53,166 @@ const defaultNav: NavigationMenu[] = [
   {
     id: 2,
     parentId: null,
-    title: "平台资讯",
-    titleEn: "Information",
-    url: "/information",
+    title: "电商产业",
+    titleEn: "E-commerce Industry",
+    url: "#",
     icon: "",
     type: "internal",
     position: "header",
     sortOrder: 2,
     isVisible: true,
     target: "_self",
+    children: [
+      {
+        id: 21,
+        parentId: 2,
+        title: "电商运营全链路问数",
+        titleEn: "Natural language BI for e-commerce operations",
+        url: "/ecommerce-ask",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 1,
+        isVisible: true,
+        target: "_self",
+      },
+      {
+        id: 22,
+        parentId: 2,
+        title: "直播电商数字员工",
+        titleEn: "Digital employee for live commerce",
+        url: "/digital-employee",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 2,
+        isVisible: true,
+        target: "_self",
+      },
+    ],
+  },
+  {
+    id: 3,
+    parentId: null,
+    title: "AI普惠",
+    titleEn: "Inclusive AI",
+    url: "#",
+    icon: "",
+    type: "internal",
+    position: "header",
+    sortOrder: 3,
+    isVisible: true,
+    target: "_self",
+    children: [
+      {
+        id: 31,
+        parentId: 3,
+        title: "企业龙虾 Claw KX",
+        titleEn: "Enterprise AI productivity assistant",
+        url: "/arkclaw",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 1,
+        isVisible: true,
+        target: "_self",
+      },
+      {
+        id: 32,
+        parentId: 3,
+        title: "Hi-agent智能底座",
+        titleEn: "Inclusive agent foundation platform",
+        url: "/brain",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 2,
+        isVisible: true,
+        target: "_self",
+      },
+    ],
+  },
+  {
+    id: 4,
+    parentId: null,
+    title: "数治流通",
+    titleEn: "Data Governance & Flow",
+    url: "#",
+    icon: "",
+    type: "internal",
+    position: "header",
+    sortOrder: 4,
+    isVisible: true,
+    target: "_self",
+    children: [
+      {
+        id: 41,
+        parentId: 4,
+        title: "数据治理智能体",
+        titleEn: "Data labeling, cleaning and quality inspection",
+        url: "/data-governance",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 1,
+        isVisible: true,
+        target: "_self",
+      },
+      {
+        id: 42,
+        parentId: 4,
+        title: "可信数据接入连接器",
+        titleEn: "Trusted multi-source data connection",
+        url: "/trusted-connector",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 2,
+        isVisible: true,
+        target: "_self",
+      },
+    ],
+  },
+  {
+    id: 5,
+    parentId: null,
+    title: "园企协同",
+    titleEn: "Park Enterprise Collaboration",
+    url: "#",
+    icon: "",
+    type: "internal",
+    position: "header",
+    sortOrder: 5,
+    isVisible: true,
+    target: "_self",
+    children: [
+      {
+        id: 51,
+        parentId: 5,
+        title: "园企协同平台",
+        titleEn: "Park enterprise service landing page",
+        url: "/park-collaboration",
+        icon: "",
+        type: "internal",
+        position: "header",
+        sortOrder: 1,
+        isVisible: true,
+        target: "_self",
+      },
+      {
+        id: 52,
+        parentId: 5,
+        title: "词元中枢",
+        titleEn: "Token operation center",
+        url: "/console.html#/api",
+        icon: "",
+        type: "external",
+        position: "header",
+        sortOrder: 2,
+        isVisible: true,
+        target: "_self",
+      },
+    ],
   },
 ];
 
@@ -88,6 +239,25 @@ const headerMenus = ref<NavigationMenu[]>(defaultNav);
 
 const goToLogin = () => router.push("/login");
 const goToConsole = () => (window.location.href = "/console.html#/profile");
+
+const normalizePath = (url: string) => url.split("#")[0].split("?")[0];
+
+const isMenuActive = (item: NavigationMenu) => {
+  const currentPath = router.currentRoute.value.path;
+  const currentFullPath = router.currentRoute.value.fullPath;
+  const itemPath = normalizePath(item.url || "");
+
+  if (itemPath && itemPath !== "#" && currentPath === itemPath) return true;
+  if (item.url && item.url.includes("#") && currentFullPath === item.url) return true;
+
+  return Boolean(
+    item.children?.some((child) => {
+      const childPath = normalizePath(child.url || "");
+      if (!childPath || childPath === "#") return false;
+      return currentPath === childPath || currentPath.startsWith(`${childPath}/`);
+    })
+  );
+};
 
 const activityCategories = computed(() => {
   const map = new Map<string, NavActivity[]>();
@@ -226,6 +396,7 @@ onUnmounted(() => {
             'has-mega':
               (item.children && item.children.length > 0) ||
               item.url === '/news',
+            'is-active': isMenuActive(item),
           }"
         >
           <template v-if="item.url && item.url !== '#'">
@@ -235,9 +406,7 @@ onUnmounted(() => {
               class="nav-link"
               :target="item.target"
               :class="{
-                'router-link-active':
-                  $route.path === item.url ||
-                  (item.url === '/app-center' && $route.path === '/apps'),
+                'router-link-active': isMenuActive(item),
               }"
             >
               {{ item.title }}
@@ -254,7 +423,7 @@ onUnmounted(() => {
               :href="item.url"
               class="nav-link"
               :target="item.target"
-              :class="{ 'router-link-active': $route.path === item.url }"
+              :class="{ 'router-link-active': isMenuActive(item) }"
             >
               {{ item.title }}
               <i
@@ -266,7 +435,7 @@ onUnmounted(() => {
               ></i>
             </a>
           </template>
-          <div v-else class="nav-link">
+          <div v-else class="nav-link" :class="{ 'router-link-active': isMenuActive(item) }">
             {{ item.title }}
             <i class="fas fa-chevron-down arrow"></i>
           </div>
@@ -546,8 +715,21 @@ onUnmounted(() => {
   color: #3b82f6;
 }
 
+.nav-item-container.is-active > .nav-link,
+.nav-link.router-link-active:not(.logo) {
+  color: #0f5fe8;
+  font-weight: 800;
+  background: linear-gradient(135deg, #eef6ff, #f7fbff);
+  border: 1px solid #b9d7ff;
+  box-shadow: 0 8px 20px rgba(15, 95, 232, 0.08);
+}
+
+.nav-item-container.is-active > .nav-link .arrow,
+.nav-link.router-link-active:not(.logo) .arrow {
+  opacity: 0.9;
+}
+
 .router-link-active:not(.logo) {
-  color: #475569;
   font-weight: 800;
 }
 

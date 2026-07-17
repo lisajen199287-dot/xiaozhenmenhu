@@ -62,11 +62,11 @@ const toggle = (index: number) => {
           </h4>
           <div class="f-content">
             <div class="f-content-inner">
-              <RouterLink to="/infra">算力底座 (Compute)</RouterLink>
-              <RouterLink to="/engine">AIGC 引擎 (Engine)</RouterLink>
-              <RouterLink to="/brain">知识智脑 (Brain)</RouterLink>
-              <RouterLink to="/app-center">应用中心 (AppStore)</RouterLink>
-              <RouterLink to="/agent">企业智能体 (Agent)</RouterLink>
+              <RouterLink to="/trusted-connector">视频视觉流式分析</RouterLink>
+              <RouterLink to="/trusted-connector">智慧物联多设备接入</RouterLink>
+              <RouterLink to="/infra">端云大模型推理基座</RouterLink>
+              <RouterLink to="/agent">行业智能体应用</RouterLink>
+              <RouterLink to="/data-governance">智能体全域安全脱敏组件</RouterLink>
             </div>
           </div>
         </div>

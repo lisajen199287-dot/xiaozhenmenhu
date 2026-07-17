@@ -4,7 +4,7 @@ import { useRouter } from "vue-router";
 const router = useRouter();
 
 const goVideoAuth = () => {
-  router.push("/digital-employee/video-login");
+  window.location.href = "https://www.cii-group.com/aivideo/";
 };
 
 const goPracticeUser = () => {

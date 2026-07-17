@@ -80,6 +80,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/EcommerceAskAuthView.vue')
     },
     {
+        path: '/ecommerce-ask/workbench',
+        name: 'EcommerceAskWorkbench',
+        component: () => import('@/views/EcommerceAskWorkbenchView.vue')
+    },
+    {
         path: '/data-governance',
         name: 'DataGovernanceLanding',
         component: () => import('@/views/DataGovernanceLandingView.vue')

@@ -1,0 +1,163 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>直播电商陪练系统</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main class="practice-workbench">
+      <aside class="system-sidebar">
+        <div class="system-brand">
+          <div class="brand-icon">🎧</div>
+          <div>
+            <strong>直播电商陪练</strong>
+            <span>AI PRACTICE SYSTEM</span>
+          </div>
+        </div>
+        <nav class="system-nav">
+          <button class="active" data-module="practice"><span>💬</span><strong>直播陪练</strong><em>模拟弹幕练回答</em></button>
+          <button data-module="script"><span>✨</span><strong>话术生成</strong><em>生成直播口播稿</em></button>
+          <button data-module="report"><span>📊</span><strong>陪练报告</strong><em>查看评分与建议</em></button>
+          <button data-module="settings"><span>🎚️</span><strong>陪练配置</strong><em>选择商品和场景</em></button>
+        </nav>
+      </aside>
+
+      <section class="system-main">
+        <header class="system-topbar">
+          <div>
+            <span>LIVE COMMERCE TRAINING</span>
+            <h1 id="page-title">直播陪练</h1>
+          </div>
+          <div class="current-product-pill">
+            <span>📦</span>
+            <div>
+              <small>当前商品</small>
+              <strong id="current-product">冰感防晒衣 · 异议处理</strong>
+            </div>
+          </div>
+        </header>
+
+        <section class="module-panel" id="practice">
+          <div class="panel-title">
+            <div>
+              <h2>直播陪练</h2>
+              <p>先选择训练商品，再模拟直播间买家弹幕，主播可通过打字方式提交回答。</p>
+            </div>
+            <div class="scenario-tabs">
+              <button class="active" data-scene="异议处理">异议处理</button>
+              <button data-scene="商品讲解">商品讲解</button>
+              <button data-scene="福利催单">福利催单</button>
+            </div>
+          </div>
+
+          <article class="product-selector">
+            <div class="panel-subtitle">
+              <h3>选择训练商品</h3>
+              <span id="product-meta">服饰单品 · ¥159</span>
+            </div>
+            <div class="product-list" id="product-list"></div>
+          </article>
+
+          <div class="practice-grid">
+            <article class="live-room-card">
+              <div class="live-header"><span class="live-dot"></span>模拟直播间 · <b id="live-product">冰感防晒衣</b><em>在线弹幕 128</em></div>
+              <div class="live-stage">
+                <div class="anchor-avatar">主播</div>
+                <div class="product-floating"><strong id="floating-product">冰感防晒衣</strong><span id="floating-price">¥159</span></div>
+                <div class="barrage-list" id="question-list"></div>
+              </div>
+              <div class="reply-box">
+                <textarea id="reply-text" rows="4" placeholder="输入主播回复，例如：这个问题问得很实际，这款商品核心优势是……"></textarea>
+                <div class="reply-actions">
+                  <button class="voice-btn">🎙️ 语音回复</button>
+                  <button class="send-btn" id="submit-reply">提交回答</button>
+                </div>
+              </div>
+            </article>
+
+            <article class="dialogue-card">
+              <div class="panel-subtitle">
+                <h3>对话与即时反馈</h3>
+                <span id="dialog-count">本轮已记录 3 条</span>
+              </div>
+              <div class="dialogue-list" id="dialogue-list"></div>
+            </article>
+
+            <article class="coach-card">
+              <div class="panel-subtitle">
+                <h3>本轮建议</h3>
+                <button data-jump="script">生成话术</button>
+              </div>
+              <p>回答时按“先共情 → 给证据 → 承接福利”的顺序表达，避免夸大功效或绝对化承诺。</p>
+            </article>
+          </div>
+        </section>
+
+        <section class="module-panel hidden" id="script">
+          <div class="panel-title">
+            <div>
+              <h2>话术生成</h2>
+              <p id="script-time">已基于当前商品和最近报告生成，可直接用于直播口播。</p>
+            </div>
+            <button class="primary-action compact" id="regen-script">重新生成</button>
+          </div>
+
+          <div class="script-layout" id="script-layout"></div>
+
+          <article class="script-chat-card">
+            <div class="panel-subtitle">
+              <h3>自然语言生成指定话术</h3>
+              <span>例如：处理价格异议 / 福利催单 / 开场欢迎</span>
+            </div>
+            <textarea id="script-prompt" rows="4">帮我生成一段处理价格异议的话术，语气自然一点，适合直播间口播。</textarea>
+            <div class="script-chat-actions">
+              <button class="voice-btn" id="prompt-example">套用示例</button>
+              <button class="send-btn" id="generate-script">生成指定话术</button>
+            </div>
+            <p class="script-ai-reply" id="script-reply">可输入自然语言要求，系统会结合当前商品生成指定直播话术。</p>
+          </article>
+        </section>
+
+        <section class="module-panel hidden" id="report">
+          <div class="panel-title">
+            <div>
+              <h2>陪练报告</h2>
+              <p>展示本轮训练评分、关键词命中、评分依据与导出 PDF 能力。</p>
+            </div>
+            <button class="primary-action compact" id="export-report">导出 PDF</button>
+          </div>
+          <div class="report-overview">
+            <article class="total-score-card"><span>综合训练总分</span><strong>85.2</strong><p>高于组织平均分 9.4 分</p></article>
+            <article class="radar-card"><h3>能力雷达图</h3><div class="radar-visual"><div></div></div><p>蓝色区域为当前主播表现，虚线参考组织平均水平。</p></article>
+            <article class="keyword-card"><h3>商品关键词命中</h3><strong>60%</strong><div><span>UPF50+</span><span>冰感</span><span>检测报告</span></div></article>
+          </div>
+          <div class="score-table">
+            <div class="score-row head"><b>指标</b><b>本次得分</b><b>组织均值</b><b>评分依据</b></div>
+            <div class="score-row"><b>清晰度</b><strong>88</strong><span>79</span><p>回答结构完整，但开头可更快点出适用人群。</p></div>
+            <div class="score-row"><b>流畅度</b><strong>84</strong><span>76</span><p>整体节奏自然，中段可减少重复表达。</p></div>
+            <div class="score-row"><b>商品专业力</b><strong>91</strong><span>80</span><p>卖点和场景覆盖充分，建议补充检测证据。</p></div>
+            <div class="score-row"><b>异议处理力</b><strong>82</strong><span>74</span><p>能回应价格与版型异议，但缺少对比话术。</p></div>
+          </div>
+        </section>
+
+        <section class="module-panel hidden" id="settings">
+          <div class="panel-title">
+            <div>
+              <h2>陪练配置</h2>
+              <p>支持从商品库选择已上架商品，也可手动配置新品和特殊直播场景。</p>
+            </div>
+          </div>
+          <div class="settings-grid">
+            <article><h3>商品库选择</h3><p>自动关联商品基础信息、卖点、营销活动标签和常见异议。</p><button data-jump="practice">去选择商品</button></article>
+            <article><h3>自定义商品</h3><p>手动输入商品名称、类目、卖点和直播推广信息，适配新品训练。</p><button>新建练习</button></article>
+            <article><h3>训练场景</h3><p>可配置开场、讲解、异议处理、福利催单等训练目标。</p><button data-jump="practice">开始陪练</button></article>
+          </div>
+        </section>
+      </section>
+    </main>
+
+    <script src="./app.js"></script>
+  </body>
+</html>

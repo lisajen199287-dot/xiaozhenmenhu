@@ -49,6 +49,12 @@ export default defineConfig({
   server: {
     port: 5555,
     strictPort: false,
+    fs: {
+      allow: [
+        resolve(__dirname),
+        '/Users/qingran/Documents/web_projects/pc_ui/node_modules'
+      ]
+    },
     proxy: {
       '/api': {
         target: 'http://192.168.12.28:48080',

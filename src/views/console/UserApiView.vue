@@ -52,7 +52,7 @@ const fetchData = async () => {
 
 const handleCreateApiKey = async () => {
 
-    const result = await ElMessageBox.prompt('请输入密钥名称', '新建 API 密钥', {
+    const result = await ElMessageBox.prompt('请输入密钥名称', '新建词元密钥', {
         confirmButtonText: '创建', cancelButtonText: '取消', inputPlaceholder: '如：生产环境Key', inputPattern: /.+/, inputErrorMessage: '名称不能为空'
     })
     const name = (result as any).value
@@ -121,13 +121,13 @@ onMounted(fetchData)
 
       <div class="header-text">
 
-        <h2>API 管理</h2>
+        <h2>词元中枢</h2>
 
-        <p>管理您的开发密钥，用于集成 CII 服务到您的自有系统中</p>
+        <p>管理租户算力 Token、词元密钥与补助协同调用，用于接入园区企业服务能力</p>
 
       </div>
 
-      <button class="btn-primary" @click="handleCreateApiKey"><i class="fas fa-plus"></i> 创建新密钥</button>
+      <button class="btn-primary" @click="handleCreateApiKey"><i class="fas fa-plus"></i> 创建词元密钥</button>
 
     </div>
 
@@ -173,7 +173,7 @@ onMounted(fetchData)
 
     <div class="content-card">
 
-      <div class="card-header"><h3>API 密钥列表</h3></div>
+      <div class="card-header"><h3>词元密钥列表</h3></div>
 
       <div v-if="loading" class="loading-state">密钥加载中...</div>
 
@@ -209,7 +209,7 @@ onMounted(fetchData)
 
           <tr v-if="apiKeys.length === 0">
 
-              <td colspan="5" class="empty-state">您尚未创建任何 API 密钥</td>
+              <td colspan="5" class="empty-state">您尚未创建任何词元密钥</td>
 
           </tr>
 

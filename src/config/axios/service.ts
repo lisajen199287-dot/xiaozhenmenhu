@@ -191,6 +191,9 @@ service.interceptors.response.use(
     } else if (code === 500) {
       ElMessage.error('服务器错误,请联系管理员!')
       return Promise.reject(new Error(msg))
+    } else if (code === 404 || String(code) === '404') {
+      console.warn('接口资源不存在，已静默处理:', config.url)
+      return Promise.reject('not-found')
     } else if (code !== 200) {
       if (msg === '无效的刷新令牌') {
         // hard coding：忽略这个提示，直接登出
@@ -206,6 +209,10 @@ service.interceptors.response.use(
   },
   (error: AxiosError) => {
     console.log('err' + error) // for debug
+    if (error.response?.status === 404) {
+      console.warn('请求资源不存在，已静默处理:', error.config?.url)
+      return Promise.reject(error)
+    }
     let { message } = error
     if (message === 'Network Error') {
       message = '操作失败,系统异常!'

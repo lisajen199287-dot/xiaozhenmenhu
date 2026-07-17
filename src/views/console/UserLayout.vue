@@ -12,7 +12,7 @@ const route = useRoute();
 const menuItems = [
   { name: "用户中心", icon: "fas fa-user-circle", path: "/profile" },
   { name: "我的工单", icon: "fas fa-clipboard-list", path: "/tickets" },
-  { name: "API管理", icon: "fas fa-key", path: "/api" },
+  { name: "词元中枢", icon: "fas fa-key", path: "/api" },
   { name: "费用中心", icon: "fas fa-wallet", path: "/billing" },
   { name: "帮助与反馈", icon: "fas fa-circle-question", path: "/help" },
 ];

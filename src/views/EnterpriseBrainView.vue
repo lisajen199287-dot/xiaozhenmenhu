@@ -60,17 +60,6 @@ const handleSubmit = async () => {
   }
 };
 
-const scrollToForm = () => {
-  const el = document.getElementById("consult-form");
-  if (el) el.scrollIntoView({ behavior: "smooth" });
-};
-
-const handleClick = () => {
-  window.open(
-    "https://zntkfpt.aics.cii-group.com/login?TenantName=aicangshan",
-    "_blank"
-  );
-};
 </script>
 
 <template>
@@ -87,10 +76,6 @@ const handleClick = () => {
           基于 RAG 检索增强技术，构建企业专属知识库。打造 7×24
           小时在线的业务专家，让每个员工都拥有金牌导师。
         </p>
-        <div class="hero-actions">
-          <button class="btn-primary" @click="handleClick">立即使用</button>
-          <button class="btn-primary" @click="scrollToForm">预约演示</button>
-        </div>
       </div>
     </header>
 
@@ -139,6 +124,34 @@ const handleClick = () => {
               <p>{{ s.desc }}</p>
             </div>
           </div>
+        </div>
+      </section>
+
+      <section class="ai-apps-section">
+        <div class="section-label">AI APPLICATIONS</div>
+        <h2 class="section-title">Hi-agent 智能底座 · AI 应用中心</h2>
+        <p class="section-subtitle">
+          围绕园区企业高频办公场景，沉淀可即开即用的智能体应用，让企业在统一底座中完成知识问答、合同审查与业务协同。
+        </p>
+        <div class="ai-app-card">
+          <div class="ai-app-icon">
+            <i class="fas fa-file-shield"></i>
+          </div>
+          <div class="ai-app-content">
+            <span class="app-badge">LEGAL AGENT</span>
+            <h3>合同审查助手</h3>
+            <p>
+              面向采购、销售、招商与服务合同场景，自动识别关键条款、责任边界、付款约定与潜在合规风险，输出结构化审查意见和修改建议。
+            </p>
+            <div class="app-tags">
+              <span>风险条款识别</span>
+              <span>合规建议生成</span>
+              <span>审查报告导出</span>
+            </div>
+          </div>
+          <RouterLink to="/arkclaw" class="ai-app-action">
+            进入应用 <i class="fas fa-arrow-right"></i>
+          </RouterLink>
         </div>
       </section>
 
@@ -560,6 +573,102 @@ const handleClick = () => {
   font-size: 1rem;
 }
 
+.ai-apps-section {
+  margin-bottom: 80px;
+  padding: 72px;
+  border: 1px solid rgba(37, 99, 235, 0.14);
+  border-radius: 32px;
+  background:
+    radial-gradient(circle at 12% 20%, rgba(59, 130, 246, 0.12), transparent 28%),
+    linear-gradient(135deg, #ffffff 0%, #f8fbff 100%);
+  box-shadow: 0 30px 80px rgba(15, 23, 42, 0.06);
+  text-align: center;
+}
+
+.ai-app-card {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr) auto;
+  align-items: center;
+  gap: 28px;
+  margin-top: 44px;
+  padding: 28px;
+  border: 1px solid #dbeafe;
+  border-radius: 26px;
+  background: rgba(255, 255, 255, 0.86);
+  box-shadow: 0 24px 60px rgba(37, 99, 235, 0.08);
+  text-align: left;
+}
+
+.ai-app-icon {
+  width: 86px;
+  height: 86px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 24px;
+  color: #ffffff;
+  font-size: 2rem;
+  background: linear-gradient(135deg, #2563eb, #06b6d4);
+  box-shadow: 0 18px 38px rgba(37, 99, 235, 0.24);
+}
+
+.ai-app-content h3 {
+  margin: 8px 0 12px;
+  color: #0f172a;
+  font-size: 1.8rem;
+  font-weight: 850;
+}
+
+.ai-app-content p {
+  max-width: 720px;
+  margin: 0 0 18px;
+  color: #475569;
+  line-height: 1.75;
+}
+
+.app-badge {
+  color: #2563eb;
+  font-size: 0.74rem;
+  font-weight: 850;
+  letter-spacing: 0.18em;
+}
+
+.app-tags {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+
+.app-tags span {
+  padding: 7px 12px;
+  border-radius: 999px;
+  color: #1d4ed8;
+  background: #eff6ff;
+  font-size: 0.82rem;
+  font-weight: 700;
+}
+
+.ai-app-action {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  min-width: 132px;
+  padding: 14px 22px;
+  border-radius: 14px;
+  color: #ffffff;
+  background: linear-gradient(135deg, #2563eb, #0ea5e9);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.22);
+  font-weight: 800;
+  text-decoration: none;
+  transition: all 0.25s ease;
+}
+
+.ai-app-action:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 18px 36px rgba(37, 99, 235, 0.28);
+}
+
 /* Demo Section */
 .demo-flex {
   display: flex;
@@ -848,6 +957,23 @@ const handleClick = () => {
   }
   .premium-grid {
     grid-template-columns: 1fr;
+  }
+  .ai-apps-section {
+    padding: 44px 24px;
+  }
+  .ai-app-card {
+    grid-template-columns: 1fr;
+    text-align: center;
+  }
+  .ai-app-icon {
+    margin: 0 auto;
+  }
+  .ai-app-content p {
+    margin-left: auto;
+    margin-right: auto;
+  }
+  .app-tags {
+    justify-content: center;
   }
   .demo-flex {
     flex-direction: column;

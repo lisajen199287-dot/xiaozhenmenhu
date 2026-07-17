@@ -1,0 +1,294 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>电商智能问数系统</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "PingFang SC", "Microsoft YaHei", sans-serif; color: #102033; background: #f5f8fc; }
+    button, input, select, textarea { font: inherit; }
+    .ask-workbench { min-height: 100vh; display: grid; grid-template-columns: 280px minmax(0, 1fr); }
+    .system-sidebar { position: sticky; top: 0; height: 100vh; padding: 24px 18px; background: #071b36; color: #fff; }
+    .system-logo { display: flex; gap: 12px; align-items: center; padding: 10px 8px 26px; }
+    .logo-mark { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; background: linear-gradient(135deg, #2563eb, #06b6d4); font-size: 20px; }
+    .system-logo strong, .system-logo span { display: block; }
+    .system-logo strong { font-size: 16px; }
+    .system-logo span { margin-top: 4px; color: #8fb4e8; font-size: 10px; font-weight: 800; letter-spacing: .12em; }
+    .system-nav { display: grid; gap: 10px; }
+    .system-nav button { display: flex; gap: 12px; align-items: center; width: 100%; padding: 14px; border: 0; border-radius: 14px; text-align: left; color: #bdd3ef; background: transparent; cursor: pointer; }
+    .system-nav button:hover, .system-nav button.active { color: #fff; background: rgba(37, 99, 235, .32); }
+    .nav-icon { display: grid; place-items: center; width: 36px; height: 36px; border-radius: 12px; background: rgba(255,255,255,.08); }
+    .system-nav button.active .nav-icon { background: linear-gradient(135deg, #2563eb, #06b6d4); }
+    .system-nav strong, .system-nav small { display: block; }
+    .system-nav small { margin-top: 4px; color: #86a6cf; }
+    .system-main { min-width: 0; padding: 24px 30px 46px; }
+    .system-topbar { display: flex; justify-content: space-between; gap: 24px; align-items: center; margin-bottom: 24px; padding: 22px 24px; border: 1px solid #dde8f6; border-radius: 22px; background: rgba(255,255,255,.9); box-shadow: 0 16px 36px rgba(15,23,42,.05); }
+    .top-eyebrow { color: #2563eb; font-size: 12px; font-weight: 900; letter-spacing: .14em; }
+    .system-topbar h1 { margin: 8px 0 0; font-size: 30px; }
+    .top-actions button, .panel-title button, .search-btn { border: 0; border-radius: 12px; background: #0f172a; color: #fff; padding: 12px 16px; font-weight: 850; cursor: pointer; }
+    .view-panel { display: grid; gap: 22px; }
+    .dashboard-simple-filter { display: flex; }
+    .date-range-display { display: inline-flex; align-items: center; gap: 22px; min-width: 375px; height: 38px; padding: 0 18px 0 24px; border: 1px solid #cbd5e1; border-radius: 8px; background: #fff; color: #0f172a; font-size: 19px; font-weight: 900; }
+    .dashboard-metric-groups { display: grid; grid-template-columns: minmax(0, 4fr) minmax(190px, 1fr); gap: 16px; }
+    .metric-group { display: grid; gap: 16px; padding: 14px; border: 1px solid #dce8f6; border-radius: 24px; }
+    .business-metric-group { grid-template-columns: repeat(4, minmax(0, 1fr)); background: linear-gradient(135deg, #fff, #f5f9ff); box-shadow: 0 18px 42px rgba(37,99,235,.06); }
+    .alert-metric-group { grid-template-columns: minmax(0, 1fr); border-style: dashed; border-color: #fdba74; background: linear-gradient(135deg, #fff7ed, #fffefd); box-shadow: 0 18px 42px rgba(249,115,22,.08); }
+    .metric-tile { position: relative; min-height: 150px; padding: 22px; border: 1px solid #e1eaf5; border-radius: 20px; background: #fff; overflow: hidden; }
+    .metric-tile:after { content: ""; position: absolute; right: -30px; top: -30px; width: 92px; height: 92px; border-radius: 50%; opacity: .14; }
+    .metric-tile.blue:after { background: #2563eb; } .metric-tile.cyan:after { background: #06b6d4; } .metric-tile.orange:after { background: #f97316; } .metric-tile.purple:after { background: #7c3aed; }
+    .metric-icon { display: grid; place-items: center; width: 44px; height: 44px; border-radius: 14px; color: #2563eb; background: #eff6ff; }
+    .inventory-alert-card { border-color: #fed7aa; background: #fffaf5; }
+    .inventory-alert-card .metric-icon { color: #fff; background: linear-gradient(135deg, #ef4444, #f97316); }
+    .metric-tile span { display: block; margin-top: 16px; color: #64748b; }
+    .metric-tile strong { display: block; margin: 8px 0 0; font-size: 30px; }
+    .metric-note { display: block; margin-top: 12px; color: #94a3b8; font-size: 12px; font-weight: 850; }
+    .panel-card, .inventory-sales-card { padding: 24px; border: 1px solid #dce8f6; border-radius: 22px; background: #fff; box-shadow: 0 18px 40px rgba(15,23,42,.055); }
+    .panel-title { display: flex; justify-content: space-between; gap: 16px; align-items: flex-start; margin-bottom: 20px; }
+    .panel-title h2 { margin: 0 0 8px; font-size: 22px; }
+    .panel-title p { margin: 0; color: #64748b; line-height: 1.7; }
+    .platform-list { display: grid; gap: 12px; }
+    .platform-list div { padding: 16px; border-radius: 16px; background: #f8fbff; }
+    .platform-list strong, .platform-list span, .platform-list small { display: block; }
+    .platform-list span { margin: 8px 0 4px; font-size: 22px; font-weight: 900; }
+    .platform-list small { color: #64748b; }
+    .inventory-sales-card { background: linear-gradient(135deg, #fff, #f6fbff); }
+    .legend { display: flex; gap: 14px; align-items: center; color: #64748b; font-size: 13px; font-weight: 850; }
+    .legend span { display: flex; gap: 7px; align-items: center; }
+    .legend i { width: 10px; height: 10px; border-radius: 50%; }
+    .stock-dot { background: #2563eb; } .sales-dot { background: #06b6d4; }
+    .inventory-summary { display: grid; grid-template-columns: repeat(4, minmax(0,1fr)); gap: 12px; margin-bottom: 20px; }
+    .inventory-summary div { padding: 16px 18px; border-radius: 18px; background: #f1f7ff; }
+    .inventory-summary strong, .inventory-summary span { display: block; }
+    .inventory-summary strong { color: #0f172a; font-size: 26px; }
+    .inventory-summary span { margin-top: 6px; color: #64748b; font-weight: 800; }
+    .inventory-summary .risk { background: #fff7ed; }
+    .inventory-summary .risk strong { color: #f97316; }
+    .inventory-chart { display: grid; gap: 12px; }
+    .inventory-row { display: grid; grid-template-columns: 170px minmax(180px,1fr) 86px 96px; gap: 16px; align-items: center; padding: 15px; border: 1px solid #e3edf8; border-radius: 16px; background: #fff; }
+    .product-info strong, .product-info span, .stock-days strong, .stock-days span { display: block; }
+    .product-info span, .stock-days span { margin-top: 4px; color: #64748b; font-size: 12px; font-weight: 750; }
+    .relation-bars { display: grid; gap: 8px; }
+    .bar-line { height: 12px; border-radius: 999px; background: #edf4fc; overflow: hidden; }
+    .bar-line span { display: block; height: 100%; border-radius: inherit; }
+    .stock span { background: linear-gradient(90deg, #2563eb, #60a5fa); } .sales span { background: linear-gradient(90deg, #06b6d4, #67e8f9); }
+    .stock-days { text-align: right; } .stock-days strong { font-size: 18px; }
+    .status-pill { justify-self: end; padding: 7px 10px; border-radius: 999px; font-size: 12px; font-style: normal; font-weight: 900; }
+    .safe { color: #059669; background: #ecfdf5; } .warning { color: #d97706; background: #fffbeb; } .danger { color: #dc2626; background: #fef2f2; }
+    .filter-row { display: grid; grid-template-columns: 92px 24px 92px minmax(180px, 1fr) minmax(160px, 1fr) 220px; gap: 10px; align-items: center; margin-bottom: 18px; }
+    .filter-row.sales-filter { grid-template-columns: 92px 24px 92px minmax(200px, 1fr) minmax(160px, 1fr) 220px; }
+    .filter-row input, .filter-row select { height: 42px; border: 1px solid #dbe6f3; border-radius: 12px; padding: 0 12px; color: #334155; background: #f8fbff; }
+    .filter-row .to { text-align: center; color: #64748b; font-weight: 800; }
+    .data-table { border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; }
+    .table-row { display: grid; gap: 12px; align-items: center; padding: 15px 18px; border-top: 1px solid #edf2f7; }
+    .table-row:first-child { border-top: 0; }
+    .table-head { color: #64748b; background: #f8fbff; font-size: 13px; font-weight: 900; }
+    .purchase-table .table-row { grid-template-columns: 1.35fr 1fr 1fr 1fr 1fr; }
+    .sales-table .table-row { grid-template-columns: 1.25fr 1.1fr 1fr .8fr 1fr .8fr .7fr; }
+    .table-row strong { color: #0f172a; }
+    .table-row em { font-style: normal; color: #16a34a; font-weight: 900; }
+    .purchase-chart-card { margin-bottom: 18px; padding: 18px; border: 1px solid #dbeafe; border-radius: 18px; background: #f8fbff; }
+    .chart-legend { display: flex; gap: 16px; justify-content: flex-end; color: #64748b; font-size: 12px; font-weight: 850; }
+    .purchase-column-chart { display: grid; grid-template-columns: repeat(4, 1fr); gap: 18px; min-height: 250px; align-items: end; padding: 20px 8px 4px; }
+    .supplier-column { display: grid; grid-template-rows: 1fr auto; gap: 12px; justify-items: center; height: 240px; }
+    .column-bars { display: flex; align-items: end; justify-content: center; gap: 10px; width: 100%; height: 175px; padding-inline: 8px; border-bottom: 1px solid #dbeafe; }
+    .column-bars span { width: 28px; min-height: 18px; border-radius: 999px 999px 6px 6px; }
+    .amount-bar { background: linear-gradient(180deg, #2563eb, #60a5fa); } .quantity-bar { background: linear-gradient(180deg, #06b6d4, #67e8f9); }
+    .column-label { text-align: center; color: #334155; font-size: 12px; font-weight: 850; }
+    .ask-layout { display: grid; grid-template-columns: 260px minmax(0, 1fr); gap: 20px; }
+    .quick-questions { display: grid; align-content: start; gap: 12px; }
+    .quick-questions button { display: grid; gap: 6px; padding: 14px; border: 1px solid #dbeafe; border-radius: 14px; text-align: left; color: #1d4ed8; background: #eff6ff; font-weight: 850; cursor: pointer; }
+    .quick-questions button strong { color: #0f3f8f; font-size: 14px; }
+    .quick-questions button span { color: #49627f; font-size: 12px; line-height: 1.55; font-weight: 700; }
+    .chat-box { display: flex; flex-direction: column; min-height: 520px; border: 1px solid #e2e8f0; border-radius: 18px; overflow: hidden; background: #f8fbff; }
+    .message-list { flex: 1; padding: 22px; display: grid; align-content: start; gap: 16px; }
+    .message { display: grid; grid-template-columns: auto minmax(0,1fr); gap: 12px; align-items: start; }
+    .message i { display: grid; place-items: center; width: 34px; height: 34px; border-radius: 50%; background: #e0f2fe; color: #0369a1; font-style: normal; }
+    .message p { margin: 0; padding: 14px 16px; border-radius: 14px; background: #fff; line-height: 1.75; color: #334155; }
+    .message.user p { background: #2563eb; color: #fff; }
+    .ask-input { display: grid; grid-template-columns: minmax(0,1fr) 120px; gap: 12px; padding: 16px; border-top: 1px solid #e2e8f0; background: #fff; }
+    .ask-input textarea { height: 74px; resize: none; border: 1px solid #dbe6f3; border-radius: 14px; padding: 12px; line-height: 1.6; }
+    .ask-input button { border: 0; border-radius: 14px; color: #fff; background: linear-gradient(135deg, #2563eb, #06b6d4); font-weight: 900; cursor: pointer; }
+    .hidden { display: none !important; }
+    @media (max-width: 1100px) {
+      .ask-workbench { grid-template-columns: 1fr; }
+      .system-sidebar { position: relative; height: auto; }
+      .system-nav { grid-template-columns: repeat(3,1fr); }
+      .dashboard-metric-groups, .ask-layout { grid-template-columns: 1fr; }
+      .business-metric-group, .inventory-summary, .purchase-column-chart { grid-template-columns: repeat(2,1fr); }
+      .inventory-row { grid-template-columns: 1fr; }
+      .filter-row, .filter-row.sales-filter { grid-template-columns: repeat(2, minmax(0,1fr)); }
+    }
+    @media (max-width: 720px) {
+      .system-main { padding: 16px; }
+      .system-topbar, .panel-title { flex-direction: column; align-items: flex-start; }
+      .system-nav, .business-metric-group, .inventory-summary, .filter-row, .filter-row.sales-filter, .purchase-column-chart { grid-template-columns: 1fr; }
+      .date-range-display { min-width: 0; width: 100%; font-size: 15px; }
+      .data-table { overflow-x: auto; }
+      .table-row { min-width: 760px; }
+      .ask-input { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+  <main class="ask-workbench">
+    <aside class="system-sidebar">
+      <div class="system-logo">
+        <div class="logo-mark">📈</div>
+        <div><strong>电商智能问数系统</strong><span>DATA ASK WORKBENCH</span></div>
+      </div>
+      <nav class="system-nav">
+        <button class="active" data-section="dashboard"><b class="nav-icon">🎛️</b><span><strong>智能看板</strong><small>多平台经营概览</small></span></button>
+        <button data-section="purchase"><b class="nav-icon">🛒</b><span><strong>采购统计</strong><small>采购金额与结构</small></span></button>
+        <button data-section="sales"><b class="nav-icon">📊</b><span><strong>销售统计</strong><small>销售额与毛利</small></span></button>
+      </nav>
+    </aside>
+
+    <section class="system-main">
+      <header class="system-topbar">
+        <div><span class="top-eyebrow">E-COMMERCE OPERATION DATA</span><h1 id="pageTitle">智能看板</h1></div>
+        <div class="top-actions"><button id="topAskBtn">✨ 发起问数</button></div>
+      </header>
+
+      <div id="dashboard" class="view-panel">
+        <section class="dashboard-simple-filter"><div class="date-range-display"><span>2026-06-15&nbsp;&nbsp;–&nbsp;&nbsp;2026-07-14</span><span>📅</span></div></section>
+        <section class="dashboard-metric-groups compact-metrics">
+          <div class="metric-group business-metric-group">
+            <article class="metric-tile blue"><b class="metric-icon">💰</b><span>销售额</span><strong>¥ 328,600</strong></article>
+            <article class="metric-tile cyan"><b class="metric-icon">🧾</b><span>订单数</span><strong>4,128</strong></article>
+            <article class="metric-tile purple"><b class="metric-icon">👛</b><span>应收</span><strong>¥ 52,600</strong></article>
+            <article class="metric-tile blue"><b class="metric-icon">💳</b><span>应付</span><strong>¥ 33,800</strong></article>
+          </div>
+          <div class="metric-group alert-metric-group">
+            <article class="metric-tile inventory-alert-card orange"><b class="metric-icon">⚠️</b><span>库存告警</span><strong>16</strong><small class="metric-note">库存实时监控中</small></article>
+          </div>
+        </section>
+        <section class="panel-card">
+          <div class="panel-title"><div><h2>平台经营数据</h2></div></div>
+          <div class="platform-list">
+            <div><strong>抖音</strong><span>¥142,800</span><small>1,762 单</small></div>
+            <div><strong>淘宝</strong><span>¥96,500</span><small>1,128 单</small></div>
+          </div>
+        </section>
+        <section class="inventory-sales-card">
+          <div class="panel-title"><div><h2>库存与销量关系总览</h2><p>按核心商品展示当前库存、近 7 日销量和预计可售天数，帮助运营一眼判断是否需要补货或调整直播排期。</p></div><div class="legend"><span><i class="stock-dot"></i> 当前库存</span><span><i class="sales-dot"></i> 近7日销量</span></div></div>
+          <div class="inventory-summary"><div><strong>58%</strong><span>库存周转率</span></div><div><strong>1</strong><span>潜在滞销 SKU</span></div><div class="risk"><strong>2</strong><span>需补货 SKU</span></div><div><strong>4.1天</strong><span>平均可售天数</span></div></div>
+          <div class="inventory-chart" id="inventoryRows"></div>
+        </section>
+      </div>
+
+      <div id="purchase" class="view-panel hidden">
+        <section class="panel-card">
+          <div class="panel-title"><div><h2>采购统计</h2><p>按时间、供应商、品类等维度展示采购金额与数量，辅助采购与财务分析成本变化。</p></div><button>导出报表</button></div>
+          <div class="filter-row"><input type="month" value="2026-07"><span class="to">至</span><input type="month" value="2026-07"><input placeholder="请输入供应商名称"><select><option>全部品类</option><option>美妆个护</option><option>食品饮品</option></select><button class="search-btn">搜索</button></div>
+          <section class="purchase-chart-card"><div class="panel-title"><div><h2>采购金额与数量对比</h2><p>按供应商展示采购金额和采购数量。</p></div><div class="chart-legend"><span>● 采购金额</span><span>● 采购数量</span></div></div><div class="purchase-column-chart" id="purchaseChart"></div></section>
+          <div class="data-table purchase-table" id="purchaseTable"></div>
+        </section>
+      </div>
+
+      <div id="sales" class="view-panel hidden">
+        <section class="panel-card">
+          <div class="panel-title"><div><h2>销售统计</h2><p>按时间、客户、产品、区域等维度汇总销售额、订单数、毛利等指标，辅助经营决策。</p></div><button>导出报表</button></div>
+          <div class="filter-row sales-filter"><input type="month" value="2026-07"><span class="to">至</span><input type="month" value="2026-07"><input placeholder="请输入客户名称"><select><option>全部区域</option><option>华东</option><option>华南</option></select><button class="search-btn">搜索</button></div>
+          <div class="data-table sales-table" id="salesTable"></div>
+        </section>
+      </div>
+
+      <div id="ask" class="view-panel hidden">
+        <section class="panel-card ask-card">
+          <div class="panel-title"><div><h2>智能问数</h2><p>用自然语言发送直播电商相关问数需求，系统输出结构化结论。</p></div></div>
+          <div class="ask-layout">
+            <div class="quick-questions" id="quickQuestions"></div>
+            <div class="chat-box">
+              <div class="message-list" id="messageList"><div class="message"><i>🤖</i><p>您好，我是电商经营问数助手。您可以直接询问销售、采购、库存、结算、商品转化等问题。</p></div></div>
+              <div class="ask-input"><textarea id="askInput">当前销量和库存是否匹配？哪些商品存在断货或滞销风险？</textarea><button id="sendAsk">发送</button></div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+  </main>
+  <script>
+    const sections = ["dashboard", "purchase", "sales", "ask"];
+    const titleMap = { dashboard: "智能看板", purchase: "采购统计", sales: "销售统计", ask: "智能问数" };
+    let askScene = "dashboard";
+    const inventoryRows = [
+      ["防晒套组", 1260, 980, 72, 86, "2.8天", "低库存", "danger"],
+      ["零食组合", 3420, 1680, 92, 74, "6.1天", "健康", "safe"],
+      ["家清礼包", 2180, 1120, 78, 66, "5.4天", "健康", "safe"],
+      ["服饰单品", 860, 720, 48, 64, "2.2天", "补货预警", "warning"],
+    ];
+    const purchaseRows = [
+      ["福建优选供应链", "美妆个护", "¥86,000", "3,400 件", "2026-07-11"],
+      ["华东仓储集采", "食品饮品", "¥124,800", "5,260 件", "2026-07-10"],
+      ["海峡生活科技", "家清日化", "¥69,300", "2,180 件", "2026-07-09"],
+      ["直播爆品工厂", "服饰鞋包", "¥96,500", "4,920 件", "2026-07-08"],
+    ];
+    const purchaseChart = [
+      ["福建优选供应链", "美妆个护", 69, 65],
+      ["华东仓储集采", "食品饮品", 100, 100],
+      ["海峡生活科技", "家清日化", 56, 41],
+      ["直播爆品工厂", "服饰鞋包", 77, 94],
+    ];
+    const salesRows = [
+      ["会员复购人群", "防晒套组", "华东", "¥128,000", "1,302", "31.8%", "2026-07-11"],
+      ["直播新客", "零食组合", "华南", "¥92,600", "1,086", "26.4%", "2026-07-10"],
+      ["达人渠道", "家清礼包", "华北", "¥76,400", "812", "29.1%", "2026-07-09"],
+      ["私域社群", "服饰单品", "西南", "¥61,900", "638", "34.2%", "2026-07-08"],
+    ];
+    const questions = {
+      dashboard: [
+        ["供销匹配分析", "当前销量和库存是否匹配？哪些商品存在断货或滞销风险？"],
+        ["补货优先级", "根据近7日销量和预计可售天数，给出下周补货优先级建议"],
+        ["滞销预警", "找出潜在滞销 SKU，并分析是否需要降价、换直播场次或减少采购"],
+        ["经营现金压力", "结合库存周转率、应收应付和销售趋势，判断企业短期经营压力"],
+      ],
+      purchase: [
+        ["采购成本异常", "近7日哪些供应商或品类采购成本波动异常？原因可能是什么？"],
+        ["采购结构优化", "根据销售表现和库存可售天数，哪些品类应减少采购或优先补货？"],
+        ["供应商对比", "对比福建优选供应链和直播爆品工厂的采购金额、数量和成本变化"],
+        ["采购预算建议", "结合当前库存、近7日销量和采购成本，给出下周采购预算建议"],
+      ],
+      sales: [
+        ["销售增长归因", "近7日销售额增长主要来自哪些客户、产品和区域？"],
+        ["毛利表现分析", "哪些产品毛利率较高，适合作为下周直播主推品？"],
+        ["客户转化分析", "直播新客、会员复购和私域社群的订单转化表现有什么差异？"],
+        ["区域销售机会", "哪些区域销售表现更好，下一阶段应该重点投放哪些商品？"],
+      ],
+    };
+    function switchSection(section) {
+      sections.forEach(id => document.getElementById(id).classList.toggle("hidden", id !== section));
+      document.getElementById("pageTitle").textContent = titleMap[section];
+      document.querySelectorAll(".system-nav button").forEach(btn => btn.classList.toggle("active", btn.dataset.section === section));
+      document.getElementById("topAskBtn").style.display = section === "ask" ? "none" : "inline-block";
+    }
+    function openAsk(scene) { askScene = scene; switchSection("ask"); renderQuestions(); document.getElementById("askInput").value = questions[scene][0][1]; }
+    function renderQuestions() {
+      document.getElementById("quickQuestions").innerHTML = questions[askScene].map(q => `<button data-q="${q[1]}"><strong>${q[0]}</strong><span>${q[1]}</span></button>`).join("");
+      document.querySelectorAll("#quickQuestions button").forEach(btn => btn.onclick = () => document.getElementById("askInput").value = btn.dataset.q);
+    }
+    function addMessage(role, text) {
+      const div = document.createElement("div");
+      div.className = "message " + role;
+      div.innerHTML = `<i>${role === "user" ? "我" : "🤖"}</i><p>${text}</p>`;
+      document.getElementById("messageList").appendChild(div);
+      div.scrollIntoView({ behavior: "smooth", block: "end" });
+    }
+    document.querySelectorAll(".system-nav button").forEach(btn => btn.onclick = () => switchSection(btn.dataset.section));
+    document.getElementById("topAskBtn").onclick = () => openAsk(document.querySelector(".system-nav button.active").dataset.section || "dashboard");
+    document.getElementById("sendAsk").onclick = () => {
+      const input = document.getElementById("askInput");
+      const text = input.value.trim();
+      if (!text) return;
+      addMessage("user", text);
+      addMessage("assistant", "分析结论：本周销售增长主要来自抖音直播间转化率提升、爆品防晒套组库存充足、达人预热视频带来的高意向流量。建议继续保留防晒套组主推位，同时补充家清日化和零食组合做第二梯队，并重点关注库存告警 SKU，避免直播中断货。");
+      input.value = "";
+    };
+    document.getElementById("inventoryRows").innerHTML = inventoryRows.map(r => `<article class="inventory-row"><div class="product-info"><strong>${r[0]}</strong><span>库存 ${r[1]} 件 · 销量 ${r[2]} 件</span></div><div class="relation-bars"><div class="bar-line stock"><span style="width:${r[3]}%"></span></div><div class="bar-line sales"><span style="width:${r[4]}%"></span></div></div><div class="stock-days"><strong>${r[5]}</strong><span>预计可售</span></div><em class="status-pill ${r[7]}">${r[6]}</em></article>`).join("");
+    document.getElementById("purchaseTable").innerHTML = `<div class="table-row table-head"><span>供应商</span><span>品类</span><span>采购金额</span><span>采购数量</span><span>时间</span></div>` + purchaseRows.map(r => `<div class="table-row"><strong>${r[0]}</strong><span>${r[1]}</span><span>${r[2]}</span><span>${r[3]}</span><span>${r[4]}</span></div>`).join("");
+    document.getElementById("salesTable").innerHTML = `<div class="table-row table-head"><span>客户</span><span>产品</span><span>区域</span><span>销售额</span><span>订单数</span><span>毛利</span><span>时间</span></div>` + salesRows.map(r => `<div class="table-row"><strong>${r[0]}</strong><span>${r[1]}</span><span>${r[2]}</span><span>${r[3]}</span><span>${r[4]}</span><em>${r[5]}</em><span>${r[6]}</span></div>`).join("");
+    document.getElementById("purchaseChart").innerHTML = purchaseChart.map(r => `<div class="supplier-column"><div class="column-bars"><span class="amount-bar" style="height:${r[2]}%"></span><span class="quantity-bar" style="height:${r[3]}%"></span></div><div class="column-label"><strong>${r[0]}</strong><br><small>${r[1]}</small></div></div>`).join("");
+    renderQuestions();
+  </script>
+</body>
+</html>
