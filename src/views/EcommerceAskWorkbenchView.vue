@@ -10,6 +10,7 @@ const navItems: Array<{ key: SectionKey; title: string; icon: string; desc: stri
   { key: "dashboard", title: "智能看板", icon: "fa-gauge-high", desc: "多平台经营概览" },
   { key: "purchase", title: "采购统计", icon: "fa-cart-flatbed", desc: "采购金额与结构" },
   { key: "sales", title: "销售统计", icon: "fa-chart-line", desc: "销售额与毛利" },
+  { key: "ask", title: "智能问数", icon: "fa-comments", desc: "自然语言分析" },
 ];
 
 const dashboardCards = [

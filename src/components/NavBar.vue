@@ -235,7 +235,12 @@ const fetchNavActivities = async () => {
   }
 };
 
-const headerMenus = ref<NavigationMenu[]>(defaultNav);
+const headerMenus = ref<NavigationMenu[]>([
+  defaultNav[0],
+  defaultNav[2],
+  defaultNav[1],
+  ...defaultNav.slice(3),
+]);
 
 const goToLogin = () => router.push("/login");
 const goToConsole = () => (window.location.href = "/console.html#/profile");
