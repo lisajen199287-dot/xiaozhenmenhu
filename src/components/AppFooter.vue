@@ -62,9 +62,9 @@ const toggle = (index: number) => {
           </h4>
           <div class="f-content">
             <div class="f-content-inner">
-              <RouterLink to="/trusted-connector">视频视觉流式分析</RouterLink>
-              <RouterLink to="/trusted-connector">智慧物联多设备接入</RouterLink>
-              <RouterLink to="/infra">端云大模型推理基座</RouterLink>
+              <RouterLink to="/video-vision-stream">视频视觉流式分析</RouterLink>
+              <RouterLink to="/video-vision-stream">智慧物联多设备接入</RouterLink>
+              <RouterLink to="/video-vision-stream">端云大模型推理基座</RouterLink>
               <RouterLink to="/agent">行业智能体应用</RouterLink>
               <RouterLink to="/data-governance">智能体全域安全脱敏组件</RouterLink>
             </div>
@@ -91,12 +91,12 @@ const toggle = (index: number) => {
     <!-- Bottom Copyright -->
     <div class="footer-copyright">
       <div class="wrapper fc-inner">
-        <span class="cp-text">© 2026 福州市仓山区产业投资集团有限公司版权所有</span>
+        <span class="cp-text">© 2026 ××××××××××××× 版权所有</span>
         <!-- <a href="https://beian.miit.gov.cn/" target="_blank" class="cp-link">闽ICP备2025086349号-1</a> -->
         <div class="cp-box">
-          <a href="https://beian.miit.gov.cn" rel="noreferrer" class="cp-link" target="_blank">闽ICP备2025086349号-1</a >
+          <a href="https://beian.miit.gov.cn" rel="noreferrer" class="cp-link" target="_blank">××ICP备××××××××号-×</a >
           <img class="cp-icon" src="@/assets/images/logo_icon.png" alt="">
-          <a href="https://beian.mps.gov.cn/#/query/webSearch " rel="noreferrer" class="cp-link" target="_blank">闽公网安备35010402351855号</a >
+          <a href="https://beian.mps.gov.cn/#/query/webSearch " rel="noreferrer" class="cp-link" target="_blank">×公网安备×××××××××××××号</a >
         </div>
       </div>
     </div>

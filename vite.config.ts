@@ -30,7 +30,14 @@ const htmlFallbackPlugin = () => {
     server.middlewares.use((req: any, _res: any, next: any) => {
       if (shouldFallback(req)) {
         const url = new URL(req.url, 'http://localhost')
-        req.url = `/index.html${url.search}`
+        const showcaseRoutes = new Set([
+          '/showcase',
+          '/showcase/',
+          '/showcase/smart-campus/demo'
+        ])
+        req.url = showcaseRoutes.has(url.pathname)
+          ? `/showcase/showcase.html${url.search}`
+          : `/index.html${url.search}`
       }
       next()
     })

@@ -115,6 +115,11 @@ const routes: RouteRecordRaw[] = [
         component: () => import('@/views/TrustedConnectorAuthView.vue')
     },
     {
+        path: '/video-vision-stream',
+        name: 'VideoVisionStream',
+        component: () => import('@/views/VideoVisionStreamView.vue')
+    },
+    {
         path: '/infra',
         name: 'Infra',
         component: () => import('@/views/InfraView.vue')

@@ -4,6 +4,22 @@
   "installCommand": "npm ci",
   "rewrites": [
     {
+      "source": "/showcase",
+      "destination": "/showcase/showcase.html"
+    },
+    {
+      "source": "/showcase/",
+      "destination": "/showcase/showcase.html"
+    },
+    {
+      "source": "/showcase/smart-campus/demo",
+      "destination": "/showcase/showcase.html"
+    },
+    {
+      "source": "/showcase/assets/:path*",
+      "destination": "/showcase/assets/:path*"
+    },
+    {
       "source": "/console.html/:path*",
       "destination": "/console.html"
     },
