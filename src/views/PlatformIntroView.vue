@@ -113,7 +113,7 @@ onBeforeUnmount(() => {
       <div class="challenge-panel">
         <div class="challenge-heading">
           <span class="section-kicker">OPERATION CHALLENGES</span>
-          <h2>园区运营商面临的问题与挑战</h2>
+          <h2>园区运营面临的问题与挑战</h2>
           <p>
             园区运营正面临从“空间出租”向“企业服务与精细化运营”转型的压力，
             招商、服务、运营三大环节亟待升级。
@@ -196,7 +196,18 @@ onBeforeUnmount(() => {
             <div>
               <h3>企业转型的真实痛点</h3>
               <ul class="pain-list">
-                <li v-for="item in transformationPains" :key="item">{{ item }}</li>
+                <li
+                  v-for="item in transformationPains"
+                  :key="item"
+                  :class="{ highlighted: item === '缺可信服务商' }"
+                >
+                  <span v-if="item === '缺可信服务商'" class="pain-highlight-mark">
+                    {{ item }}
+                    <span class="pain-arrow pain-arrow-horizontal" aria-hidden="true"></span>
+                    <span class="pain-arrow pain-arrow-diagonal" aria-hidden="true"></span>
+                  </span>
+                  <template v-else>{{ item }}</template>
+                </li>
               </ul>
             </div>
           </article>
@@ -249,10 +260,10 @@ onBeforeUnmount(() => {
     <section class="operation-solution-section">
       <div class="solution-panel">
         <div class="solution-heading">
-          <h2>园区数智运营解决方案框架</h2>
+          <h2>园区数智化运营解决方案框架</h2>
         </div>
 
-        <div class="solution-flow" aria-label="园区数智运营解决方案框架">
+        <div class="solution-flow" aria-label="园区数智化运营解决方案框架">
           <div class="solution-canvas">
           <svg class="solution-lines" viewBox="0 0 1200 650" preserveAspectRatio="none" aria-hidden="true">
             <defs>
@@ -268,11 +279,14 @@ onBeforeUnmount(() => {
             <path class="line muted" d="M204 229 L176 210" />
             <path class="line muted" d="M204 229 L176 280" />
             <path class="line muted no-arrow" d="M220 399 H204" />
-            <path class="line muted" d="M204 399 L176 390" />
-            <path class="line muted" d="M204 399 L176 460" />
+            <path class="line muted" d="M204 399 L176 375" />
+            <path class="line muted" d="M204 399 L176 445" />
             <path class="line muted no-arrow" d="M220 559 H204" />
             <path class="line muted" d="M204 559 L176 550" />
             <path class="line muted" d="M204 559 L176 620" />
+            <path class="line muted no-arrow" d="M906 559 H922" />
+            <path class="line muted" d="M922 559 L940 544" />
+            <path class="line muted" d="M922 559 L940 614" />
 
             <!-- 园区招商分别驱动园区运营、产业服务与政策服务。 -->
             <path class="line" d="M676 77 H840" />
@@ -281,14 +295,14 @@ onBeforeUnmount(() => {
             <path class="line" d="M363 150 V190" />
             <path class="line" d="M763 150 V190" />
 
-            <!-- 产业服务、词元中枢、可信空间和数据治理形成纵向与横向能力链。 -->
+            <!-- 产业服务、数据治理、可信空间和词元中枢形成纵向与横向能力链。 -->
             <path class="line" d="M363 268 V360" />
             <path class="line" d="M363 438 V520" />
             <path class="line" d="M506 559 H620" />
 
-            <!-- 三条关键业务关系：政策申报、算力补贴、园区运营提供政策服务。 -->
-            <path class="line" d="M763 520 V268" />
-            <path class="line curved" d="M620 229 C570 270 548 365 506 399" />
+            <!-- 三条关键业务关系：数据治理政策申报、政策服务算力补助、园区运营提供政策服务。 -->
+            <path class="line" d="M763 268 V520" />
+            <path class="line curved" d="M506 399 C548 365 570 270 620 229" />
             <path class="line curved" d="M945 116 C945 180 940 229 906 229" />
 
             <!-- 园区运营向右分支至园企协同与智慧物联。 -->
@@ -298,25 +312,27 @@ onBeforeUnmount(() => {
 
           <div class="flow-node input-node blue" style="--x: 0px; --y: 180px">问数智能体</div>
           <div class="flow-node input-node blue" style="--x: 0px; --y: 250px">数字员工</div>
-          <div class="flow-node input-node purple" style="--x: 0px; --y: 360px">算力Token</div>
-          <div class="flow-node input-node purple" style="--x: 0px; --y: 430px">账单明细</div>
+          <div class="flow-node input-node slate" style="--x: 0px; --y: 345px">资产盘点</div>
+          <div class="flow-node input-node slate" style="--x: 0px; --y: 415px">清洗标注</div>
           <div class="flow-node input-node green" style="--x: 0px; --y: 520px">数据流通</div>
           <div class="flow-node input-node green" style="--x: 0px; --y: 590px">模型广场</div>
 
           <div class="flow-node main-node purple" style="--x: 390px; --y: 38px">园区招商</div>
           <div class="flow-node main-node blue" style="--x: 220px; --y: 190px">产业服务</div>
-          <div class="flow-node main-node purple" style="--x: 220px; --y: 360px">词元中枢</div>
+          <div class="flow-node main-node slate" style="--x: 220px; --y: 360px">数据治理</div>
           <div class="flow-node main-node green" style="--x: 220px; --y: 520px">可信空间</div>
-          <div class="flow-node main-node slate" style="--x: 620px; --y: 520px">数据治理</div>
+          <div class="flow-node main-node purple" style="--x: 620px; --y: 520px">词元中枢</div>
           <div class="flow-node main-node amber" style="--x: 620px; --y: 190px">政策服务</div>
           <div class="flow-node main-node green operation-node" style="--x: 840px; --y: 38px">园区运营</div>
 
+          <div class="flow-node input-node compact purple" style="--x: 940px; --y: 520px">算力Token</div>
+          <div class="flow-node input-node compact purple" style="--x: 940px; --y: 590px">账单明细</div>
           <div class="flow-node side-node green" style="--x: 1060px; --y: 28px">园企协同</div>
           <div class="flow-node side-node green" style="--x: 1060px; --y: 176px">智慧物联</div>
 
           <div class="flow-label provide" style="--x: 918px; --y: 142px">提供</div>
-          <div class="flow-label subsidy" style="--x: 528px; --y: 300px">算力<br />补贴</div>
-          <div class="flow-label policy" style="--x: 776px; --y: 388px">政策<br />申报</div>
+          <div class="flow-label subsidy" style="--x: 528px; --y: 300px">政策<br />申报</div>
+          <div class="flow-label policy" style="--x: 776px; --y: 388px">算力<br />补助</div>
           </div>
         </div>
       </div>
@@ -628,7 +644,7 @@ onBeforeUnmount(() => {
 
 .governance-panel {
   position: relative;
-  overflow: hidden;
+  overflow: visible;
   padding: 34px;
   border: 1px solid rgba(147, 197, 253, 0.62);
   border-radius: 28px;
@@ -701,6 +717,7 @@ onBeforeUnmount(() => {
   grid-template-columns: 1fr 1.25fr;
   gap: 28px;
   align-items: stretch;
+  z-index: 30;
 }
 
 .pain-card,
@@ -713,6 +730,9 @@ onBeforeUnmount(() => {
 }
 
 .pain-card {
+  position: relative;
+  z-index: 50;
+  overflow: visible;
   display: grid;
   grid-template-columns: 104px minmax(0, 1fr);
   gap: 24px;
@@ -747,6 +767,13 @@ onBeforeUnmount(() => {
   line-height: 1.5;
 }
 
+.pain-list li.highlighted {
+  position: relative;
+  z-index: 80;
+  padding-left: 18px;
+  color: #334155;
+}
+
 .pain-list li::before {
   content: "";
   position: absolute;
@@ -756,6 +783,56 @@ onBeforeUnmount(() => {
   height: 6px;
   border-radius: 50%;
   background: #2563eb;
+}
+
+.pain-list li.highlighted::before {
+  left: 0;
+}
+
+.pain-highlight-mark {
+  position: relative;
+  z-index: 100;
+  display: inline-block;
+  padding: 1px 13px 2px;
+  border: 3px solid #ff4b4b;
+  border-radius: 999px;
+  line-height: 1.1;
+  background: transparent;
+}
+
+.pain-arrow {
+  position: absolute;
+  z-index: 999;
+  height: 0;
+  border-top: 4px solid #ff4b4b;
+  pointer-events: none;
+}
+
+.pain-arrow::before {
+  content: "";
+  position: absolute;
+  left: -2px;
+  top: -8px;
+  width: 0;
+  height: 0;
+  border-top: 6px solid transparent;
+  border-bottom: 6px solid transparent;
+  border-right: 14px solid #ff4b4b;
+}
+
+.pain-arrow-horizontal {
+  left: calc(100% + 14px);
+  top: 50%;
+  width: 120px;
+  transform: translateY(-50%);
+}
+
+.pain-arrow-diagonal {
+  left: calc(100% - 2px);
+  top: 34px;
+  width: 112px;
+  transform: rotate(60deg);
+  transform-origin: left center;
 }
 
 .role-card {
@@ -1021,6 +1098,12 @@ onBeforeUnmount(() => {
   border-radius: 10px;
   background: rgba(255, 255, 255, 0.92);
   font-size: 18px;
+}
+
+.input-node.compact {
+  min-height: 48px;
+  padding: 9px 12px;
+  font-size: 17px;
 }
 
 .main-node {

@@ -309,7 +309,7 @@ onUnmounted(() => {
           @click="isMobileMenuOpen = false"
         >
           <div class="logo-text">
-            <span class="main">仓山区互联网小镇平台</span>
+            <span class="main">仓山区互联网小镇数智化服务平台</span>
             <span class="sub">CANGSHAN INTERNET TOWN PLATFORM</span>
           </div>
         </RouterLink>
@@ -638,9 +638,10 @@ onUnmounted(() => {
 }
 
 .logo-text .main {
-  font-size: 1.09rem;
+  font-size: 0.98rem;
   font-weight: 850;
   letter-spacing: -0.01em;
+  white-space: nowrap;
 }
 
 .home-link-logo {

@@ -11,7 +11,7 @@ const input = ref('')
 const messages = ref<ChatMessage[]>([
   {
     role: 'assistant',
-    text: '您好，我是仓山区互联网小镇平台智能客服。可以咨询园企协同、问数系统、数字员工、控制台使用等问题。'
+    text: '您好，我是仓山区互联网小镇数智化服务平台智能客服。可以咨询园企协同、问数系统、数字员工、控制台使用等问题。'
   }
 ])
 const chatBodyRef = ref<HTMLElement | null>(null)

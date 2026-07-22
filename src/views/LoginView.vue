@@ -371,7 +371,7 @@ onMounted(() => {
       <div class="visual-gradient"></div>
       <div class="visual-content">
         <div class="logo-white" @click="router.push('/')">
-          <span>福州市仓山区人工智能公共服务平台</span>
+          <span>仓山区互联网小镇数智化服务平台</span>
         </div>
         <div class="hero-quote">
           <h2 class="animate-up">欢迎回来</h2>

@@ -16,7 +16,7 @@
       <div class="hero-overlay"></div>
       <div class="hero-content">
         <div class="hero-badge">
-          福州市商务局 × 抖音集团 × 仓山区人工智能公共服务平台 联合推出
+          福州市商务局 × 抖音集团 × 仓山区互联网小镇数智化服务平台 联合推出
         </div>
         <h1 class="hero-title">全国首个<span class="highlight">AI算力消费券</span></h1>
         <div class="hero-features">
@@ -70,7 +70,7 @@
             <a href="#">隐私协议</a>
             <a href="#">服务条款</a>
           </div>
-          <div class="footer-copy">© 2024 仓山区人工智能公共服务平台</div>
+          <div class="footer-copy">© 2024 仓山区互联网小镇数智化服务平台</div>
         </div>
       </div>
     </footer> -->

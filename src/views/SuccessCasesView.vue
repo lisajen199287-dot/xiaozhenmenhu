@@ -56,7 +56,7 @@ onMounted(() => {
               />
             </div>
             <div class="case-content">
-              仓山区人工智能公共服务平台×中科玥游｜福州短剧企业，如何通过Seedance2.0
+              仓山区互联网小镇数智化服务平台×中科玥游｜福州短剧企业，如何通过Seedance2.0
               API实现规模化高效创作？
             </div>
             <div class="tag_Division">
@@ -81,7 +81,7 @@ onMounted(() => {
               />
             </div>
             <div class="case-content">
-              仓山区人工智能公共服务平台×福建广电网络｜AIAPI赋能，筑牢智慧广电政企服务新标杆
+              仓山区互联网小镇数智化服务平台×福建广电网络｜AIAPI赋能，筑牢智慧广电政企服务新标杆
             </div>
             <div class="tag_Division">
               <div class="case-tag">广播电视行业</div>
@@ -105,7 +105,7 @@ onMounted(() => {
               />
             </div>
             <div class="case-content">
-              仓山区人工智能公共服务平台×福州市大吕网络科技｜AI能力精细化运营，让游戏研发多场景提效100%
+              仓山区互联网小镇数智化服务平台×福州市大吕网络科技｜AI能力精细化运营，让游戏研发多场景提效100%
             </div>
             <div class="tag_Division">
               <div class="case-tag">游戏行业</div>
@@ -129,7 +129,7 @@ onMounted(() => {
               />
             </div>
             <div class="case-content">
-              仓山区人工智能公共服务平台×武汉宜鼎众城｜武汉TK电商机构，如何通过AIAPI实现墨镜品类高效增长？
+              仓山区互联网小镇数智化服务平台×武汉宜鼎众城｜武汉TK电商机构，如何通过AIAPI实现墨镜品类高效增长？
             </div>
             <div class="tag_Division">
               <div class="case-tag">电商行业</div>

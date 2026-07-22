@@ -3,7 +3,7 @@ import { ref, onMounted } from "vue";
 
 onMounted(() => {
   document.title =
-    "AI真身口播数字人 - 你的原生数字分身 - 福州市仓山区人工智能公共服务平台";
+    "AI真身口播数字人 - 你的原生数字分身 - 仓山区互联网小镇数智化服务平台";
 
   // Suggestion: In a real production app, use @vueuse/head for meta tags
 });

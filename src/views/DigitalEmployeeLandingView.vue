@@ -12,7 +12,7 @@ const goPracticeUser = () => {
 };
 
 const goPracticeAdmin = () => {
-  window.location.href = "/console.html#/profile";
+  window.location.href = "https://conver.aics.cii-group.com/";
 };
 </script>
 

@@ -92,11 +92,10 @@ const toggle = (index: number) => {
     <div class="footer-copyright">
       <div class="wrapper fc-inner">
         <span class="cp-text">© 2026 ××××××××××××× 版权所有</span>
-        <!-- <a href="https://beian.miit.gov.cn/" target="_blank" class="cp-link">闽ICP备2025086349号-1</a> -->
         <div class="cp-box">
-          <a href="https://beian.miit.gov.cn" rel="noreferrer" class="cp-link" target="_blank">××ICP备××××××××号-×</a >
+          <a href="https://beian.miit.gov.cn/" target="_blank" rel="noreferrer" class="cp-link">××ICP备××××××××号-×</a>
           <img class="cp-icon" src="@/assets/images/logo_icon.png" alt="">
-          <a href="https://beian.mps.gov.cn/#/query/webSearch " rel="noreferrer" class="cp-link" target="_blank">×公网安备×××××××××××××号</a >
+          <a href="https://beian.mps.gov.cn/#/query/webSearch" target="_blank" rel="noreferrer" class="cp-link">×公网安备×××××××××××××号</a>
         </div>
       </div>
     </div>
