@@ -4,6 +4,65 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>智慧园区运营管理系统</title>
+  <style>
+    .ai-dispatch-link,
+    .camera-view-link {
+      display: inline-flex;
+      flex: 0 0 auto;
+      min-height: 24px;
+      align-items: center;
+      justify-content: center;
+      gap: 6px;
+      margin: 0;
+      padding: 0 9px;
+      border: 1px solid rgba(15, 118, 110, 0.28);
+      border-radius: 999px;
+      color: #0f766e;
+      background: rgba(240, 253, 250, 0.9);
+      font-size: 0.68rem;
+      font-weight: 900;
+      line-height: 1;
+      text-decoration: none;
+      box-shadow: 0 6px 14px rgba(15, 118, 110, 0.1);
+      pointer-events: auto;
+      cursor: pointer;
+      position: relative;
+      z-index: 80;
+      transition: transform 0.18s ease, background-color 0.18s ease, color 0.18s ease;
+    }
+
+    .ai-dispatch-link:hover,
+    .camera-view-link:hover {
+      color: #fff;
+      background: #0f766e;
+      transform: translateY(-1px);
+    }
+
+    .camera-view-body {
+      display: grid;
+      gap: 8px;
+      height: 100%;
+      min-height: 0;
+    }
+
+    .camera-view-copy {
+      padding: 9px 10px;
+      border: 1px solid rgba(226, 232, 240, 0.92);
+      border-radius: 8px;
+      color: #334155;
+      background: rgba(248, 250, 252, 0.88);
+      font-size: 0.76rem;
+      font-weight: 700;
+      line-height: 1.45;
+    }
+
+    .camera-view-link {
+      width: 100%;
+      min-height: 34px;
+      border-radius: 8px;
+      font-size: 0.78rem;
+    }
+  </style>
   <script>
     window.history.replaceState(null, "", "/showcase/smart-campus/demo");
   </script>
@@ -12,5 +71,69 @@
 </head>
 <body>
   <div id="app"></div>
+  <script>
+    (() => {
+      const dispatchUrl = "https://192.110.0.48:48190/";
+      const cameraUrl = "http://192.168.110.94:5000";
+
+      const jumpTo = (url) => (event) => {
+        event.preventDefault();
+        event.stopPropagation();
+        window.location.href = url;
+      };
+
+      const mountDispatchButton = () => {
+        const card = document.querySelector(".ai-card");
+        if (!card || card.querySelector(".ai-dispatch-link")) return;
+        const head = card.querySelector(".live-card-head");
+
+        const link = document.createElement("a");
+        link.className = "ai-dispatch-link";
+        link.href = dispatchUrl;
+        link.target = "_self";
+        link.textContent = "进入中枢";
+        link.addEventListener("click", jumpTo(dispatchUrl));
+        (head || card).appendChild(link);
+      };
+
+      const mountCameraModule = () => {
+        const card = [...document.querySelectorAll(".live-right .live-card")]
+          .find((item) => item.querySelector(".live-card-head span")?.textContent?.trim() === "实时事件流" || item.dataset.cameraModule === "true");
+        if (!card || card.dataset.cameraModule === "true") return;
+
+        card.dataset.cameraModule = "true";
+        const title = card.querySelector(".live-card-head span");
+        const meta = card.querySelector(".live-card-head small");
+        if (title) title.textContent = "摄像头查看";
+        if (meta) meta.textContent = "园区视频 / 实时查看";
+
+        const body = card.querySelector(".live-events") || document.createElement("div");
+        body.className = "camera-view-body";
+        body.innerHTML = "";
+
+        const copy = document.createElement("div");
+        copy.className = "camera-view-copy";
+        copy.textContent = "接入园区摄像头实时画面，支持安防巡检、停车场与重点楼宇视频查看。";
+
+        const link = document.createElement("a");
+        link.className = "camera-view-link";
+        link.href = cameraUrl;
+        link.target = "_self";
+        link.textContent = "查看摄像头";
+        link.addEventListener("click", jumpTo(cameraUrl));
+
+        body.append(copy, link);
+        if (!body.parentElement) card.appendChild(body);
+      };
+
+      const mountEnhancements = () => {
+        mountDispatchButton();
+        mountCameraModule();
+      };
+
+      mountEnhancements();
+      new MutationObserver(mountEnhancements).observe(document.body, { childList: true, subtree: true });
+    })();
+  </script>
 </body>
 </html>

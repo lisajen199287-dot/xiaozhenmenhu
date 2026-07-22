@@ -6,13 +6,13 @@ const productImages = [
     index: "01",
     title: "EdgeSight 边缘AI NVR",
     subtitle: "基于RK3888的轻量化智能视觉分析主机",
-    image: "/static/images/edgesight-product-host-final.jpg"
+    image: "/static/images/edgesight-product-host-light.png"
   },
   {
     index: "02",
     title: "EdgeSight 边缘AI NVR",
     subtitle: "基于RK3888的轻量化智能视觉分析方案",
-    image: "/static/images/edgesight-product-solution-final.jpg"
+    image: "/images/video-vision-stream/edgesight-nvr-solution-light.png"
   }
 ];
 

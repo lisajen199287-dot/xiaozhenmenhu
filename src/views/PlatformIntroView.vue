@@ -11,6 +11,30 @@ let observer: ResizeObserver | null = null;
 const FRAME_WIDTH = 1600;
 const FRAME_HEIGHT = 1360;
 
+const transformationPains = [
+  "不知道怎么转",
+  "转不起",
+  "怕踩坑",
+  "缺人才",
+  "缺数据",
+  "缺可信服务商"
+];
+
+const governmentRoles = [
+  { icon: "fa-people-arrows", title: "产业生态", subtitle: "组织者" },
+  { icon: "fa-building-columns", title: "公共能力", subtitle: "供给者" },
+  { icon: "fa-door-open", title: "创新场景", subtitle: "开放者" },
+  { icon: "fa-shield-halved", title: "规则秩序", subtitle: "维护者" }
+];
+
+const modernizationPath = [
+  { icon: "fa-cloud", title: "普惠算力/模型/工业软件/应用模板" },
+  { icon: "fa-bullseye", title: "小切口用起来" },
+  { icon: "fa-database", title: "真实数据积累起来" },
+  { icon: "fa-chart-line", title: "行业模型成熟起来" },
+  { icon: "fa-rocket", title: "产业能力形成起来" }
+];
+
 const frameHeight = computed(() => `${Math.ceil(FRAME_HEIGHT * scale.value)}px`);
 const frameStyle = computed(() => ({
   width: `${FRAME_WIDTH}px`,
@@ -149,6 +173,75 @@ onBeforeUnmount(() => {
             园区亟需构建“精准招商、特色服务、智能运营”的一体化运营体系，
             实现企业引得进、留得住，园区管得好、响应快。
           </p>
+        </div>
+      </div>
+    </section>
+
+    <section class="industry-governance-section">
+      <div class="governance-panel">
+        <div class="governance-heading">
+          <span class="section-kicker">INDUSTRIAL GOVERNANCE</span>
+          <h2>产业治理现代化</h2>
+          <p>
+            面向中小企业数字化转型，政府侧通过组织生态、供给公共能力、开放创新场景和维护规则秩序，
+            把分散资源沉淀为可持续的产业服务能力。
+          </p>
+        </div>
+
+        <div class="governance-top-grid">
+          <article class="pain-card">
+            <div class="governance-icon large">
+              <i class="fas fa-circle-exclamation"></i>
+            </div>
+            <div>
+              <h3>企业转型的真实痛点</h3>
+              <ul class="pain-list">
+                <li v-for="item in transformationPains" :key="item">{{ item }}</li>
+              </ul>
+            </div>
+          </article>
+
+          <article class="role-card">
+            <div class="role-heading">
+              <span></span>
+              <h3>政府要做什么</h3>
+              <span></span>
+            </div>
+            <div class="role-grid">
+              <div v-for="item in governmentRoles" :key="item.title" class="role-item">
+                <span class="governance-icon">
+                  <i :class="['fas', item.icon]"></i>
+                </span>
+                <strong>{{ item.title }}</strong>
+                <small>{{ item.subtitle }}</small>
+              </div>
+            </div>
+          </article>
+        </div>
+
+        <div class="path-panel">
+          <div class="path-heading">
+            <span></span>
+            <h3>面向中小企业的有效路径</h3>
+            <span></span>
+          </div>
+          <div class="path-flow">
+            <template v-for="(item, index) in modernizationPath" :key="item.title">
+              <article class="path-step">
+                <span class="governance-icon">
+                  <i :class="['fas', item.icon]"></i>
+                </span>
+                <strong>{{ item.title }}</strong>
+              </article>
+              <i v-if="index < modernizationPath.length - 1" class="fas fa-arrow-right path-arrow"></i>
+            </template>
+          </div>
+          <p class="path-slogan">让企业敢转、会转、转得起、转得好。</p>
+        </div>
+
+        <div class="governance-summary">
+          <span>产业治理现代化，</span>
+          <strong>不是替企业做选择，而是把分散资源组织成系统能力。</strong>
         </div>
       </div>
     </section>
@@ -527,6 +620,281 @@ onBeforeUnmount(() => {
   line-height: 1.8;
 }
 
+.industry-governance-section {
+  width: min(100% - 48px, 1400px);
+  margin: 24px auto 0;
+  padding: 12px 0 8px;
+}
+
+.governance-panel {
+  position: relative;
+  overflow: hidden;
+  padding: 34px;
+  border: 1px solid rgba(147, 197, 253, 0.62);
+  border-radius: 28px;
+  background:
+    radial-gradient(circle at 6% 4%, rgba(37, 99, 235, 0.13), transparent 30%),
+    radial-gradient(circle at 92% 12%, rgba(14, 165, 233, 0.13), transparent 32%),
+    linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(241, 247, 255, 0.94));
+  box-shadow: 0 24px 80px rgba(42, 90, 135, 0.12);
+}
+
+.governance-panel::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background:
+    linear-gradient(rgba(37, 99, 235, 0.032) 1px, transparent 1px),
+    linear-gradient(90deg, rgba(37, 99, 235, 0.032) 1px, transparent 1px);
+  background-size: 28px 28px;
+}
+
+.governance-panel::after {
+  content: "";
+  position: absolute;
+  right: 28px;
+  top: 26px;
+  width: 150px;
+  height: 92px;
+  opacity: 0.28;
+  pointer-events: none;
+  background: repeating-linear-gradient(
+    90deg,
+    rgba(37, 99, 235, 0.26) 0 8px,
+    transparent 8px 18px
+  );
+  clip-path: polygon(0 100%, 0 42%, 12% 42%, 12% 72%, 24% 72%, 24% 34%, 36% 34%, 36% 56%, 48% 56%, 48% 18%, 60% 18%, 60% 46%, 72% 46%, 72% 0, 84% 0, 84% 30%, 100% 30%, 100% 100%);
+}
+
+.governance-heading,
+.governance-top-grid,
+.path-panel,
+.governance-summary {
+  position: relative;
+  z-index: 1;
+}
+
+.governance-heading {
+  max-width: 920px;
+  margin: 0 auto 28px;
+  text-align: center;
+}
+
+.governance-heading h2 {
+  margin: 0;
+  color: #0f172a;
+  font-size: clamp(30px, 3.2vw, 46px);
+  font-weight: 950;
+  letter-spacing: 0.02em;
+}
+
+.governance-heading p {
+  margin: 14px 0 0;
+  color: #52657d;
+  font-size: 16px;
+  line-height: 1.9;
+}
+
+.governance-top-grid {
+  display: grid;
+  grid-template-columns: 1fr 1.25fr;
+  gap: 28px;
+  align-items: stretch;
+}
+
+.pain-card,
+.role-card,
+.path-panel {
+  border: 1px solid #dbeafe;
+  border-radius: 24px;
+  background: rgba(255, 255, 255, 0.82);
+  box-shadow: 0 18px 46px rgba(37, 99, 235, 0.08);
+}
+
+.pain-card {
+  display: grid;
+  grid-template-columns: 104px minmax(0, 1fr);
+  gap: 24px;
+  align-items: center;
+  padding: 28px;
+}
+
+.pain-card h3,
+.role-heading h3,
+.path-heading h3 {
+  margin: 0;
+  color: #1e3a8a;
+  font-size: 24px;
+  font-weight: 950;
+}
+
+.pain-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px 22px;
+  padding: 0;
+  margin: 18px 0 0;
+  list-style: none;
+}
+
+.pain-list li {
+  position: relative;
+  padding-left: 18px;
+  color: #334155;
+  font-size: 17px;
+  font-weight: 800;
+  line-height: 1.5;
+}
+
+.pain-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 0.68em;
+  width: 6px;
+  height: 6px;
+  border-radius: 50%;
+  background: #2563eb;
+}
+
+.role-card {
+  padding: 28px;
+}
+
+.role-heading,
+.path-heading {
+  display: grid;
+  grid-template-columns: minmax(40px, 1fr) auto minmax(40px, 1fr);
+  gap: 22px;
+  align-items: center;
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.role-heading span,
+.path-heading span {
+  height: 2px;
+  border-radius: 999px;
+  background: linear-gradient(90deg, transparent, rgba(37, 99, 235, 0.38), transparent);
+}
+
+.role-grid {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.role-item {
+  display: grid;
+  justify-items: center;
+  min-height: 150px;
+  padding: 18px 12px;
+  border-radius: 18px;
+  background: linear-gradient(180deg, #ffffff, #f3f8ff);
+  text-align: center;
+}
+
+.role-item strong,
+.role-item small {
+  display: block;
+  color: #1e3a8a;
+  font-weight: 900;
+  line-height: 1.25;
+}
+
+.role-item strong {
+  margin-top: 12px;
+  font-size: 18px;
+}
+
+.role-item small {
+  margin-top: 4px;
+  font-size: 17px;
+}
+
+.governance-icon {
+  display: grid;
+  width: 62px;
+  height: 62px;
+  place-items: center;
+  border: 5px solid rgba(37, 99, 235, 0.14);
+  border-radius: 50%;
+  color: #fff;
+  background: linear-gradient(135deg, #2338b8, #2563eb);
+  box-shadow: 0 14px 30px rgba(37, 99, 235, 0.18);
+  font-size: 24px;
+}
+
+.governance-icon.large {
+  width: 92px;
+  height: 92px;
+  border-width: 8px;
+  font-size: 42px;
+}
+
+.path-panel {
+  margin-top: 26px;
+  padding: 28px;
+}
+
+.path-flow {
+  display: grid;
+  grid-template-columns: minmax(190px, 1.22fr) auto minmax(140px, 0.82fr) auto minmax(170px, 0.92fr) auto minmax(170px, 0.92fr) auto minmax(170px, 0.92fr);
+  gap: 12px;
+  align-items: center;
+}
+
+.path-step {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 14px;
+  align-items: center;
+  min-height: 82px;
+  padding: 16px;
+  border: 1px solid #dbeafe;
+  border-radius: 18px;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.96), rgba(239, 247, 255, 0.92));
+}
+
+.path-step strong {
+  color: #1e3a8a;
+  font-size: 18px;
+  font-weight: 900;
+  line-height: 1.35;
+}
+
+.path-arrow {
+  color: #2d7fd3;
+  font-size: 30px;
+}
+
+.path-slogan {
+  margin: 26px 0 0;
+  color: #27364d;
+  font-size: 28px;
+  font-weight: 500;
+  text-align: center;
+  letter-spacing: 0.02em;
+}
+
+.governance-summary {
+  margin-top: 22px;
+  padding: 20px 26px;
+  border: 1px solid rgba(248, 113, 113, 0.18);
+  border-radius: 18px;
+  background: linear-gradient(90deg, rgba(254, 242, 242, 0.82), rgba(255, 255, 255, 0.72));
+  color: #1e3a8a;
+  font-size: clamp(22px, 2.35vw, 34px);
+  font-weight: 950;
+  line-height: 1.35;
+  text-align: center;
+}
+
+.governance-summary strong {
+  color: #c2410c;
+}
+
 .operation-solution-section {
   width: min(100% - 48px, 1400px);
   margin: 24px auto 0;
@@ -764,6 +1132,10 @@ onBeforeUnmount(() => {
     width: calc(100% - 20px);
   }
 
+  .industry-governance-section {
+    width: calc(100% - 20px);
+  }
+
   .challenge-panel {
     padding: 22px;
   }
@@ -775,6 +1147,63 @@ onBeforeUnmount(() => {
 
   .challenge-card {
     min-height: 0;
+  }
+
+  .governance-panel,
+  .pain-card,
+  .role-card,
+  .path-panel {
+    padding: 22px;
+  }
+
+  .governance-top-grid,
+  .pain-card,
+  .role-grid,
+  .path-flow {
+    grid-template-columns: 1fr;
+  }
+
+  .pain-card {
+    justify-items: start;
+  }
+
+  .pain-list {
+    grid-template-columns: 1fr;
+  }
+
+  .role-heading,
+  .path-heading {
+    grid-template-columns: 1fr;
+    gap: 10px;
+    text-align: left;
+  }
+
+  .role-heading span,
+  .path-heading span,
+  .path-arrow {
+    display: none;
+  }
+
+  .role-item {
+    grid-template-columns: auto minmax(0, 1fr);
+    justify-items: start;
+    min-height: 0;
+    gap: 14px;
+    align-items: center;
+    text-align: left;
+  }
+
+  .role-item strong,
+  .role-item small {
+    grid-column: 2;
+  }
+
+  .role-item small {
+    margin-top: -8px;
+  }
+
+  .path-slogan {
+    font-size: 22px;
   }
 
   .solution-panel {
