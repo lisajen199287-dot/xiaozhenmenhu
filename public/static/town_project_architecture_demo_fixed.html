@@ -166,6 +166,7 @@
   }
   .platforms{display:flex;gap:10px;min-height:75px}
   .platform-card{
+    position:relative;
     flex:1;
     border-radius:12px;
     display:flex;flex-direction:column;justify-content:center;align-items:center;
@@ -225,6 +226,39 @@
     padding:11px 13px;
     position:relative;overflow:hidden;
     box-shadow:inset 0 1px 0 rgba(255,255,255,.9);
+  }
+  .origin-self{
+    border-color:rgba(31,145,232,.34);
+    background:
+      linear-gradient(145deg,rgba(232,248,255,.96),rgba(255,255,255,.84));
+  }
+  .origin-integrated{
+    border-color:rgba(124,94,219,.3);
+    background:
+      linear-gradient(145deg,rgba(246,244,255,.94),rgba(255,255,255,.82));
+  }
+  .origin-tag{
+    position:absolute;
+    top:8px;
+    right:10px;
+    z-index:3;
+    padding:3px 7px;
+    border-radius:999px;
+    font-size:10px;
+    line-height:1;
+    font-weight:900;
+    letter-spacing:.5px;
+    box-shadow:0 4px 12px rgba(47,117,181,.1);
+  }
+  .origin-self .origin-tag{
+    color:#1165b8;
+    border:1px solid rgba(31,145,232,.28);
+    background:rgba(226,247,255,.92);
+  }
+  .origin-integrated .origin-tag{
+    color:#5a48ad;
+    border:1px solid rgba(124,94,219,.24);
+    background:rgba(246,243,255,.94);
   }
   .node h3{font-size:17px;margin:0 0 6px}
   .node .desc{font-size:11px;color:var(--muted);margin-bottom:10px}
@@ -370,6 +404,17 @@
   .service-arrow::before{border-top-color:rgba(85,216,255,.46)}
   .service-arrow::after{color:var(--cyan)}
   .service-arrow span{color:#177ca1}
+
+  .asset-node.origin-integrated,
+  .model-node.origin-integrated,
+  .policy.origin-integrated{
+    border-color:rgba(124,94,219,.3);
+    background:linear-gradient(145deg,rgba(246,244,255,.94),rgba(255,255,255,.82));
+  }
+  .token-hub.origin-self{
+    border-color:rgba(31,145,232,.34);
+    background:linear-gradient(145deg,rgba(232,248,255,.96),rgba(255,255,255,.84));
+  }
 
   .hardware{
     position:relative;z-index:2;
@@ -524,9 +569,9 @@
         <div class="group">
           <div class="group-label">AI普惠应用</div>
           <div class="platforms">
-            <a class="platform-card link-card" href="/arkclaw" target="_top" aria-label="跳转到企业龙虾 Claw KX"><b>Claw KX</b><small>智能执行平台</small></a>
-            <a class="platform-card link-card" href="/agent" target="_top" aria-label="跳转到 Hi-Agent 落地页"><b>Hi-Agent</b><small>智能体编排</small></a>
-            <div class="platform-card"><b>Dify</b><small>应用开发平台</small></div>
+            <a class="platform-card link-card origin-self" href="/arkclaw" target="_top" aria-label="跳转到企业龙虾 Claw KX"><span class="origin-tag">自研</span><b>Claw KX</b><small>智能执行平台</small></a>
+            <a class="platform-card link-card origin-integrated" href="/agent" target="_top" aria-label="跳转到 Hi-Agent 落地页"><span class="origin-tag">集成</span><b>Hi-Agent</b><small>智能体编排</small></a>
+            <div class="platform-card origin-integrated"><span class="origin-tag">集成</span><b>Dify</b><small>应用开发平台</small></div>
           </div>
         </div>
       </div>
@@ -538,7 +583,8 @@
         <div class="group">
           <div class="group-label">特色产业应用</div>
           <div class="business-apps">
-            <article class="app-card">
+            <article class="app-card origin-self">
+              <span class="origin-tag">自研</span>
               <div class="app-icon">员</div>
               <div>
                 <h3>数字员工</h3>
@@ -546,7 +592,8 @@
               </div>
               <div class="output-tags"><span>视频生成</span><span>直播陪练</span></div>
             </article>
-            <article class="app-card">
+            <article class="app-card origin-self">
+              <span class="origin-tag">自研</span>
               <div class="app-icon">数</div>
               <div>
                 <h3>电商问数</h3>
@@ -562,7 +609,8 @@
     <section class="layer">
       <div class="layer-title">数据要素层</div>
       <div class="data-pipeline">
-        <article class="node">
+        <article class="node origin-self">
+          <span class="origin-tag">自研</span>
           <h3>数据治理</h3>
           <div class="desc">将业务数据加工为可管理、可复用、可评估的数据资源</div>
           <div class="steps">
@@ -576,7 +624,8 @@
 
         <div class="flow-arrow"><span>资源化</span></div>
 
-        <article class="node">
+        <article class="node origin-integrated">
+          <span class="origin-tag">集成</span>
           <h3>可信空间</h3>
           <div class="desc">通过可信机制完成安全流通与可控使用</div>
           <div class="connector-box">多元可信接入连接器</div>
@@ -585,15 +634,17 @@
 
         <div class="flow-arrow"><span>资产化</span></div>
 
-        <article class="node asset-node">
+        <article class="node asset-node origin-integrated">
+          <span class="origin-tag">集成</span>
           <div class="asset-orb">DATA</div>
-          <h3>数据资产</h3>
+          <h3>高质量数据集</h3>
           <small>可登记 · 可流通 · 可计量</small>
         </article>
 
         <div class="flow-arrow"><span>训练供给</span></div>
 
-        <article class="node model-node">
+        <article class="node model-node origin-integrated">
+          <span class="origin-tag">集成</span>
           <h3>模型训推</h3>
           <div class="desc">沉淀行业数据样本，支撑应用模型持续优化</div>
           <div class="model-tags"><span>模型迭代</span><span>微调训练</span></div>
@@ -604,7 +655,8 @@
     <section class="layer">
       <div class="layer-title">园企服务层</div>
       <div class="services-grid">
-        <article class="node policy">
+        <article class="node policy origin-integrated">
+          <span class="origin-tag">集成</span>
           <div class="policy-head">
             <div>
               <h3>园企协同</h3>
@@ -624,7 +676,8 @@
 
         <div class="flow-arrow service-arrow"><span>Token 支撑服务</span></div>
 
-        <article class="node token-hub">
+        <article class="node token-hub origin-self">
+          <span class="origin-tag">自研</span>
           <div>
             <h3>词元中枢</h3>
             <div class="desc">承接数据资产并完成词元化，形成统一 Token 供给与计量能力</div>

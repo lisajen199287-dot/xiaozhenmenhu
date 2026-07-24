@@ -109,74 +109,6 @@ onBeforeUnmount(() => {
       </div>
     </header>
 
-    <section class="operator-challenge-section">
-      <div class="challenge-panel">
-        <div class="challenge-heading">
-          <span class="section-kicker">OPERATION CHALLENGES</span>
-          <h2>园区运营面临的问题与挑战</h2>
-          <p>
-            园区运营正面临从“空间出租”向“企业服务与精细化运营”转型的压力，
-            招商、服务、运营三大环节亟待升级。
-          </p>
-        </div>
-
-        <div class="challenge-grid">
-          <article class="challenge-card leasing-card">
-            <div class="challenge-card-head">
-              <span class="challenge-icon">招</span>
-              <div>
-                <strong>招商困境</strong>
-                <small>获客转化与品牌吸引力不足</small>
-              </div>
-            </div>
-            <ul>
-              <li><b>空置率高：</b>招商渠道有限，客户转化效率低</li>
-              <li><b>影响力弱：</b>园区品牌曝光不足，招商吸引力有限</li>
-              <li><b>企业流失率增高：</b>企业需求无法持续满足，续租意愿下降</li>
-            </ul>
-          </article>
-
-          <article class="challenge-card service-card">
-            <div class="challenge-card-head">
-              <span class="challenge-icon">服</span>
-              <div>
-                <strong>服务短板</strong>
-                <small>服务资源分散，园企连接不够紧密</small>
-              </div>
-            </div>
-            <ul>
-              <li><b>服务同质化：</b>缺乏特色服务和差异化竞争力</li>
-              <li><b>企业资源整合弱：</b>企业需求、服务资源与政策资源分散</li>
-              <li><b>园企连接弱：</b>缺少常态化沟通和精准触达机制</li>
-            </ul>
-          </article>
-
-          <article class="challenge-card operation-card">
-            <div class="challenge-card-head">
-              <span class="challenge-icon">营</span>
-              <div>
-                <strong>运营挑战</strong>
-                <small>人工依赖高，响应与决策能力不足</small>
-              </div>
-            </div>
-            <ul>
-              <li><b>人员效率低：</b>依赖人工处理，跨部门协同成本高</li>
-              <li><b>应急响应弱：</b>风险发现不及时，缺乏统一调度和闭环处置</li>
-              <li><b>数据支撑不足：</b>运营数据分散，管理决策主要依赖经验</li>
-            </ul>
-          </article>
-        </div>
-
-        <div class="challenge-summary">
-          <span>转型方向</span>
-          <p>
-            园区亟需构建“精准招商、特色服务、智能运营”的一体化运营体系，
-            实现企业引得进、留得住，园区管得好、响应快。
-          </p>
-        </div>
-      </div>
-    </section>
-
     <section class="industry-governance-section">
       <div class="governance-panel">
         <div class="governance-heading">
@@ -257,13 +189,81 @@ onBeforeUnmount(() => {
       </div>
     </section>
 
+    <section class="operator-challenge-section">
+      <div class="challenge-panel">
+        <div class="challenge-heading">
+          <span class="section-kicker">OPERATION CHALLENGES</span>
+          <h2>园区运营面临的问题与挑战</h2>
+          <p>
+            园区运营正面临从“空间出租”向“企业服务与精细化运营”转型的压力，
+            招商、服务、运营三大环节亟待升级。
+          </p>
+        </div>
+
+        <div class="challenge-grid">
+          <article class="challenge-card leasing-card">
+            <div class="challenge-card-head">
+              <span class="challenge-icon">招</span>
+              <div>
+                <strong>招商困境</strong>
+                <small>获客转化与品牌吸引力不足</small>
+              </div>
+            </div>
+            <ul>
+              <li><b>空置率高：</b>招商渠道有限，客户转化效率低</li>
+              <li><b>影响力弱：</b>园区品牌曝光不足，招商吸引力有限</li>
+              <li><b>企业流失率增高：</b>企业需求无法持续满足，续租意愿下降</li>
+            </ul>
+          </article>
+
+          <article class="challenge-card service-card">
+            <div class="challenge-card-head">
+              <span class="challenge-icon">服</span>
+              <div>
+                <strong>服务短板</strong>
+                <small>服务资源分散，园企连接不够紧密</small>
+              </div>
+            </div>
+            <ul>
+              <li><b>服务同质化：</b>缺乏特色服务和差异化竞争力</li>
+              <li><b>企业资源整合弱：</b>企业需求、服务资源与政策资源分散</li>
+              <li><b>园企连接弱：</b>缺少常态化沟通和精准触达机制</li>
+            </ul>
+          </article>
+
+          <article class="challenge-card operation-card">
+            <div class="challenge-card-head">
+              <span class="challenge-icon">营</span>
+              <div>
+                <strong>运营挑战</strong>
+                <small>人工依赖高，响应与决策能力不足</small>
+              </div>
+            </div>
+            <ul>
+              <li><b>人员效率低：</b>依赖人工处理，跨部门协同成本高</li>
+              <li><b>应急响应弱：</b>风险发现不及时，缺乏统一调度和闭环处置</li>
+              <li><b>数据支撑不足：</b>运营数据分散，管理决策主要依赖经验</li>
+            </ul>
+          </article>
+        </div>
+
+        <div class="challenge-summary">
+          <span>转型方向</span>
+          <p>
+            园区亟需构建“精准招商、特色服务、智能运营”的一体化运营体系，
+            实现企业引得进、留得住，园区管得好、响应快。
+          </p>
+        </div>
+      </div>
+    </section>
+
     <section class="operation-solution-section">
       <div class="solution-panel">
         <div class="solution-heading">
-          <h2>园区数智化运营解决方案框架</h2>
+          <h2>园区数智化运营业务框架</h2>
         </div>
 
-        <div class="solution-flow" aria-label="园区数智化运营解决方案框架">
+        <div class="solution-flow" aria-label="园区数智化运营业务框架">
           <div class="solution-canvas">
           <svg class="solution-lines" viewBox="0 0 1200 650" preserveAspectRatio="none" aria-hidden="true">
             <defs>
