@@ -1,0 +1,83 @@
+[
+  {
+    "id": "building_01",
+    "name": "1号楼",
+    "position": [
+      -103.2659,
+      26.5351,
+      24
+    ]
+  },
+  {
+    "id": "building_02",
+    "name": "2号楼",
+    "position": [
+      -103.5089,
+      -18.2937,
+      24
+    ]
+  },
+  {
+    "id": "building_03",
+    "name": "3号楼",
+    "position": [
+      -102.8963,
+      -60.3949,
+      24
+    ]
+  },
+  {
+    "id": "building_04",
+    "name": "4号楼",
+    "position": [
+      -101.9259,
+      -101.7026,
+      24
+    ]
+  },
+  {
+    "id": "building_05",
+    "name": "5号楼",
+    "position": [
+      94.3833,
+      -38.423,
+      24
+    ]
+  },
+  {
+    "id": "building_06",
+    "name": "6号楼",
+    "position": [
+      47.565,
+      23.4095,
+      24
+    ]
+  },
+  {
+    "id": "building_07",
+    "name": "7号楼",
+    "position": [
+      22.6049,
+      96.0239,
+      24
+    ]
+  },
+  {
+    "id": "parking_deck_central",
+    "name": "立体停车场",
+    "position": [
+      -16,
+      -41,
+      10
+    ]
+  },
+  {
+    "id": "building_10_south_u_complex",
+    "name": "南侧U形综合楼",
+    "position": [
+      -8.1272,
+      -102.4853,
+      24
+    ]
+  }
+]
