@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" role="img" aria-label="无效二维码占位图">
+  <rect width="120" height="120" fill="#fff"/>
+  <g fill="#10233f">
+    <path d="M8 8h32v32H8zm6 6v20h20V14zm5 5h10v10H19zM80 8h32v32H80zm6 6v20h20V14zm5 5h10v10H91zM8 80h32v32H8zm6 6v20h20V86zm5 5h10v10H19z" fill-rule="evenodd"/>
+    <path d="M48 8h8v8h-8zm12 0h8v8h-8zm-12 12h8v8h-8zm16 0h8v8h-8zm-20 16h8v8h-8zm12-4h8v8h-8zm16 4h8v8h-8zM8 48h8v8H8zm12-4h8v8h-8zm12 8h8v8h-8zM8 64h8v8H8zm16-4h8v8h-8zm12 8h8v8h-8zM80 48h8v8h-8zm16-4h8v8h-8zm8 16h8v8h-8zm-24 8h8v8h-8zm12-4h8v8h-8zM48 80h8v8h-8zm12-4h8v8h-8zm12 8h8v8h-8zm-28 8h8v8h-8zm16 4h8v8h-8zm12 8h8v8h-8zm12-16h8v8h-8zm12-8h8v8h-8zm8 16h8v8h-8zm-20 8h8v8h-8zm16 4h8v8h-8z"/>
+  </g>
+  <rect x="42" y="46" width="36" height="28" rx="3" fill="#2563eb"/>
+  <text x="60" y="64" fill="#fff" font-family="Arial, sans-serif" font-size="10" font-weight="700" text-anchor="middle">DEMO</text>
+</svg>

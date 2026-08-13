@@ -9,7 +9,7 @@ const scale = ref(1);
 let observer: ResizeObserver | null = null;
 
 const FRAME_WIDTH = 1600;
-const FRAME_HEIGHT = 1560;
+const FRAME_HEIGHT = 1630;
 
 const transformationPains = [
   "不知道怎么转",

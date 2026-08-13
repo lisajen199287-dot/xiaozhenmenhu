@@ -164,6 +164,7 @@
     letter-spacing:1px;
     margin-bottom:8px;
   }
+  .layer-section-label{margin:0 0 8px}
   .platforms{display:flex;gap:10px;min-height:75px}
   .platform-card{
     position:relative;
@@ -625,9 +626,10 @@
     color:#6550bf;border-color:rgba(124,94,219,.27);background:rgba(239,235,255,.82)
   }
   .execute .topology-head{
-    color:#16835f;border-color:rgba(34,184,132,.27);background:rgba(230,249,242,.82)
+    color:#6550bf;border-color:rgba(124,94,219,.27);background:rgba(239,235,255,.82)
   }
   .topology-panel{
+    position:relative;
     flex:1;
     min-height:330px;
     border:1px solid rgba(47,117,214,.26);
@@ -657,6 +659,36 @@
   .topo-card.violet::before{background:#7c5edb}
   .topo-card b{display:block;font-size:13px;margin-bottom:5px}
   .topo-card p{margin:0;color:var(--muted);font-size:10px;line-height:1.45}
+  .hardware-badge{
+    position:absolute;
+    top:7px;
+    right:8px;
+    z-index:2;
+    border:1px solid currentColor;
+    border-radius:999px;
+    padding:2px 7px;
+    background:rgba(255,255,255,.88);
+    font-size:9px;
+    font-weight:900;
+    line-height:1.25;
+    white-space:nowrap;
+  }
+  .ownership-own{
+    border-color:rgba(31,126,210,.5) !important;
+    background:linear-gradient(145deg,rgba(216,240,255,.98),rgba(246,252,255,.9)) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 0 0 1px rgba(31,126,210,.05);
+  }
+  .ownership-own::before{background:#1f7ed2 !important}
+  .ownership-own > .hardware-badge{color:#0c5ca8;background:rgba(207,237,255,.96)}
+  .topology-panel.ownership-own{padding-top:10px}
+  .topology-panel.ownership-own h3{padding-right:52px;color:#0c5ca8}
+  .ownership-integrated{
+    border-color:rgba(112,82,202,.46) !important;
+    background:linear-gradient(145deg,rgba(235,231,255,.98),rgba(250,248,255,.9)) !important;
+    box-shadow:inset 0 1px 0 rgba(255,255,255,.9),0 0 0 1px rgba(112,82,202,.05);
+  }
+  .ownership-integrated::before{background:#7052ca !important}
+  .ownership-integrated > .hardware-badge{color:#51409f;background:rgba(229,223,255,.96)}
   .sensor-stack,.execute-stack{display:grid;gap:9px;flex:1}
   .sensor-stack{grid-template-rows:1.2fr 1fr .6fr}
   .execute-stack{grid-template-rows:1fr 1fr}
@@ -728,7 +760,7 @@
       <div class="layer-title">FDE服务层</div>
       <div class="fde-grid">
         <div class="group">
-          <div class="group-label">AI普惠应用</div>
+          <div class="group-label">AI普惠应用（可选）</div>
           <div class="platforms">
             <a class="platform-card link-card origin-self" href="/arkclaw" target="_top" aria-label="跳转到企业龙虾 Claw KX"><span class="origin-tag">自研</span><b>Claw KX</b><small>智能执行平台</small></a>
             <a class="platform-card link-card origin-integrated" href="/agent" target="_top" aria-label="跳转到 Hi-Agent 落地页"><span class="origin-tag">外采集成</span><b>Hi-Agent</b><small>智能体编排</small></a>
@@ -742,7 +774,7 @@
       <div class="layer-title">AI应用层</div>
       <div class="apps-grid">
         <div class="group">
-          <div class="group-label">特色产业应用</div>
+          <div class="group-label">特色产业应用（可选）</div>
           <div class="business-apps">
             <article class="app-card origin-self">
               <span class="origin-tag">自研</span>
@@ -769,6 +801,7 @@
 
     <section class="layer">
       <div class="layer-title">数据要素层</div>
+      <div class="group-label layer-section-label">数据要素层（必须）</div>
       <div class="data-pipeline">
         <article class="node origin-self">
           <span class="origin-tag">自研</span>
@@ -815,6 +848,7 @@
 
     <section class="layer">
       <div class="layer-title">园企服务层</div>
+      <div class="group-label layer-section-label">园企服务层（必须）</div>
       <div class="services-grid">
         <article class="node portal origin-self">
           <span class="origin-tag">自研</span>
@@ -871,8 +905,9 @@
     </section>
 
     <section class="hardware">
-      <div class="layer-title">产品能力层</div>
+      <div class="layer-title">硬件产品层</div>
       <div class="hardware-topology">
+        <div class="group-label layer-section-label">硬件产品层（必须）</div>
         <div class="topology-intro">
           <div class="topology-kicker">PRODUCT HARDWARE TOPOLOGY</div>
           <h2>EdgeSensus × SkySensus 全域智能拓扑</h2>
@@ -883,15 +918,18 @@
           <section class="topology-column sensors">
             <div class="topology-head">① 感知设备</div>
             <div class="sensor-stack">
-              <article class="topo-card">
+              <article class="topo-card ownership-integrated">
+                <span class="hardware-badge">外采集成</span>
                 <b>安防摄像头 IPC</b>
-                <p>RTSP / ONVIF<br>视频流、告警与录像</p>
+                <p>RTSP / ONVIF<br>视频流实时拉取</p>
               </article>
-              <article class="topo-card teal">
+              <article class="topo-card teal ownership-integrated">
+                <span class="hardware-badge">外采集成</span>
                 <b>智能水电表</b>
                 <p>用电量、用水量<br>负荷与能耗数据</p>
               </article>
-              <article class="topo-card violet">
+              <article class="topo-card violet ownership-integrated">
+                <span class="hardware-badge">外采集成</span>
                 <b>物联网设备</b>
                 <p>环境、门禁与设施感知</p>
               </article>
@@ -900,7 +938,8 @@
 
           <section class="topology-column edge">
             <div class="topology-head">② EdgeSensus｜边缘全域智算</div>
-            <div class="topology-panel">
+            <div class="topology-panel ownership-own">
+              <span class="hardware-badge">自研</span>
               <h3>EdgeSensus｜边缘全域智算</h3>
               <article class="topo-card edge-primary">
                 <b>EdgeSight｜边缘 AI NVR</b>
@@ -922,7 +961,8 @@
 
           <section class="topology-column cloud">
             <div class="topology-head">③ SkySensus｜云端全域智脑</div>
-            <div class="topology-panel cloud-panel">
+            <div class="topology-panel cloud-panel ownership-own">
+              <span class="hardware-badge">自研</span>
               <h3>SkySensus｜云端全域智脑</h3>
               <div class="cloud-products">
                 <article class="topo-card">
@@ -945,11 +985,13 @@
           <section class="topology-column execute">
             <div class="topology-head">④ 执行与协同</div>
             <div class="execute-stack">
-              <article class="topo-card teal">
+              <article class="topo-card teal ownership-integrated">
+                <span class="hardware-badge">外采集成</span>
                 <b>无人机</b>
                 <p>园区空中巡防<br>事故与自然灾害排查</p>
               </article>
-              <article class="topo-card teal">
+              <article class="topo-card teal ownership-integrated">
+                <span class="hardware-badge">外采集成</span>
                 <b>无人车</b>
                 <p>园区地面巡防<br>事故与自然灾害排查</p>
               </article>

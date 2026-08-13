@@ -29,7 +29,7 @@ const toggle = (index: number) => {
               <div class="qr-group">
                 <div class="qr-item">
                   <div class="qr-box">
-                    <img src="/static/images/qrcode_official.jpg" alt="官方公众号" />
+                    <img src="/static/images/qrcode_placeholder.svg" alt="公众号二维码占位图" />
                   </div>
                   <span>官方公众号</span>
                 </div>
